@@ -41,7 +41,8 @@
   ],
 
   "combinedAfterLunchGroups": [
-    ["PP1", "PP2"]
+    ["PP1", "PP2"],
+    ["PP1", "PP2", "Class 1", "Class 2"]
   ],
 
   "subjects": {

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Timetable</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- Load banner -->
+  <div id="load-banner" class="load-banner" style="display:none">
+    <div class="load-banner-msg">
+      💾 Saved schedule loaded (locks preserved)
+      <span id="load-banner-time" class="load-banner-time"></span>
+    </div>
+    <button class="btn btn-sm" onclick="dismissBannerFresh()"><i class="ti ti-refresh"></i> Start Fresh</button>
+    <button class="btn btn-sm" style="color:#9ca3af" onclick="dismissBanner()">Dismiss</button>
+  </div>
+
+  <div class="header">
+    <div>
+      <div class="title">🏫 School Timetable</div>
+      <div class="subtitle">Right-click any cell to lock/unlock · Click to edit · Changes auto-saved</div>
+    </div>
+    <div class="top-btns">
+      <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> Print</button>
+      <button class="btn" onclick="exportJSON()"><i class="ti ti-download"></i> Export</button>
+      <button class="btn" onclick="triggerImport()"><i class="ti ti-upload"></i> Import</button>
+      <button class="btn" id="regen-btn" onclick="regenerate()"><i class="ti ti-refresh"></i> Regenerate</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active"  onclick="switchTab('class')">📚 Class View</button>
+    <button class="tab"         onclick="switchTab('teacher')">👩‍🏫 Teacher View</button>
+    <button class="tab"         onclick="switchTab('subject')">📖 Subject View</button>
+    <button class="tab"         onclick="switchTab('dashboard')">📊 Dashboard</button>
+    <button class="tab"         onclick="switchTab('admin')">⚙️ Admin</button>
+  </div>
+
+  <div id="conflict-panel" class="conflict-panel"></div>
+
+  <!-- CLASS VIEW -->
+  <div id="class-view">
+    <div class="controls">
+      <select id="class-select" onchange="renderClassView()"></select>
+      <span id="class-stats-badge" class="badge badge-info"></span>
+    </div>
+    <div class="hint-bar">
+      <span>🖱️ Left-click to edit</span>
+      <span>🔒 Right-click to lock/unlock (locked cells survive Regenerate)</span>
+    </div>
+    <div class="legend" id="class-legend"></div>
+    <div class="timetable-wrap"><table id="class-table"></table></div>
+  </div>
+
+  <!-- TEACHER VIEW -->
+  <div id="teacher-view" style="display:none">
+    <div class="controls">
+      <select id="teacher-select" onchange="renderTeacherView()"></select>
+      <span id="teacher-stats-badge" class="badge badge-info"></span>
+    </div>
+    <div class="stats" id="teacher-stats"></div>
+    <div class="timetable-wrap"><table id="teacher-table"></table></div>
+  </div>
+
+  <!-- SUBJECT VIEW -->
+  <div id="subject-view" style="display:none">
+    <div class="controls">
+      <select id="subject-select" onchange="renderSubjectView()"></select>
+      <span id="subject-stats-badge" class="badge badge-info"></span>
+    </div>
+    <div class="stats" id="subject-stats"></div>
+    <div class="timetable-wrap"><table id="subject-table"></table></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard-view" style="display:none">
+    <div class="stats" id="dash-stats"></div>
+    <div class="dash-grid">
+
+      <!-- Workload card -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-chart-bar"></i> Teacher Workload</h2>
+          <span id="dash-wl-legend" style="display:flex;gap:10px;font-size:10px">
+            <span style="color:#93c5fd">■ Low</span>
+            <span style="color:#4ade80">■ Normal</span>
+            <span style="color:#fbbf24">■ Heavy</span>
+            <span style="color:#f87171">■ Over</span>
+          </span>
+        </div>
+        <div id="dash-workload" style="padding:4px 0"></div>
+      </div>
+
+      <!-- Issues card -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-alert-circle"></i> Schedule Issues</h2>
+          <button class="btn btn-sm btn-warn" onclick="fillEmptySlots()">
+            <i class="ti ti-magic"></i> Auto-fill Gaps
+          </button>
+        </div>
+        <div id="dash-issues" style="max-height:500px;overflow-y:auto"></div>
+      </div>
+
+    </div>
+
+    <!-- Class coverage -->
+    <div class="admin-card" style="margin-top:1.5rem">
+      <div class="admin-card-header">
+        <h2><i class="ti ti-layout-grid"></i> Class Coverage</h2>
+        <span id="dash-coverage-summary"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="coverage-table" id="dash-coverage"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW -->
+  <div id="admin-view" style="display:none">
+    <div class="admin-grid">
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-users"></i> Teachers</h2>
+          <button class="btn btn-sm btn-primary" onclick="openAddTeacher()"><i class="ti ti-plus"></i> Add</button>
+        </div>
+        <div id="teachers-list"></div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-school"></i> Classes, Sections &amp; Subjects</h2>
+          <button class="btn btn-sm" onclick="openAddClass()"><i class="ti ti-plus"></i> Add Class</button>
+        </div>
+        <div class="class-config-grid" id="class-config-grid"></div>
+      </div>
+
+      <div class="admin-card admin-full">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-calendar-off"></i> Teacher Attendance &amp; Availability</h2>
+          <span>Tick a day to mark a teacher absent — excluded from next regeneration</span>
+        </div>
+        <div style="overflow-x:auto;padding:1rem">
+          <table class="att-table" id="att-table"></table>
+        </div>
+      </div>
+
+      <div class="admin-card admin-full">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-shield-check"></i> Scheduling Constraints</h2>
+          <span>Rules enforced when generating or regenerating — changes take effect on next run</span>
+        </div>
+        <div id="constraints-panel" style="padding:0 4px"></div>
+      </div>
+
+    </div>
+
+    <div class="run-panel">
+      <h2><i class="ti ti-settings-automation"></i> Scheduler Settings — Periods per Week</h2>
+      <p>Adjust subject frequencies then run the scheduler. <strong>Period 1</strong> every day is always the class teacher's subject. <strong>Locked cells 🔒</strong> survive regeneration. The algorithm pads slots to maximise fill rate.</p>
+      <div class="freq-grid" id="freq-grid"></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-success" onclick="runAndSwitch()"><i class="ti ti-player-play"></i> Run Full Scheduler</button>
+        <button class="btn" onclick="regenerate()"><i class="ti ti-refresh"></i> Regenerate (keep locks)</button>
+        <button class="btn btn-danger btn-sm" onclick="resetToDefaults()" style="margin-left:auto"><i class="ti ti-rotate-clockwise"></i> Reset to Defaults</button>
+        <span id="run-status" style="font-size:12px;color:#6b7280"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Cell edit modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Edit Period</h3>
+    <label>Subject</label>
+    <select id="modal-subject"></select>
+    <label>Teacher</label>
+    <select id="modal-teacher"></select>
+    <div class="lock-row" onclick="document.getElementById('modal-lock').click()">
+      <input type="checkbox" id="modal-lock">
+      <span>🔒 Lock — won't change on Regenerate</span>
+    </div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="clearCell()">Clear</button>
+      <button class="btn btn-primary" onclick="saveCell()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Teacher edit modal -->
+<div class="modal-bg" id="teacher-modal">
+  <div class="modal">
+    <h3 id="teacher-modal-title">Teacher</h3>
+    <label>Name</label>
+    <input type="text" id="tm-name" placeholder="e.g. S. Sharma">
+    <label>Teacher ID</label>
+    <input type="text" id="tm-id" placeholder="e.g. T20">
+    <label>Subjects they can teach</label>
+    <div class="chips-editor" id="tm-subjects-chips" onclick="document.getElementById('tm-subj-input').focus()"></div>
+    <div style="display:flex;gap:6px;margin:6px 0 14px">
+      <input type="text" id="tm-subj-input" placeholder="Type subject + Enter" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid #d1d5db;font-size:13px;outline:none">
+      <button class="btn btn-sm" onclick="addChip('subjects')">Add</button>
+    </div>
+    <label>Classes assigned to</label>
+    <div class="chips-editor" id="tm-classes-chips" onclick="document.getElementById('tm-class-input').focus()"></div>
+    <div style="display:flex;gap:6px;margin:6px 0 14px">
+      <select id="tm-class-input" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid #d1d5db;font-size:13px;outline:none;margin-bottom:0"></select>
+      <button class="btn btn-sm" onclick="addChip('classes')">Add</button>
+    </div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeTeacherModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="tm-delete-btn" onclick="deleteTeacher()" style="display:none"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn btn-primary" onclick="saveTeacher()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

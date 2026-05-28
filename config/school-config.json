@@ -82,7 +82,7 @@
     { "id": "T02", "name": "U. Mayuri",            "subjects": ["English", "Maths", "Hindi", "Drawing", "GK", "Telugu", "Natural Talk", "Health Talk", "Games", "Story Telling", "Activity", "Audio Visual Room"], "classes": ["PP2", "Class 1", "Class 2"],
       "classSubjects": { "Class 1": ["Hindi"], "Class 2": ["Hindi"] } },
     { "id": "T03", "name": "CH.N.B. Lavanya",      "subjects": ["English", "Maths", "Telugu", "EVS", "Drawing", "GK", "Moral Science", "Games", "Activity", "Audio Visual Room"],            "classes": ["Class 1"] },
-    { "id": "T04", "name": "S. Syamala",           "subjects": ["English", "Maths", "EVS", "Telugu", "GK", "Drawing", "Games", "Activity", "Audio Visual Room"],                             "classes": ["Class 2", "Class 3"] },
+    { "id": "T04", "name": "S. Syamala",           "subjects": ["English", "Maths", "EVS", "Telugu", "GK", "Drawing", "Games", "Activity", "Audio Visual Room", "Moral Science"],                             "classes": ["Class 2", "Class 3"] },
     { "id": "T05", "name": "N.G. Bhavani",         "subjects": ["English", "EVS", "Hindi", "GK", "Drawing", "Moral Science", "Sports & Games", "Activity", "Audio Visual Room"],              "classes": ["Class 3", "Class 6", "Class 7"],
       "classSubjects": { "Class 6": ["Hindi"], "Class 7": ["Hindi"] } },
     { "id": "T06", "name": "M. Rama Sanyasamma",   "subjects": ["English", "EVS", "Telugu", "Hindi", "GK", "Moral Science", "Sports & Games", "Activity", "Audio Visual Room"],               "classes": ["Class 4"] },

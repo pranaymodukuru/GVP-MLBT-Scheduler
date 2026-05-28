@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { STORAGE_KEY, DEFAULT_CLASS_CONFIG, DEFAULT_TEACHERS, DEFAULT_TEACHER_AVAILABILITY } from '../config/school-config.js';
+import { STORAGE_KEY, DEFAULT_CLASS_CONFIG, DEFAULT_TEACHERS, DEFAULT_TEACHER_AVAILABILITY, RAW_CONFIG } from '../config/school-config.js';
 
 /** Serialise current state to localStorage */
 export function saveState() {
@@ -110,6 +110,71 @@ export function applySnap(snap) {
   }
   if (snap.CONSTRAINTS)          state.CONSTRAINTS          = snap.CONSTRAINTS;
   if (snap.timetable)            state.timetable            = snap.timetable;
+}
+
+/**
+ * Reconstruct a school-config.json-shaped object from current state.
+ * Static fields (periods, days, colors, etc.) are preserved from RAW_CONFIG;
+ * editable admin fields (teachers, classes, subjects freq, constraints) come
+ * from state.
+ */
+function buildConfigSnapshot() {
+  const out = JSON.parse(JSON.stringify(RAW_CONFIG));
+
+  out.constraints = { ...state.CONSTRAINTS };
+
+  // Rebuild teachers: preserve static per-teacher fields (classSubjects,
+  // availablePeriods, etc.) and write current name/subjects/classes +
+  // period-level unavailability derived from TEACHER_AVAILABILITY.
+  const origById = Object.fromEntries((RAW_CONFIG.teachers || []).map(t => [t.id, t]));
+  out.teachers = state.TEACHERS.map(t => {
+    const orig  = origById[t.id] || {};
+    const avail = state.TEACHER_AVAILABILITY[t.id] || {};
+    const entry = {
+      ...orig,
+      id:       t.id,
+      name:     t.name,
+      subjects: [...t.subjects],
+      classes:  [...t.classes],
+    };
+    const bp = avail.blockedPeriods;
+    if (bp && Object.keys(bp).length) {
+      entry.unavailablePeriods = JSON.parse(JSON.stringify(bp));
+    } else {
+      delete entry.unavailablePeriods;
+    }
+    return entry;
+  });
+
+  // Update freq fields on existing subjects (preserve color/textColor/flags).
+  for (const [name, freq] of Object.entries(state.SUBJECT_FREQ)) {
+    if (out.subjects[name]) out.subjects[name].periodsPerWeek = freq;
+  }
+  for (const [name, min] of Object.entries(state.SUBJECT_MIN_FREQ)) {
+    if (out.subjects[name]) out.subjects[name].minPeriodsPerWeek = min;
+  }
+  for (const [name, daily] of Object.entries(state.SUBJECT_MUST_APPEAR_DAILY)) {
+    if (out.subjects[name]) out.subjects[name].mustAppearDaily = daily;
+  }
+
+  out.classes = JSON.parse(JSON.stringify(state.CLASS_CONFIG));
+
+  return out;
+}
+
+/** POST current state as school-config.json to the dev server. Fire-and-forget. */
+export async function saveConfig() {
+  const snapshot = buildConfigSnapshot();
+  try {
+    const res = await fetch('/save-config', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(snapshot, null, 2),
+    });
+    if (!res.ok) console.warn('Config save failed:', res.status);
+  } catch (_) {
+    // server not running — silently ignore
+  }
 }
 
 function buildSnapshot() {

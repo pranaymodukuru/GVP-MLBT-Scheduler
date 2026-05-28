@@ -70,3 +70,7 @@ export const DEFAULT_CONSTRAINTS = cfg.constraints || {
   maxTeacherPeriodsPerDay: 6,
   peOncePerDay: true,
 };
+
+// Raw config object — used by persistence.js to build a config-file snapshot
+// that preserves static fields (periods, colors, etc.) not tracked in state.
+export const RAW_CONFIG = cfg;

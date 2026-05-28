@@ -9,7 +9,7 @@ import { state } from '../state.js';
 import { DAYS, WORK_PERIODS, PERIODS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES } from '../../config/school-config.js';
 import { parseSection } from '../helpers.js';
 import { refreshSelects } from '../selects.js';
-import { saveState } from '../persistence.js';
+import { saveState, saveConfig } from '../persistence.js';
 import { showToast } from '../toast.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -38,10 +38,12 @@ export function renderTeachersList() {
     return;
   }
   el.innerHTML = state.TEACHERS.map(t => {
-    const avail         = state.TEACHER_AVAILABILITY[t.id] || {};
-    const absent        = avail.blockedDays || [];
-    const periodBlocks  = avail.blockedPeriods || {};
-    const periodCount   = Object.values(periodBlocks).reduce((n, arr) => n + arr.length, 0);
+    const avail        = state.TEACHER_AVAILABILITY[t.id] || {};
+    const absent       = avail.blockedDays || [];
+    const periodBlocks = avail.blockedPeriods || {};
+    const periodTags   = Object.entries(periodBlocks)
+      .map(([day, periods]) => `<span class="tag tag-period">${day}: ${periods.join(', ')}</span>`)
+      .join('');
     return (
       `<div class="admin-row">` +
       `<div class="admin-row-info">` +
@@ -53,8 +55,8 @@ export function renderTeachersList() {
             ? t.classes.map(c => `<span class="tag tag-class">${c}</span>`).join('')
             : `<span class="tag tag-warn">No classes</span>`) +
           (absent.length ? `<span class="tag tag-absent">Absent: ${absent.join(', ')}</span>` : '') +
-          (periodCount  ? `<span class="tag tag-absent">${periodCount} period block${periodCount !== 1 ? 's' : ''}</span>` : '') +
         `</div>` +
+        (periodTags ? `<div class="admin-row-tags" style="margin-top:4px">${periodTags}</div>` : '') +
       `</div>` +
       `<div class="admin-row-actions">` +
         `<button class="btn btn-sm" onclick="openEditTeacher('${t.id}')"><i class="ti ti-edit"></i></button>` +
@@ -94,6 +96,7 @@ export function toggleTeacherDayBlock(tid, day, isBlocked) {
   if (isBlocked && idx === -1) arr.push(day);
   else if (!isBlocked && idx > -1) arr.splice(idx, 1);
   saveState();
+  saveConfig();
   renderTeachersList();
   // Refresh the period panel so disabled states update for the now-absent day
   const puTid = document.getElementById('period-unavail-panel')
@@ -181,6 +184,7 @@ export function toggleTeacherPeriodBlock(tid, day, period, isBlocked) {
   if (!arr.length) delete dayArr[day];
   if (!Object.keys(dayArr).length) delete state.TEACHER_AVAILABILITY[tid].blockedPeriods;
   saveState();
+  saveConfig();
   renderTeachersList();
   showToast(
     isBlocked ? `🚫 ${tid} unavailable ${day} ${period}` : `✅ ${tid} available ${day} ${period}`,
@@ -261,6 +265,7 @@ export function setSectionCount(base, val) {
   renderClassConfigGrid();
   refreshSelects();
   saveState();
+  saveConfig();
 }
 
 export function setSectionTeacher(base, label, tid) {
@@ -268,6 +273,7 @@ export function setSectionTeacher(base, label, tid) {
   state.CLASS_CONFIG[base].sectionTeachers[label] = tid;
   renderClassConfigGrid();
   saveState();
+  saveConfig();
 }
 
 export function addSubject(base) {
@@ -280,6 +286,7 @@ export function addSubject(base) {
   renderClassConfigGrid();
   renderFreqGrid();
   saveState();
+  saveConfig();
 }
 
 export function removeSubject(base, subj) {
@@ -287,6 +294,7 @@ export function removeSubject(base, subj) {
   renderClassConfigGrid();
   renderFreqGrid();
   saveState();
+  saveConfig();
 }
 
 export function deleteClass(base) {
@@ -296,6 +304,7 @@ export function deleteClass(base) {
   renderFreqGrid();
   refreshSelects();
   saveState();
+  saveConfig();
 }
 
 export function openAddClass() {
@@ -307,6 +316,7 @@ export function openAddClass() {
   renderClassConfigGrid();
   refreshSelects();
   saveState();
+  saveConfig();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -339,7 +349,7 @@ export function renderFreqGrid() {
         ` onchange="setSubjectMinFreq('${s}',parseInt(this.value)||0)">` +
       `<input type="number" min="1" max="12" value="${state.SUBJECT_FREQ[s] || 2}"` +
         ` title="Target periods/week"` +
-        ` onchange="state.SUBJECT_FREQ['${s}']=parseInt(this.value)||2;saveState()">` +
+        ` onchange="setSubjectFreq('${s}',parseInt(this.value)||2)">` +
       `<div class="freq-daily-cell">` +
         `<input type="checkbox" ${state.SUBJECT_MUST_APPEAR_DAILY[s] ? 'checked' : ''}` +
           ` title="Must appear every day"` +
@@ -349,14 +359,22 @@ export function renderFreqGrid() {
     ).join('');
 }
 
+export function setSubjectFreq(subj, val) {
+  state.SUBJECT_FREQ[subj] = Math.max(1, val);
+  saveState();
+  saveConfig();
+}
+
 export function setSubjectMinFreq(subj, val) {
   state.SUBJECT_MIN_FREQ[subj] = Math.max(0, val);
   saveState();
+  saveConfig();
 }
 
 export function setSubjectMustAppearDaily(subj, val) {
   state.SUBJECT_MUST_APPEAR_DAILY[subj] = val;
   saveState();
+  saveConfig();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -426,5 +444,6 @@ export function setConstraint(key, value) {
   state.CONSTRAINTS[key] = value;
   renderConstraintsPanel();
   saveState();
+  saveConfig();
   showToast(`Constraint updated`);
 }

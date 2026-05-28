@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { saveState } from '../persistence.js';
+import { saveState, saveConfig } from '../persistence.js';
 import { showToast } from '../toast.js';
 import { refreshSelects } from '../selects.js';
 import { renderTeachersList } from '../views/admin-view.js';
@@ -113,6 +113,7 @@ export function saveTeacher() {
   renderTeachersList();
   refreshSelects();
   saveState();
+  saveConfig();
 }
 
 export function deleteTeacher() {
@@ -123,6 +124,7 @@ export function deleteTeacher() {
   renderTeachersList();
   refreshSelects();
   saveState();
+  saveConfig();
 }
 
 export function closeTeacherModal() {

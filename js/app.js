@@ -10,7 +10,7 @@ import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_S
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
 import { refreshSelects } from './selects.js';
-import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchSavedList } from './persistence.js';
+import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchSavedList, saveConfig } from './persistence.js';
 import { generateTimetable, checkConflicts } from './scheduler.js';
 import { renderClassView } from './views/class-view.js';
 import { renderTeacherView } from './views/teacher-view.js';
@@ -33,6 +33,7 @@ import {
   toggleTeacherDayBlock,
   toggleTeacherPeriodBlock,
   setConstraint,
+  setSubjectFreq,
   setSubjectMinFreq,
   setSubjectMustAppearDaily,
 } from './views/admin-view.js';
@@ -412,6 +413,7 @@ window.toggleTeacherDayBlock    = toggleTeacherDayBlock;
 window.toggleTeacherPeriodBlock = toggleTeacherPeriodBlock;
 window.renderPeriodUnavailabilityPanel = renderPeriodUnavailabilityPanel;
 window.setConstraint        = setConstraint;
+window.setSubjectFreq             = setSubjectFreq;
 window.setSubjectMinFreq          = setSubjectMinFreq;
 window.setSubjectMustAppearDaily  = setSubjectMustAppearDaily;
 
@@ -420,6 +422,7 @@ window.renderClassView   = renderClassView;
 window.renderTeacherView = renderTeacherView;
 window.renderSubjectView = renderSubjectView;
 
-// Expose state + saveState for the freq-grid inline onchange handler
+// Expose state + saveState for any remaining inline handlers
 window.state            = state;
 window.saveState        = saveState;
+window.saveConfig       = saveConfig;

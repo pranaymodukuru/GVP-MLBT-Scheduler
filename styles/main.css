@@ -131,10 +131,12 @@ td:last-child,th:last-child{border-right:none}
 .tag-class{background:#d1fae5;color:#065f46}
 .tag-warn{background:#fef3c7;color:#92400e}
 .tag-absent{background:#fee2e2;color:#991b1b}
+.tag-period{background:#fff7ed;color:#c2410c}
 [data-theme="dark"] .tag-subj{background:#1e3a6e;color:#93c5fd}
 [data-theme="dark"] .tag-class{background:#0a2e1a;color:#4ade80}
 [data-theme="dark"] .tag-warn{background:#3d2a0a;color:#fbbf24}
 [data-theme="dark"] .tag-absent{background:#3d0f0f;color:#f87171}
+[data-theme="dark"] .tag-period{background:#3d1a08;color:#fb923c}
 .admin-row-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
 /* Class config */
 .class-config-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;padding:1rem}

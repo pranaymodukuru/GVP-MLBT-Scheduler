@@ -133,7 +133,10 @@
   "subjects": {
     "Activity": {
       "color": "#fef3c7",
-      "textColor": "#92400e"
+      "textColor": "#92400e",
+      "periodsPerWeek": 2,
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "English": {
       "color": "#dbeafe",
@@ -167,104 +170,121 @@
       "color": "#d1fae5",
       "textColor": "#065f46",
       "periodsPerWeek": 5,
-      "minPeriodsPerWeek": 3
+      "minPeriodsPerWeek": 3,
+      "mustAppearDaily": false
     },
     "EVS - Science": {
       "color": "#e0f2fe",
       "textColor": "#0369a1",
       "periodsPerWeek": 3,
-      "minPeriodsPerWeek": 2
+      "minPeriodsPerWeek": 2,
+      "mustAppearDaily": false
     },
     "EVS - Social": {
       "color": "#f1f5f9",
       "textColor": "#334155",
       "periodsPerWeek": 3,
-      "minPeriodsPerWeek": 2
+      "minPeriodsPerWeek": 2,
+      "mustAppearDaily": false
     },
     "Gen. Science": {
       "color": "#e0f2fe",
       "textColor": "#0369a1",
       "periodsPerWeek": 5,
-      "minPeriodsPerWeek": 3
+      "minPeriodsPerWeek": 3,
+      "mustAppearDaily": false
     },
     "Physical Science": {
       "color": "#ede9fe",
       "textColor": "#4c1d95",
       "periodsPerWeek": 5,
-      "minPeriodsPerWeek": 3
+      "minPeriodsPerWeek": 3,
+      "mustAppearDaily": false
     },
     "Biology": {
       "color": "#fae8ff",
       "textColor": "#701a75",
       "periodsPerWeek": 5,
-      "minPeriodsPerWeek": 3
+      "minPeriodsPerWeek": 3,
+      "mustAppearDaily": false
     },
     "Social": {
       "color": "#f1f5f9",
       "textColor": "#334155",
       "periodsPerWeek": 5,
-      "minPeriodsPerWeek": 3
+      "minPeriodsPerWeek": 3,
+      "mustAppearDaily": false
     },
     "GK": {
       "color": "#ffedd5",
       "textColor": "#9a3412",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Drawing": {
       "color": "#fff7ed",
       "textColor": "#9a3412",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "AI": {
       "color": "#cffafe",
       "textColor": "#164e63",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Moral Science": {
       "color": "#fee2e2",
       "textColor": "#991b1b",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Value Education": {
       "color": "#fce7f3",
       "textColor": "#831843",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Physical Education": {
       "color": "#dcfce7",
       "textColor": "#14532d",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Games": {
       "color": "#bbf7d0",
       "textColor": "#14532d",
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
-      "sharedRoom": true
+      "sharedRoom": true,
+      "mustAppearDaily": false
     },
     "Natural Talk": {
       "color": "#fef9c3",
       "textColor": "#713f12",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Health Talk": {
       "color": "#fce7f3",
       "textColor": "#9d174d",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Story Telling": {
       "color": "#f3e8ff",
       "textColor": "#6b21a8",
       "periodsPerWeek": 2,
-      "minPeriodsPerWeek": 1
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     },
     "Audio Visual Room": {
       "color": "#e0e7ff",
@@ -272,7 +292,8 @@
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
       "anyClassTeacher": true,
-      "sharedRoom": true
+      "sharedRoom": true,
+      "mustAppearDaily": false
     },
     "Library": {
       "color": "#fef9c3",
@@ -280,7 +301,8 @@
       "periodsPerWeek": 1,
       "minPeriodsPerWeek": 1,
       "anyFreeTeacher": true,
-      "sharedRoom": true
+      "sharedRoom": true,
+      "mustAppearDaily": false
     },
     "Computers/AI": {
       "color": "#dbeafe",
@@ -288,25 +310,31 @@
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
       "anyFreeTeacher": true,
-      "sharedRoom": true
+      "sharedRoom": true,
+      "mustAppearDaily": false
     },
     "Newspaper Reading": {
       "color": "#f0fdf4",
       "textColor": "#065f46",
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
-      "anyFreeTeacher": true
+      "anyFreeTeacher": true,
+      "mustAppearDaily": false
     },
     "Sports & Games": {
       "color": "#ffe4e6",
       "textColor": "#9f1239",
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
-      "sharedRoom": true
+      "sharedRoom": true,
+      "mustAppearDaily": false
     },
     "Free Period": {
       "color": "#f8fafc",
-      "textColor": "#334155"
+      "textColor": "#334155",
+      "periodsPerWeek": 2,
+      "minPeriodsPerWeek": 1,
+      "mustAppearDaily": false
     }
   },
   "teachers": [
@@ -336,7 +364,6 @@
       "name": "U. Mayuri",
       "subjects": [
         "English",
-        "Computers/AI",
         "Maths",
         "Hindi",
         "Drawing",
@@ -347,7 +374,8 @@
         "Games",
         "Story Telling",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "Computers/AI"
       ],
       "classes": [
         "PP2",
@@ -491,8 +519,9 @@
       "name": "D. Rajani",
       "subjects": [
         "Maths",
-        "Computers/AI",
+        "Computers",
         "English",
+        "Computers/AI",
         "Activity",
         "Audio Visual Room"
       ],
@@ -595,13 +624,43 @@
         ]
       },
       "unavailablePeriods": {
-      "Mon": ["P1", "P2", "P3", "P4"],
-      "Tue": ["P1", "P2", "P3", "P4"],
-      "Wed": ["P1", "P2", "P3", "P4"],
-      "Thu": ["P1", "P2", "P3", "P4"],
-      "Fri": ["P1", "P2", "P3", "P4"],
-      "Sat": ["P1", "P2", "P3", "P4"]
-    }
+        "Mon": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "Tue": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "Wed": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "Thu": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "Fri": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "Sat": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ]
+      }
     },
     {
       "id": "T15",
@@ -634,6 +693,7 @@
       "id": "T17",
       "name": "A. Ramani",
       "subjects": [
+        "Computers",
         "Computers/AI",
         "Activity",
         "Audio Visual Room"
@@ -703,31 +763,13 @@
       "sections": 1,
       "subjects": [
         "English",
-        "Activity",
         "Maths",
         "Drawing",
         "Natural Talk",
         "Health Talk",
         "Story Telling",
         "Games",
-        "Audio Visual Room",
-        "Free Period"
-      ],
-      "sectionTeachers": {
-        "A": "T02"
-      }
-    },
-    "PP1": {
-      "sections": 1,
-      "subjects": [
-        "English",
         "Activity",
-        "Maths",
-        "Drawing",
-        "Natural Talk",
-        "Health Talk",
-        "Story Telling",
-        "Games",
         "Audio Visual Room",
         "Free Period"
       ],
@@ -735,11 +777,28 @@
         "A": "T01"
       }
     },
+    "PP1": {
+      "sections": 1,
+      "subjects": [
+        "English",
+        "Maths",
+        "Drawing",
+        "Natural Talk",
+        "Health Talk",
+        "Story Telling",
+        "Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T02"
+      }
+    },
     "Class 1": {
       "sections": 1,
       "subjects": [
         "English",
-        "Activity",
         "Maths",
         "Hindi",
         "Telugu",
@@ -748,6 +807,7 @@
         "Moral Science",
         "Drawing",
         "Games",
+        "Activity",
         "Audio Visual Room",
         "Free Period"
       ],
@@ -759,15 +819,15 @@
       "sections": 1,
       "subjects": [
         "English",
-        "Activity",
         "Maths",
-        "Hindi",
         "Telugu",
+        "Hindi",
         "EVS",
-        "GK",
         "Moral Science",
+        "GK",
         "Drawing",
         "Games",
+        "Activity",
         "Audio Visual Room",
         "Free Period"
       ],
@@ -780,20 +840,22 @@
       "subjects": [
         "Telugu",
         "Hindi",
-        "Activity",
         "English",
         "EVS",
         "Maths",
         "Drawing",
         "GK",
-        "Computers/AI",
+        "Computers",
         "Moral Science",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Activity",
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T05"
@@ -804,20 +866,22 @@
       "subjects": [
         "Telugu",
         "Hindi",
-        "Activity",
         "English",
         "EVS",
         "Maths",
         "Drawing",
         "GK",
-        "Computers/AI",
+        "Computers",
         "Moral Science",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Activity",
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T06"
@@ -828,21 +892,23 @@
       "subjects": [
         "Telugu",
         "Hindi",
-        "Activity",
         "English",
         "EVS - Social",
         "EVS - Science",
         "Maths",
         "Drawing",
         "GK",
-        "Computers/AI",
+        "Computers",
         "Physical Education",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Activity",
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T08"
@@ -853,21 +919,23 @@
       "subjects": [
         "Telugu",
         "Hindi",
-        "Activity",
         "English",
         "Gen. Science",
         "Social",
         "Maths",
         "GK",
-        "Computers/AI",
+        "Computers",
         "Value Education",
         "Physical Education",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Activity",
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T09"
@@ -878,21 +946,23 @@
       "subjects": [
         "Telugu",
         "Hindi",
-        "Activity",
         "English",
         "Gen. Science",
         "Social",
         "Maths",
         "GK",
-        "Computers/AI",
+        "Computers",
         "Value Education",
         "Physical Education",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Activity",
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T10"
@@ -909,15 +979,17 @@
         "Social",
         "Maths",
         "GK",
-        "Computers/AI",
+        "Computers",
         "Value Education",
         "Physical Education",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T11"
@@ -933,15 +1005,17 @@
         "Biology",
         "Social",
         "Maths",
-        "Computers/AI",
+        "Computers",
         "Value Education",
         "Physical Education",
-        "Audio Visual Room",
+        "Audio Video",
         "Library",
         "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
-        "Free Period"
+        "Audio Visual Room",
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T12"

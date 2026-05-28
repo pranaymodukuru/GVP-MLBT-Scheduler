@@ -13,7 +13,8 @@ import os
 import sys
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
-SAVE_DIR = os.path.join(os.path.dirname(__file__), "saved_schedules")
+SAVE_DIR   = os.path.join(os.path.dirname(__file__), "saved_schedules")
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "school-config.json")
 
 
 def latest_schedule():
@@ -63,6 +64,24 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self):
+        if self.path == "/save-config":
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body)
+            except json.JSONDecodeError:
+                self.send_error(400, "Invalid JSON")
+                return
+            with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+                f.write("\n")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps({"saved": "school-config.json"}).encode())
+            return
+
         if self.path != "/save":
             self.send_error(404)
             return
@@ -97,6 +116,7 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Filename")
         self.end_headers()
+        return
 
     def log_message(self, fmt, *args):
         if self.command == "POST":

@@ -47,11 +47,14 @@ export function isUpper(secId) {
 
 /** True if the teacher is available on the given day (and period, if supplied) */
 export function isTeacherAvailable(tid, day, period = null) {
+  const avail = state.TEACHER_AVAILABILITY[tid] || {};
+  if ((avail.blockedDays || []).includes(day)) return false;
   if (period !== null) {
     const t = state.TEACHERS.find(x => x.id === tid);
     if (t?.availablePeriods && !t.availablePeriods.includes(period)) return false;
+    if ((avail.blockedPeriods?.[day] || []).includes(period)) return false;
   }
-  return !((state.TEACHER_AVAILABILITY[tid]?.blockedDays || []).includes(day));
+  return true;
 }
 
 /**

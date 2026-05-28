@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { STORAGE_KEY, DEFAULT_CLASS_CONFIG, DEFAULT_TEACHERS } from '../config/school-config.js';
+import { STORAGE_KEY, DEFAULT_CLASS_CONFIG, DEFAULT_TEACHERS, DEFAULT_TEACHER_AVAILABILITY } from '../config/school-config.js';
 
 /** Serialise current state to localStorage */
 export function saveState() {
@@ -99,7 +99,15 @@ export function applySnap(snap) {
   if (snap.SUBJECT_FREQ)         state.SUBJECT_FREQ         = snap.SUBJECT_FREQ;
   if (snap.SUBJECT_MIN_FREQ)          state.SUBJECT_MIN_FREQ          = snap.SUBJECT_MIN_FREQ;
   if (snap.SUBJECT_MUST_APPEAR_DAILY) state.SUBJECT_MUST_APPEAR_DAILY = snap.SUBJECT_MUST_APPEAR_DAILY;
-  if (snap.TEACHER_AVAILABILITY) state.TEACHER_AVAILABILITY = snap.TEACHER_AVAILABILITY;
+  if (snap.TEACHER_AVAILABILITY) {
+    state.TEACHER_AVAILABILITY = snap.TEACHER_AVAILABILITY;
+    // Seed config-level defaults for teachers that have none saved yet
+    for (const [tid, defaults] of Object.entries(DEFAULT_TEACHER_AVAILABILITY)) {
+      if (!state.TEACHER_AVAILABILITY[tid]) {
+        state.TEACHER_AVAILABILITY[tid] = JSON.parse(JSON.stringify(defaults));
+      }
+    }
+  }
   if (snap.CONSTRAINTS)          state.CONSTRAINTS          = snap.CONSTRAINTS;
   if (snap.timetable)            state.timetable            = snap.timetable;
 }

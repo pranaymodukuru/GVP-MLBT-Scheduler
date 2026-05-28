@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { DAYS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES } from '../../config/school-config.js';
+import { DAYS, WORK_PERIODS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES } from '../../config/school-config.js';
 import { parseSection } from '../helpers.js';
 import { refreshSelects } from '../selects.js';
 import { saveState } from '../persistence.js';
@@ -21,6 +21,9 @@ export function renderAdminView() {
   renderClassConfigGrid();
   renderFreqGrid();
   renderAttendanceTable();
+  const prevTid = document.getElementById('period-unavail-panel')
+    ?.querySelector('.pu-teacher-select')?.value || '';
+  renderPeriodUnavailabilityPanel(prevTid);
   renderConstraintsPanel();
 }
 
@@ -35,7 +38,10 @@ export function renderTeachersList() {
     return;
   }
   el.innerHTML = state.TEACHERS.map(t => {
-    const absent = state.TEACHER_AVAILABILITY[t.id]?.blockedDays || [];
+    const avail         = state.TEACHER_AVAILABILITY[t.id] || {};
+    const absent        = avail.blockedDays || [];
+    const periodBlocks  = avail.blockedPeriods || {};
+    const periodCount   = Object.values(periodBlocks).reduce((n, arr) => n + arr.length, 0);
     return (
       `<div class="admin-row">` +
       `<div class="admin-row-info">` +
@@ -47,6 +53,7 @@ export function renderTeachersList() {
             ? t.classes.map(c => `<span class="tag tag-class">${c}</span>`).join('')
             : `<span class="tag tag-warn">No classes</span>`) +
           (absent.length ? `<span class="tag tag-absent">Absent: ${absent.join(', ')}</span>` : '') +
+          (periodCount  ? `<span class="tag tag-absent">${periodCount} period block${periodCount !== 1 ? 's' : ''}</span>` : '') +
         `</div>` +
       `</div>` +
       `<div class="admin-row-actions">` +
@@ -88,8 +95,94 @@ export function toggleTeacherDayBlock(tid, day, isBlocked) {
   else if (!isBlocked && idx > -1) arr.splice(idx, 1);
   saveState();
   renderTeachersList();
+  // Refresh the period panel so disabled states update for the now-absent day
+  const puTid = document.getElementById('period-unavail-panel')
+    ?.querySelector('.pu-teacher-select')?.value || '';
+  if (puTid === tid) renderPeriodUnavailabilityPanel(tid);
   showToast(
     isBlocked ? `🚫 ${tid} absent on ${day}` : `✅ ${tid} available on ${day}`,
+    isBlocked ? 'error' : 'success'
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PERIOD UNAVAILABILITY PANEL
+// ─────────────────────────────────────────────────────────────────────────────
+
+export function renderPeriodUnavailabilityPanel(tid = '') {
+  const panel = document.getElementById('period-unavail-panel');
+  if (!panel) return;
+
+  const teacherSelect =
+    `<select class="pu-teacher-select" onchange="renderPeriodUnavailabilityPanel(this.value)">` +
+    `<option value="">— Select a teacher —</option>` +
+    state.TEACHERS.map(t =>
+      `<option value="${t.id}" ${t.id === tid ? 'selected' : ''}>${t.name} (${t.id})</option>`
+    ).join('') +
+    `</select>`;
+
+  if (!tid) {
+    panel.innerHTML =
+      `<div class="pu-header">${teacherSelect}</div>` +
+      `<div class="pu-empty">Select a teacher above to manage their period-level unavailability.</div>`;
+    return;
+  }
+
+  const avail         = state.TEACHER_AVAILABILITY[tid] || {};
+  const blockedDays   = avail.blockedDays   || [];
+  const blockedPeriods = avail.blockedPeriods || {};
+
+  const grid =
+    `<div style="overflow-x:auto;margin-top:14px">` +
+    `<table class="pu-table">` +
+    `<thead><tr>` +
+      `<th>Day</th>` +
+      WORK_PERIODS.map(p => `<th>${p}</th>`).join('') +
+    `</tr></thead>` +
+    `<tbody>` +
+    DAYS.map(d => {
+      const fullBlocked = blockedDays.includes(d);
+      return (
+        `<tr class="${fullBlocked ? 'pu-row-blocked' : ''}">` +
+        `<td class="pu-day-cell">` +
+          `<span>${d}</span>` +
+          (fullBlocked ? `<span class="pu-day-badge">absent</span>` : '') +
+        `</td>` +
+        WORK_PERIODS.map(p => {
+          const isBlocked = fullBlocked || (blockedPeriods[d] || []).includes(p);
+          return (
+            `<td>` +
+            `<input type="checkbox" class="att-cb" ` +
+              `${isBlocked ? 'checked' : ''} ` +
+              `${fullBlocked ? `disabled title="Teacher is fully absent on ${d}"` : ''} ` +
+              `onchange="toggleTeacherPeriodBlock('${tid}','${d}','${p}',this.checked)">` +
+            `</td>`
+          );
+        }).join('') +
+        `</tr>`
+      );
+    }).join('') +
+    `</tbody></table></div>`;
+
+  panel.innerHTML = `<div class="pu-header">${teacherSelect}</div>` + grid;
+}
+
+export function toggleTeacherPeriodBlock(tid, day, period, isBlocked) {
+  if (!state.TEACHER_AVAILABILITY[tid])              state.TEACHER_AVAILABILITY[tid]              = {};
+  if (!state.TEACHER_AVAILABILITY[tid].blockedPeriods) state.TEACHER_AVAILABILITY[tid].blockedPeriods = {};
+  const dayArr = state.TEACHER_AVAILABILITY[tid].blockedPeriods;
+  if (!dayArr[day]) dayArr[day] = [];
+  const arr = dayArr[day];
+  const idx = arr.indexOf(period);
+  if (isBlocked && idx === -1) arr.push(period);
+  else if (!isBlocked && idx > -1) arr.splice(idx, 1);
+  // Prune empty structures
+  if (!arr.length) delete dayArr[day];
+  if (!Object.keys(dayArr).length) delete state.TEACHER_AVAILABILITY[tid].blockedPeriods;
+  saveState();
+  renderTeachersList();
+  showToast(
+    isBlocked ? `🚫 ${tid} unavailable ${day} ${period}` : `✅ ${tid} available ${day} ${period}`,
     isBlocked ? 'error' : 'success'
   );
 }

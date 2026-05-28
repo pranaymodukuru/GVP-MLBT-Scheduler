@@ -23,6 +23,7 @@ import {
   renderFreqGrid,
   renderAttendanceTable,
   renderConstraintsPanel,
+  renderPeriodUnavailabilityPanel,
   setSectionCount,
   setSectionTeacher,
   addSubject,
@@ -30,6 +31,7 @@ import {
   deleteClass,
   openAddClass,
   toggleTeacherDayBlock,
+  toggleTeacherPeriodBlock,
   setConstraint,
   setSubjectMinFreq,
   setSubjectMustAppearDaily,
@@ -406,7 +408,9 @@ window.addSubject       = addSubject;
 window.removeSubject    = removeSubject;
 window.deleteClass      = deleteClass;
 window.openAddClass     = openAddClass;
-window.toggleTeacherDayBlock = toggleTeacherDayBlock;
+window.toggleTeacherDayBlock    = toggleTeacherDayBlock;
+window.toggleTeacherPeriodBlock = toggleTeacherPeriodBlock;
+window.renderPeriodUnavailabilityPanel = renderPeriodUnavailabilityPanel;
 window.setConstraint        = setConstraint;
 window.setSubjectMinFreq          = setSubjectMinFreq;
 window.setSubjectMustAppearDaily  = setSubjectMustAppearDaily;

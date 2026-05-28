@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { getSubjects } from '../helpers.js';
+import { getSubjects, isTeacherAvailable } from '../helpers.js';
 import { saveState } from '../persistence.js';
 import { checkConflicts } from '../scheduler.js';
 import { showToast } from '../toast.js';
@@ -38,12 +38,36 @@ export function openEdit(secId, day, period) {
 }
 
 export function fillTeacherDropdown(subject, selTid) {
-  document.getElementById('modal-teacher').innerHTML =
-    `<option value="">-- Unassigned --</option>` +
-    state.TEACHERS
-      .filter(t => t.subjects.includes(subject))
-      .map(t => `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${t.name}</option>`)
-      .join('');
+  const { day, period } = state.modalState;
+  const teachers = state.TEACHERS.filter(t => t.subjects.includes(subject));
+
+  let html = `<option value="">-- Unassigned --</option>`;
+
+  if (day && period) {
+    const available   = teachers.filter(t =>  isTeacherAvailable(t.id, day, period));
+    const unavailable = teachers.filter(t => !isTeacherAvailable(t.id, day, period));
+    html += available.map(t =>
+      `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${t.name}</option>`
+    ).join('');
+    if (unavailable.length) {
+      html +=
+        `<optgroup label="─── Unavailable this slot ───">` +
+        unavailable.map(t =>
+          `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>⚠ ${t.name}</option>`
+        ).join('') +
+        `</optgroup>`;
+    }
+  } else {
+    html += teachers.map(t =>
+      `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${t.name}</option>`
+    ).join('');
+  }
+
+  const sel = document.getElementById('modal-teacher');
+  sel.innerHTML = html;
+  // Tint the select red when the selected teacher is in the unavailable group
+  const selectedText = sel.options[sel.selectedIndex]?.text || '';
+  sel.style.color = selectedText.startsWith('⚠') ? '#dc2626' : '';
 }
 
 export function closeModal() {

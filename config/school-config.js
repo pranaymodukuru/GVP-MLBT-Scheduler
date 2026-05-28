@@ -56,6 +56,15 @@ export const SUBJECTS_CONFIG = cfg.subjects;
 export const DEFAULT_TEACHERS     = cfg.teachers;
 export const DEFAULT_CLASS_CONFIG = cfg.classes;
 
+// Build default TEACHER_AVAILABILITY from any teacher that declares
+// "unavailablePeriods": { "Mon": ["P3"], "Fri": ["P7","P8"] } in the config.
+// Structure: { tid: { blockedDays: [], blockedPeriods: { Day: [PeriodId] } } }
+export const DEFAULT_TEACHER_AVAILABILITY = Object.fromEntries(
+  cfg.teachers
+    .filter(t => t.unavailablePeriods && Object.keys(t.unavailablePeriods).length)
+    .map(t => [t.id, { blockedDays: [], blockedPeriods: JSON.parse(JSON.stringify(t.unavailablePeriods)) }])
+);
+
 export const DEFAULT_CONSTRAINTS = cfg.constraints || {
   maxSubjectPeriodsPerDay: 2,
   maxTeacherPeriodsPerDay: 6,

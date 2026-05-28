@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES } from '../config/school-config.js';
+import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES, COMBINED_SECTIONS, COMBINED_AFTER_LUNCH_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
 
 /** Returns all section IDs in CLASS_CONFIG order, expanding multi-section classes */
 export function allSectionIds() {
@@ -69,6 +69,44 @@ export function getEffectiveSubjects(teacher, base) {
 export function isActivePeriod(secId, periodId) {
   if (periodId === 'P8' && NO_P8_CLASSES.includes(parseSection(secId).base)) return false;
   return true;
+}
+
+/**
+ * Returns other section IDs that are ACTUALLY combined with secId at the given
+ * day + period — i.e. the timetable has the same teacher+subject there AND the
+ * pairing is an intentional combined group (not a scheduling conflict).
+ */
+export function getCombinedSections(secId, day, periodId) {
+  const cell = (state.timetable[secId] || {})[day]?.[periodId];
+  if (!cell?.teacherId || !cell?.subject) return [];
+
+  const { teacherId, subject } = cell;
+  const { base: myBase } = parseSection(secId);
+  const isAfterLunch = AFTER_LUNCH_PERIODS.includes(periodId);
+  const fixedGroup   = COMBINED_SECTIONS.find(
+    cs => cs.period === periodId && cs.sections.includes(secId)
+  );
+
+  return allSectionIds().filter(s => {
+    if (s === secId) return false;
+    const c = (state.timetable[s] || {})[day]?.[periodId];
+    if (c?.teacherId !== teacherId || c?.subject !== subject) return false;
+
+    const { base: otherBase } = parseSection(s);
+
+    if (fixedGroup) return fixedGroup.sections.includes(s);
+
+    if (isAfterLunch) {
+      return COMBINED_AFTER_LUNCH_GROUPS.some(g => g.includes(myBase) && g.includes(otherBase));
+    }
+
+    return false;
+  });
+}
+
+/** Compact section label — strips "Class " prefix and converts " - " to "-" */
+export function shortSec(secId) {
+  return secId.replace(/^Class /, '').replace(' - ', '-');
 }
 
 /** Fisher–Yates shuffle — returns a new shuffled array */

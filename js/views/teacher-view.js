@@ -4,7 +4,7 @@
 
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
-import { allSectionIds, isTeacherAvailable, isActivePeriod } from '../helpers.js';
+import { allSectionIds, isTeacherAvailable, isActivePeriod, shortSec } from '../helpers.js';
 import { getSelectorValue } from '../selects.js';
 
 export function renderTeacherView() {
@@ -33,33 +33,46 @@ export function renderTeacherView() {
     tbody += `<tr><td>${per.label}<div class="period-label">${per.time}</div></td>`;
 
     DAYS.forEach(day => {
-      let found = null;
+      // Collect all sections where this teacher is assigned this slot.
+      // When multiple sections match, only treat them as combined (not conflict)
+      // if they share the same subject — conflicts are flagged via conflictSet.
+      const allMatches = [];
       secs.forEach(s => {
         if (!isActivePeriod(s, per.id)) return;
         const c = (state.timetable[s] || {})[day]?.[per.id];
-        if (c?.teacherId === tid) found = { cls: s, subject: c.subject, locked: c.locked };
+        if (c?.teacherId === tid) allMatches.push({ cls: s, subject: c.subject, locked: c.locked });
       });
+      // For display, group by subject so combined classes (same subject) stay together;
+      // if there's a conflict (different subjects), show only the primary occurrence.
+      const primarySubject = allMatches[0]?.subject;
+      const matches = allMatches.length > 1
+        ? allMatches.filter(f => f.subject === primarySubject)
+        : allMatches;
 
-      if (found) {
+      if (matches.length > 0) {
         filled++;
-        cc[found.cls]     = (cc[found.cls]     || 0) + 1;
-        sc[found.subject] = (sc[found.subject] || 0) + 1;
-        if (!csc[found.cls]) csc[found.cls] = {};
-        csc[found.cls][found.subject] = (csc[found.cls][found.subject] || 0) + 1;
+        matches.forEach(f => {
+          cc[f.cls]     = (cc[f.cls]     || 0) + 1;
+          sc[f.subject] = (sc[f.subject] || 0) + 1;
+          if (!csc[f.cls]) csc[f.cls] = {};
+          csc[f.cls][f.subject] = (csc[f.cls][f.subject] || 0) + 1;
+        });
 
-        const bg         = SUBJECT_COLORS[found.subject] || '#f5f5f5';
-        const tc         = SUBJECT_TEXT[found.subject]   || '#333';
-        const isConflict = state.conflictSet.has(`${found.cls}|${day}|${per.id}`);
-        const lockIcon   = found.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
+        const primary    = matches[0];
+        const bg         = SUBJECT_COLORS[primary.subject] || '#f5f5f5';
+        const tc         = SUBJECT_TEXT[primary.subject]   || '#333';
+        const isConflict = matches.some(f => state.conflictSet.has(`${f.cls}|${day}|${per.id}`));
+        const lockIcon   = primary.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
+        const clsLabel   = matches.map(f => shortSec(f.cls)).join(' + ');
 
         tbody +=
-          `<td><div class="cell${found.locked ? ' cell-locked' : ''}${isConflict ? ' cell-conflict' : ''}"` +
+          `<td><div class="cell${primary.locked ? ' cell-locked' : ''}${isConflict ? ' cell-conflict' : ''}"` +
           ` style="background:${bg};color:${tc}"` +
-          ` onclick="openEdit('${found.cls}','${day}','${per.id}')"` +
-          ` oncontextmenu="toggleCellLock('${found.cls}','${day}','${per.id}',event)">` +
+          ` onclick="openEdit('${primary.cls}','${day}','${per.id}')"` +
+          ` oncontextmenu="toggleCellLock('${primary.cls}','${day}','${per.id}',event)">` +
           (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
-          `<span class="cell-subj">${found.subject}</span>` +
-          `<span class="cell-teacher">${found.cls}</span>` +
+          `<span class="cell-subj">${primary.subject}</span>` +
+          `<span class="cell-teacher">${clsLabel}</span>` +
           `</div></td>`;
       } else {
         const absent = !isTeacherAvailable(tid, day);

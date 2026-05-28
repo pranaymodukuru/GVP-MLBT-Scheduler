@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { getSubjects, isTeacherAvailable } from '../helpers.js';
+import { getSubjects, isTeacherAvailable, getCombinedSections, shortSec } from '../helpers.js';
 import { saveState } from '../persistence.js';
 import { checkConflicts } from '../scheduler.js';
 import { showToast } from '../toast.js';
@@ -23,6 +23,15 @@ export function openEdit(secId, day, period) {
   const cell = (state.timetable[secId] || {})[day]?.[period];
 
   document.getElementById('modal-title').textContent = `Edit: ${secId} · ${day} · ${period}`;
+
+  const combined = getCombinedSections(secId, day, period);
+  const noteEl   = document.getElementById('modal-combined-note');
+  if (noteEl) {
+    noteEl.textContent = combined.length
+      ? `Combined class: ${[secId, ...combined].map(shortSec).join(' + ')}`
+      : '';
+    noteEl.style.display = combined.length ? '' : 'none';
+  }
 
   const subjects = getSubjects(secId);
   const subjSel  = document.getElementById('modal-subject');

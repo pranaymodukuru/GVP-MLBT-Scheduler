@@ -211,14 +211,15 @@ td:last-child,th:last-child{border-right:none}
 .pu-empty{color:var(--text-muted);font-size:13px;padding:14px 0}
 .pu-table{border-collapse:collapse;font-size:12px}
 .pu-table th{padding:6px 10px;background:var(--surface-subtle);border-bottom:1px solid var(--border);border-right:1px solid var(--border);font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;text-align:center;white-space:nowrap}
-.pu-table th:first-child{text-align:left;min-width:80px}
+.pu-table th:first-child{text-align:left;min-width:110px}
 .pu-table td{padding:6px 10px;border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);text-align:center;vertical-align:middle}
 .pu-table td:first-child{text-align:left;background:var(--surface-subtle)}
 .pu-table tr:last-child td{border-bottom:none}
 .pu-table td:last-child,.pu-table th:last-child{border-right:none}
 .pu-row-blocked{opacity:.55}
 .pu-col-blocked{opacity:.55}
-.pu-day-cell{display:flex;align-items:center;gap:6px;white-space:nowrap;font-weight:500;color:var(--text)}
+.pu-day-cell{display:flex;flex-direction:column;align-items:flex-start;gap:1px;white-space:nowrap;font-weight:500;color:var(--text)}
+.pu-period-time{font-size:10px;font-weight:400;color:var(--text-muted);letter-spacing:.01em}
 .pu-day-badge{background:#fee2e2;color:#991b1b;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 [data-theme="dark"] .pu-day-badge{background:#3d0f0f;color:#f87171}
 /* Constraints panel */

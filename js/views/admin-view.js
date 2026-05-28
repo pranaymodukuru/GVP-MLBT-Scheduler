@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { DAYS, WORK_PERIODS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES } from '../../config/school-config.js';
+import { DAYS, WORK_PERIODS, PERIODS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES } from '../../config/school-config.js';
 import { parseSection } from '../helpers.js';
 import { refreshSelects } from '../selects.js';
 import { saveState } from '../persistence.js';
@@ -132,6 +132,8 @@ export function renderPeriodUnavailabilityPanel(tid = '') {
   const blockedDays   = avail.blockedDays   || [];
   const blockedPeriods = avail.blockedPeriods || {};
 
+  const periodMeta = Object.fromEntries(PERIODS.map(p => [p.id, p]));
+
   const grid =
     `<div style="overflow-x:auto;margin-top:14px">` +
     `<table class="pu-table">` +
@@ -143,9 +145,10 @@ export function renderPeriodUnavailabilityPanel(tid = '') {
       }).join('') +
     `</tr></thead>` +
     `<tbody>` +
-    WORK_PERIODS.map(p =>
-      `<tr>` +
-      `<td class="pu-day-cell"><span>${p}</span></td>` +
+    WORK_PERIODS.map(p => {
+      const meta = periodMeta[p] || {};
+      return `<tr>` +
+      `<td class="pu-day-cell"><span>${meta.label || p}</span>${meta.time ? `<span class="pu-period-time">${meta.time}</span>` : ''}</td>` +
       DAYS.map(d => {
         const fullBlocked = blockedDays.includes(d);
         const isBlocked = fullBlocked || (blockedPeriods[d] || []).includes(p);
@@ -158,8 +161,8 @@ export function renderPeriodUnavailabilityPanel(tid = '') {
           `</td>`
         );
       }).join('') +
-      `</tr>`
-    ).join('') +
+      `</tr>`;
+    }).join('') +
     `</tbody></table></div>`;
 
   panel.innerHTML = `<div class="pu-header">${teacherSelect}</div>` + grid;

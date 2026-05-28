@@ -104,6 +104,39 @@ export function getCombinedSections(secId, day, periodId) {
   });
 }
 
+/** Returns combinable sections for the same period/day that share the subject
+ *  but have a different teacher assigned — each entry is {secId, teacherName}. */
+export function getCombinableDiffTeacher(secId, day, periodId) {
+  const cell = (state.timetable[secId] || {})[day]?.[periodId];
+  if (!cell?.subject) return [];
+
+  const { teacherId, subject } = cell;
+  const { base: myBase } = parseSection(secId);
+  const isAfterLunch = AFTER_LUNCH_PERIODS.includes(periodId);
+  const fixedGroup   = COMBINED_SECTIONS.find(
+    cs => cs.period === periodId && cs.sections.includes(secId)
+  );
+
+  return allSectionIds().flatMap(s => {
+    if (s === secId) return [];
+    const c = (state.timetable[s] || {})[day]?.[periodId];
+    if (c?.subject !== subject) return [];
+    if (c?.teacherId === teacherId) return [];       // same teacher — already shown by getCombinedSections
+
+    const { base: otherBase } = parseSection(s);
+    let inGroup = false;
+    if (fixedGroup) {
+      inGroup = fixedGroup.sections.includes(s);
+    } else if (isAfterLunch) {
+      inGroup = COMBINABLE_GROUPS.some(g => g.includes(myBase) && g.includes(otherBase));
+    }
+    if (!inGroup) return [];
+
+    const teacher = state.TEACHERS.find(x => x.id === c.teacherId);
+    return [{ secId: s, teacherName: teacher ? teacher.name : '⚠️ Unassigned' }];
+  });
+}
+
 /** Compact section label — strips "Class " prefix and converts " - " to "-" */
 export function shortSec(secId) {
   return secId.replace(/^Class /, '').replace(' - ', '-');

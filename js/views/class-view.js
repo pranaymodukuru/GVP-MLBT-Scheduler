@@ -4,7 +4,7 @@
 
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
-import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable, isActivePeriod, getCombinedSections, shortSec } from '../helpers.js';
+import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable, isActivePeriod, getCombinedSections, getCombinableDiffTeacher, shortSec } from '../helpers.js';
 import { getSelectorValue } from '../selects.js';
 
 export function renderClassView() {
@@ -76,7 +76,8 @@ export function renderClassView() {
         const isConflict = state.conflictSet.has(`${secId}|${realDay}|${per.id}`);
         const isAbsent   = cell.teacherId && !isTeacherAvailable(cell.teacherId, realDay);
         const lockIcon   = cell.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
-        const combined   = getCombinedSections(secId, realDay, per.id);
+        const combined      = getCombinedSections(secId, realDay, per.id);
+        const combinedDiff  = getCombinableDiffTeacher(secId, realDay, per.id);
         const classes    = [
           'cell',
           cell.locked  ? 'cell-locked'   : '',
@@ -93,6 +94,9 @@ export function renderClassView() {
           `<span class="cell-subj">${cell.subject}</span>` +
           `<span class="cell-teacher">${t ? t.name : '⚠️ Unassigned'}</span>` +
           (combined.length ? `<span class="cell-combined">+ ${combined.map(shortSec).join(', ')}</span>` : '') +
+          (combinedDiff.length ? combinedDiff.map(({secId: s, teacherName}) =>
+            `<span class="cell-combined cell-combined-diff">+ ${shortSec(s)}, ${teacherName}</span>`
+          ).join('') : '') +
           `</div></td>`;
       } else {
         tbody +=

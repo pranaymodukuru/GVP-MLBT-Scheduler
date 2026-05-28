@@ -220,9 +220,9 @@
     <label>Teacher ID</label>
     <input type="text" id="tm-id" placeholder="e.g. T20">
     <label>Subjects they can teach</label>
-    <div class="chips-editor" id="tm-subjects-chips" onclick="document.getElementById('tm-subj-input').focus()"></div>
+    <div class="chips-editor" id="tm-subjects-chips"></div>
     <div style="display:flex;gap:6px;margin:6px 0 14px">
-      <input type="text" id="tm-subj-input" placeholder="Type subject + Enter" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid #d1d5db;font-size:13px;outline:none">
+      <select id="tm-subj-input" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid #d1d5db;font-size:13px;outline:none;margin-bottom:0"></select>
       <button class="btn btn-sm" onclick="addChip('subjects')">Add</button>
     </div>
     <label>Classes assigned to</label>

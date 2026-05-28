@@ -13,12 +13,6 @@ document.getElementById('teacher-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('teacher-modal')) closeTeacherModal();
 });
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.activeElement.id === 'tm-subj-input') {
-    e.preventDefault();
-    addChip('subjects');
-  }
-});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CHIP EDITOR
@@ -39,14 +33,12 @@ export function removeChip(type, i) {
 
 export function addChip(type) {
   if (type === 'subjects') {
-    const inp = document.getElementById('tm-subj-input');
-    const v   = inp.value.trim();
+    const sel = document.getElementById('tm-subj-input');
+    const v   = sel.value;
     if (v && !state.tmSubjects.includes(v)) {
       state.tmSubjects.push(v);
       renderChips('subjects');
     }
-    inp.value = '';
-    inp.focus();
   } else {
     const sel = document.getElementById('tm-class-input');
     const v   = sel.value;
@@ -60,6 +52,11 @@ export function addChip(type) {
 // ─────────────────────────────────────────────────────────────────────────────
 // MODAL LIFECYCLE
 // ─────────────────────────────────────────────────────────────────────────────
+
+export function populateSubjectSelectModal() {
+  document.getElementById('tm-subj-input').innerHTML =
+    Object.keys(state.SUBJECT_FREQ).map(s => `<option value="${s}">${s}</option>`).join('');
+}
 
 export function populateClassSelectModal() {
   document.getElementById('tm-class-input').innerHTML =
@@ -76,6 +73,7 @@ export function openAddTeacher() {
   document.getElementById('tm-delete-btn').style.display = 'none';
   renderChips('subjects');
   renderChips('classes');
+  populateSubjectSelectModal();
   populateClassSelectModal();
   document.getElementById('teacher-modal').classList.add('open');
 }
@@ -92,6 +90,7 @@ export function openEditTeacher(id) {
   document.getElementById('tm-delete-btn').style.display = 'inline-flex';
   renderChips('subjects');
   renderChips('classes');
+  populateSubjectSelectModal();
   populateClassSelectModal();
   document.getElementById('teacher-modal').classList.add('open');
 }

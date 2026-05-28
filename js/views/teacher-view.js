@@ -5,9 +5,10 @@
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
 import { allSectionIds, isTeacherAvailable, isActivePeriod } from '../helpers.js';
+import { getSelectorValue } from '../selects.js';
 
 export function renderTeacherView() {
-  const tid = document.getElementById('teacher-select').value;
+  const tid = getSelectorValue('teacher-select');
   if (!tid) return;
 
   const secs = allSectionIds();

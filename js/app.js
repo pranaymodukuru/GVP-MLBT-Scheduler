@@ -9,7 +9,7 @@ import { state } from './state.js';
 import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_SUBJECT_MIN_FREQ, DEFAULT_SUBJECT_MUST_APPEAR_DAILY, STORAGE_KEY } from '../config/school-config.js';
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
-import { refreshSelects } from './selects.js';
+import { refreshSelects, setSelectorValue } from './selects.js';
 import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchSavedList, saveConfig } from './persistence.js';
 import { generateTimetable, checkConflicts } from './scheduler.js';
 import { renderClassView } from './views/class-view.js';
@@ -94,7 +94,7 @@ export function switchTab(tab) {
 
 // Navigate to a specific cell from the dashboard issues list
 export function jumpToSlot(secId, day, period) {
-  document.getElementById('class-select').value = secId;
+  setSelectorValue('class-select', secId);
   switchTab('class');
   setTimeout(() => openEdit(secId, day, period), 60);
 }

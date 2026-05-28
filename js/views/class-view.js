@@ -5,9 +5,10 @@
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
 import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable, isActivePeriod } from '../helpers.js';
+import { getSelectorValue } from '../selects.js';
 
 export function renderClassView() {
-  const secId = document.getElementById('class-select').value;
+  const secId = getSelectorValue('class-select');
   if (!secId) return;
 
   const subjects   = getSubjects(secId);

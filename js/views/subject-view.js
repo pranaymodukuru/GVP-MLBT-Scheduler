@@ -7,9 +7,10 @@
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
 import { allSectionIds, getSubjects } from '../helpers.js';
+import { getSelectorValue } from '../selects.js';
 
 export function renderSubjectView() {
-  const subject = document.getElementById('subject-select').value;
+  const subject = getSelectorValue('subject-select');
   if (!subject) return;
 
   const secs = allSectionIds().filter(secId => getSubjects(secId).includes(subject));

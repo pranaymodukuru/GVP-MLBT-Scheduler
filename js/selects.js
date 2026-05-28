@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// SELECT DROPDOWNS — populates class-select and teacher-select
+// SELECTOR BUTTONS — populates class-select, teacher-select, subject-select
 // Lives in its own module so admin-view.js can import it without depending
 // on app.js (which would create a circular dependency).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -7,52 +7,81 @@
 import { state } from './state.js';
 import { SECTION_LABELS } from '../config/school-config.js';
 
-/** Rebuild the class-select and teacher-select dropdowns from current state */
+/** Read the currently selected value from a btn-selector container */
+export function getSelectorValue(id) {
+  return document.getElementById(id)?.dataset.selected ?? '';
+}
+
+/** Programmatically select a value in a btn-selector container */
+export function setSelectorValue(id, value) {
+  const container = document.getElementById(id);
+  if (!container) return;
+  container.dataset.selected = value;
+  container.querySelectorAll('.selector-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === value);
+  });
+}
+
+function makeBtn(value, label, callback) {
+  const btn = document.createElement('button');
+  btn.className = 'selector-btn';
+  btn.dataset.value = value;
+  btn.textContent = label;
+  btn.onclick = () => {
+    const container = btn.closest('.btn-selector');
+    container.dataset.selected = value;
+    container.querySelectorAll('.selector-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    callback();
+  };
+  return btn;
+}
+
+/** Rebuild all three btn-selector containers from current state */
 export function refreshSelects() {
   // ── Class select ──
   const cs   = document.getElementById('class-select');
-  const prev = cs.value;
+  const prev = cs.dataset.selected || '';
   cs.innerHTML = '';
 
+  let firstClass = null;
   Object.entries(state.CLASS_CONFIG).forEach(([base, cfg]) => {
     const n = cfg.sections || 1;
     if (n <= 1) {
-      const o = document.createElement('option');
-      o.value = base;
-      o.textContent = base;
-      if (base === prev) o.selected = true;
-      cs.appendChild(o);
+      const btn = makeBtn(base, base, () => window.renderClassView());
+      if (!firstClass) firstClass = base;
+      cs.appendChild(btn);
     } else {
-      const g = document.createElement('optgroup');
-      g.label = base;
       SECTION_LABELS.slice(0, n).forEach(l => {
         const id = `${base} - ${l}`;
-        const o  = document.createElement('option');
-        o.value = id;
-        o.textContent = `${base} — Section ${l}`;
-        if (id === prev) o.selected = true;
-        g.appendChild(o);
+        const btn = makeBtn(id, `${base}–${l}`, () => window.renderClassView());
+        if (!firstClass) firstClass = id;
+        cs.appendChild(btn);
       });
-      cs.appendChild(g);
     }
   });
 
+  const resolvedClass = (prev && cs.querySelector(`[data-value="${CSS.escape(prev)}"]`)) ? prev : firstClass;
+  cs.dataset.selected = resolvedClass || '';
+  if (resolvedClass) cs.querySelector(`[data-value="${CSS.escape(resolvedClass)}"]`)?.classList.add('active');
+
   // ── Teacher select ──
   const ts    = document.getElementById('teacher-select');
-  const prevT = ts.value;
+  const prevT = ts.dataset.selected || '';
   ts.innerHTML = '';
 
   state.TEACHERS.forEach(t => {
-    const o = document.createElement('option');
-    o.value = t.id;
-    o.textContent = `${t.name} (${t.id})`;
-    if (t.id === prevT) o.selected = true;
-    ts.appendChild(o);
+    ts.appendChild(makeBtn(t.id, `${t.name} (${t.id})`, () => window.renderTeacherView()));
   });
+
+  const firstTeacher = state.TEACHERS[0]?.id || '';
+  const resolvedTeacher = (prevT && ts.querySelector(`[data-value="${CSS.escape(prevT)}"]`)) ? prevT : firstTeacher;
+  ts.dataset.selected = resolvedTeacher;
+  if (resolvedTeacher) ts.querySelector(`[data-value="${CSS.escape(resolvedTeacher)}"]`)?.classList.add('active');
 
   // ── Subject select ──
   const ss    = document.getElementById('subject-select');
-  const prevS = ss.value;
+  const prevS = ss.dataset.selected || '';
   ss.innerHTML = '';
 
   const allSubjects = [...new Set(
@@ -60,10 +89,11 @@ export function refreshSelects() {
   )].sort();
 
   allSubjects.forEach(s => {
-    const o = document.createElement('option');
-    o.value = s;
-    o.textContent = s;
-    if (s === prevS) o.selected = true;
-    ss.appendChild(o);
+    ss.appendChild(makeBtn(s, s, () => window.renderSubjectView()));
   });
+
+  const firstSubject = allSubjects[0] || '';
+  const resolvedSubject = (prevS && ss.querySelector(`[data-value="${CSS.escape(prevS)}"]`)) ? prevS : firstSubject;
+  ss.dataset.selected = resolvedSubject;
+  if (resolvedSubject) ss.querySelector(`[data-value="${CSS.escape(resolvedSubject)}"]`)?.classList.add('active');
 }

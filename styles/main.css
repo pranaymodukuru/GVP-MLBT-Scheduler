@@ -291,3 +291,60 @@ td:last-child,th:last-child{border-right:none}
   .timetable-wrap{box-shadow:none;border:1px solid #ccc}
   .app{padding:0}
 }
+
+/* ── Tooltips ── */
+[data-tooltip]{position:relative}
+[data-tooltip]::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 7px);
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--text);
+  color:var(--bg);
+  font-size:11.5px;
+  line-height:1.45;
+  white-space:pre-line;
+  max-width:220px;
+  padding:6px 10px;
+  border-radius:6px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s ease, transform .15s ease;
+  transform:translateX(-50%) translateY(4px);
+  z-index:9999;
+  text-align:center;
+  font-weight:400;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+[data-tooltip]::before{
+  content:'';
+  position:absolute;
+  bottom:calc(100% + 1px);
+  left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:var(--text);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s ease;
+  z-index:9999;
+}
+[data-tooltip]:hover::after,[data-tooltip]:hover::before{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+[data-tooltip]:hover::before{transform:translateX(-50%)}
+[data-tooltip-below]::after{
+  bottom:auto;
+  top:calc(100% + 7px);
+  transform:translateX(-50%) translateY(-4px);
+}
+[data-tooltip-below]::before{
+  bottom:auto;
+  top:calc(100% + 1px);
+  border-top-color:transparent;
+  border-bottom-color:var(--text);
+}
+[data-tooltip-below]:hover::after{transform:translateX(-50%) translateY(0)}
+[data-tooltip-below]:hover::before{transform:translateX(-50%)}

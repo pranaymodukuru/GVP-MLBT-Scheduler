@@ -10,7 +10,7 @@ import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_S
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
 import { refreshSelects, setSelectorValue } from './selects.js';
-import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchSavedList, saveConfig } from './persistence.js';
+import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchBackup, fetchSavedList, saveConfig, saveAsBackup } from './persistence.js';
 import { generateTimetable, checkConflicts } from './scheduler.js';
 import { renderClassView } from './views/class-view.js';
 import { renderTeacherView } from './views/teacher-view.js';
@@ -336,26 +336,44 @@ async function init() {
   if (snap) {
     applySnap(snap);
     const ts = new Date(snap.savedAt);
+    document.getElementById('load-banner-msg').textContent = '💾 Session restored (locks preserved)';
     document.getElementById('load-banner-time').textContent =
       `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
     document.getElementById('load-banner').style.display = '';
   } else {
-    const latest = await fetchLatest();
-    if (latest) {
-      applySnap(latest.data);
+    const backup = await fetchBackup();
+    if (backup) {
+      applySnap(backup.data);
       saveState();
-      const ts = new Date(latest.data.savedAt);
+      const ts = new Date(backup.data.savedAt);
+      document.getElementById('load-banner-msg').textContent = '📌 Default backup loaded';
       document.getElementById('load-banner-time').textContent =
-        `${latest.filename} — ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+        `Backed up ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
       document.getElementById('load-banner').style.display = '';
     } else {
-      state.timetable = generateTimetable(false);
-      saveState();
+      const latest = await fetchLatest();
+      if (latest) {
+        applySnap(latest.data);
+        saveState();
+        const ts = new Date(latest.data.savedAt);
+        document.getElementById('load-banner-msg').textContent = '💾 Saved schedule loaded (locks preserved)';
+        document.getElementById('load-banner-time').textContent =
+          `${latest.filename} — ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+        document.getElementById('load-banner').style.display = '';
+      } else {
+        state.timetable = generateTimetable(false);
+        saveState();
+      }
     }
   }
   refreshSelects();
   checkConflicts();
   renderClassView();
+}
+
+export async function saveBackup() {
+  const serverSaved = await saveAsBackup();
+  showToast(serverSaved ? '📌 Backup saved — this is now your default schedule' : '📌 Backup downloaded as backup.json');
 }
 
 init();
@@ -377,6 +395,7 @@ window.fillEmptySlots   = fillEmptySlots;
 
 // Persistence
 window.exportJSON       = () => exportJSON().then(({ saved }) => showToast(`💾 Saved: ${saved}`));
+window.saveBackup       = saveBackup;
 window.triggerImport    = triggerImport;
 window.closeImportModal = closeImportModal;
 window.triggerFilePicker = triggerFilePicker;

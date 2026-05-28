@@ -208,6 +208,38 @@ export async function fetchSavedList() {
   }
 }
 
+/** Fetch the backup schedule from the server. Returns {filename, data} or null. */
+export async function fetchBackup() {
+  try {
+    const res = await fetch('/backup-schedule');
+    if (res.status === 204) return null;
+    if (!res.ok) return null;
+    return await res.json(); // { filename, data }
+  } catch (_) {
+    return null;
+  }
+}
+
+/** Save current state as the backup (default) schedule. Returns true if server saved. */
+export async function saveAsBackup() {
+  const json = buildSnapshot();
+  try {
+    const res = await fetch('/save-backup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: json,
+    });
+    if (res.ok) return true;
+  } catch (_) {
+    // server not running — fall through to download
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+  a.download = 'backup.json';
+  a.click();
+  return false;
+}
+
 /** Fetch the latest saved schedule from the server. Returns {filename, data} or null. */
 export async function fetchLatest() {
   try {

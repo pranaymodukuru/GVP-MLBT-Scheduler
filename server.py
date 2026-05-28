@@ -13,8 +13,9 @@ import os
 import sys
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
-SAVE_DIR   = os.path.join(os.path.dirname(__file__), "saved_schedules")
+SAVE_DIR    = os.path.join(os.path.dirname(__file__), "saved_schedules")
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "school-config.json")
+BACKUP_PATH = os.path.join(SAVE_DIR, "backup.json")
 
 
 def latest_schedule():
@@ -38,6 +39,21 @@ class Handler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 return
             body = json.dumps({"filename": filename, "data": data}).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
+        if self.path == "/backup-schedule":
+            if not os.path.isfile(BACKUP_PATH):
+                self.send_response(204)
+                self.end_headers()
+                return
+            with open(BACKUP_PATH, encoding="utf-8") as fh:
+                data = json.load(fh)
+            body = json.dumps({"filename": "backup.json", "data": data}).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
@@ -80,6 +96,24 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps({"saved": "school-config.json"}).encode())
+            return
+
+        if self.path == "/save-backup":
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body)
+            except json.JSONDecodeError:
+                self.send_error(400, "Invalid JSON")
+                return
+            os.makedirs(SAVE_DIR, exist_ok=True)
+            with open(BACKUP_PATH, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps({"saved": "backup.json"}).encode())
             return
 
         if self.path != "/save":

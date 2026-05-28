@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dev server for mlbt-scheduler.
+Dev server for GVP-MLBT-Scheduler.
 Serves static files and handles POST /save to write schedules to saved_schedules/.
 
 Usage:

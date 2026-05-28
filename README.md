@@ -1,4 +1,4 @@
-# MLBT School Timetable Scheduler
+# GVP MLBT Scheduler
 
 A browser-based auto-scheduler for school timetables — no backend, no build step.
 
@@ -9,7 +9,7 @@ A browser-based auto-scheduler for school timetables — no backend, no build st
 ES6 modules require an HTTP server (browsers block `import` on `file://`).
 
 ```bash
-cd mlbt-scheduler
+cd GVP-MLBT-Scheduler
 python3 -m http.server 8080
 # then open http://localhost:8080
 ```
@@ -19,7 +19,7 @@ python3 -m http.server 8080
 ## File structure
 
 ```
-mlbt-scheduler/
+GVP-MLBT-Scheduler/
 ├── index.html                  ← Shell HTML (one <script type="module">)
 ├── styles/
 │   └── main.css                ← All CSS

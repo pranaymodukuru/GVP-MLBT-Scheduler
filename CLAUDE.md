@@ -21,7 +21,7 @@ No build, lint, or test commands exist.
 ## Architecture
 
 ```
-mlbt-scheduler/
+GVP-MLBT-Scheduler/
 ├── index.html                  ← Shell HTML (single <script type="module">)
 ├── styles/
 │   └── main.css                ← All CSS

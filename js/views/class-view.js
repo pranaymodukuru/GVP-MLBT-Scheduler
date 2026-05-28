@@ -79,7 +79,7 @@ export function renderClassView() {
           ` title="${cell.locked ? 'Locked — right-click to unlock' : 'Right-click to lock'}">` +
           (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
           `<span class="cell-subj">${cell.subject}</span>` +
-          `<span class="cell-teacher">${t ? t.name.split(' ').slice(-1)[0] : '⚠️ Unassigned'}</span>` +
+          `<span class="cell-teacher">${t ? t.name : '⚠️ Unassigned'}</span>` +
           `</div></td>`;
       } else {
         tbody +=

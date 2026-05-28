@@ -54,6 +54,18 @@ import {
 } from './modals/teacher-modal.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// DARK MODE
+// ─────────────────────────────────────────────────────────────────────────────
+
+export function toggleDarkMode() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next   = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-icon').className = next === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // TAB SWITCHING
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -313,6 +325,10 @@ export function resetToDefaults() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function init() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+
   const snap = loadSavedSnap();
   if (snap) {
     applySnap(snap);
@@ -348,6 +364,7 @@ init();
 // ─────────────────────────────────────────────────────────────────────────────
 
 // App-level
+window.toggleDarkMode   = toggleDarkMode;
 window.switchTab        = switchTab;
 window.jumpToSlot       = jumpToSlot;
 window.toggleCellLock   = toggleCellLock;

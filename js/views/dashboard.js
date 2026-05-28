@@ -145,7 +145,7 @@ export function renderDashboard() {
     const pct   = Math.min(100, (t.periods / wlMax) * 100);
     const avg   = (t.periods / 6).toFixed(1);
     const cls   = t.periods < 10 ? 'wl-low' : t.periods <= 30 ? 'wl-ok' : t.periods <= 40 ? 'wl-high' : 'wl-over';
-    const label = t.name.split(' ').slice(-2).join(' ');
+    const label = t.name;
     return (
       `<div class="workload-row">` +
       `<span class="workload-name" title="${t.name}">${label}</span>` +

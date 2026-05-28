@@ -6,6 +6,7 @@
 <title>School Timetable</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <link rel="stylesheet" href="styles/main.css">
+<script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
 <div class="app">
@@ -26,6 +27,7 @@
       <div class="subtitle">Right-click any cell to lock/unlock · Click to edit · Changes auto-saved</div>
     </div>
     <div class="top-btns">
+      <button class="btn btn-sm" id="theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon" id="theme-icon"></i></button>
       <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> Print</button>
       <button class="btn" onclick="exportJSON()"><i class="ti ti-device-floppy"></i> Save</button>
       <button class="btn" onclick="triggerImport()"><i class="ti ti-upload"></i> Import</button>

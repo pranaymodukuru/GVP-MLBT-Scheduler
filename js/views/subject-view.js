@@ -47,7 +47,7 @@ export function renderSubjectView() {
 
       if (hits.length) {
         const inner = hits.map(h => {
-          const tName   = h.teacher ? h.teacher.name.split(' ').pop() : '⚠️';
+          const tName   = h.teacher ? h.teacher.name : '⚠️';
           const lockIcon = h.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
           return (
             `<div class="cell${h.locked ? ' cell-locked' : ''}"` +

@@ -416,6 +416,23 @@ export function generateTimetable(preserveLocked = false) {
   return tt;
 }
 
+/** True when two sections are intentionally combined at the given period (room-based check) */
+function isSectionsCombined(period, sec1, sec2) {
+  if (COMBINED_SECTIONS.some(cs =>
+    cs.period === period &&
+    cs.sections.includes(sec1) &&
+    cs.sections.includes(sec2)
+  )) return true;
+
+  if (AFTER_LUNCH_PERIODS.includes(period)) {
+    const base1 = parseSection(sec1).base;
+    const base2 = parseSection(sec2).base;
+    return COMBINED_AFTER_LUNCH_GROUPS.some(g => g.includes(base1) && g.includes(base2));
+  }
+
+  return false;
+}
+
 /** True when teacher appears in two sections that are intentionally combined at that period */
 function isCombinedGroup(teacherId, period, sec1, sec2, subject1, subject2) {
   if (COMBINED_SECTIONS.some(cs =>
@@ -473,14 +490,52 @@ export function checkConflicts() {
     }));
   });
 
+  // ── Room capacity conflicts ────────────────────────────────────────────────
+  // Subjects flagged sharedRoom:true map to a single physical space; at most
+  // one non-combined group may occupy that space per period.
+  const sharedRoomSubjects = new Set(
+    Object.entries(SUBJECTS_CONFIG)
+      .filter(([, s]) => s.sharedRoom)
+      .map(([name]) => name)
+  );
+
+  if (sharedRoomSubjects.size > 0) {
+    DAYS.forEach(d => {
+      WORK_PERIODS.forEach(p => {
+        const roomOcc = {};
+        allSectionIds().forEach(secId => {
+          if (!isActivePeriod(secId, p)) return;
+          const cell = (state.timetable[secId] || {})[d]?.[p];
+          if (cell?.subject && sharedRoomSubjects.has(cell.subject)) {
+            (roomOcc[cell.subject] ||= []).push(secId);
+          }
+        });
+
+        Object.entries(roomOcc).forEach(([room, secs]) => {
+          for (let i = 0; i < secs.length; i++) {
+            for (let j = i + 1; j < secs.length; j++) {
+              if (!isSectionsCombined(p, secs[i], secs[j])) {
+                state.conflictRecords.push({ room, day: d, period: p, sec1: secs[i], sec2: secs[j] });
+                state.conflictSet.add(`${secs[i]}|${d}|${p}`);
+                state.conflictSet.add(`${secs[j]}|${d}|${p}`);
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
   const panel = document.getElementById('conflict-panel');
   if (state.conflictRecords.length) {
     panel.innerHTML =
       `<strong>⚠️ ${state.conflictRecords.length} conflict(s)</strong>` +
       `<ul style="margin:6px 0 0 18px">` +
-      state.conflictRecords.map(c =>
-        `<li style="margin-bottom:3px"><strong>${c.teacherName}</strong> ` +
-        `double-booked ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
+      state.conflictRecords.map(c => c.room
+        ? `<li style="margin-bottom:3px"><strong>${c.room}</strong> ` +
+          `room clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
+        : `<li style="margin-bottom:3px"><strong>${c.teacherName}</strong> ` +
+          `double-booked ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
       ).join('') +
       `</ul>`;
     panel.style.cssText =

@@ -136,32 +136,30 @@ export function renderPeriodUnavailabilityPanel(tid = '') {
     `<div style="overflow-x:auto;margin-top:14px">` +
     `<table class="pu-table">` +
     `<thead><tr>` +
-      `<th>Day</th>` +
-      WORK_PERIODS.map(p => `<th>${p}</th>`).join('') +
+      `<th>Period</th>` +
+      DAYS.map(d => {
+        const fullBlocked = blockedDays.includes(d);
+        return `<th class="${fullBlocked ? 'pu-col-blocked' : ''}">${d}${fullBlocked ? `<span class="pu-day-badge">absent</span>` : ''}</th>`;
+      }).join('') +
     `</tr></thead>` +
     `<tbody>` +
-    DAYS.map(d => {
-      const fullBlocked = blockedDays.includes(d);
-      return (
-        `<tr class="${fullBlocked ? 'pu-row-blocked' : ''}">` +
-        `<td class="pu-day-cell">` +
-          `<span>${d}</span>` +
-          (fullBlocked ? `<span class="pu-day-badge">absent</span>` : '') +
-        `</td>` +
-        WORK_PERIODS.map(p => {
-          const isBlocked = fullBlocked || (blockedPeriods[d] || []).includes(p);
-          return (
-            `<td>` +
-            `<input type="checkbox" class="att-cb" ` +
-              `${isBlocked ? 'checked' : ''} ` +
-              `${fullBlocked ? `disabled title="Teacher is fully absent on ${d}"` : ''} ` +
-              `onchange="toggleTeacherPeriodBlock('${tid}','${d}','${p}',this.checked)">` +
-            `</td>`
-          );
-        }).join('') +
-        `</tr>`
-      );
-    }).join('') +
+    WORK_PERIODS.map(p =>
+      `<tr>` +
+      `<td class="pu-day-cell"><span>${p}</span></td>` +
+      DAYS.map(d => {
+        const fullBlocked = blockedDays.includes(d);
+        const isBlocked = fullBlocked || (blockedPeriods[d] || []).includes(p);
+        return (
+          `<td class="${fullBlocked ? 'pu-row-blocked' : ''}">` +
+          `<input type="checkbox" class="att-cb" ` +
+            `${isBlocked ? 'checked' : ''} ` +
+            `${fullBlocked ? `disabled title="Teacher is fully absent on ${d}"` : ''} ` +
+            `onchange="toggleTeacherPeriodBlock('${tid}','${d}','${p}',this.checked)">` +
+          `</td>`
+        );
+      }).join('') +
+      `</tr>`
+    ).join('') +
     `</tbody></table></div>`;
 
   panel.innerHTML = `<div class="pu-header">${teacherSelect}</div>` + grid;

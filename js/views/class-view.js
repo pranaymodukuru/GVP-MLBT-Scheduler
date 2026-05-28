@@ -17,12 +17,23 @@ export function renderClassView() {
   const activeDays = half ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat (½)'] : DAYS;
   let total = 0, filled = 0;
 
+  // Count subject occurrences in the timetable for this section
+  const subjectCounts = {};
+  const ttSection = state.timetable[secId] || {};
+  Object.values(ttSection).forEach(dayObj => {
+    Object.values(dayObj).forEach(cell => {
+      if (cell?.subject) subjectCounts[cell.subject] = (subjectCounts[cell.subject] || 0) + 1;
+    });
+  });
+
   // Legend
   document.getElementById('class-legend').innerHTML =
     [...new Set(subjects)].map(s =>
       `<span class="legend-item">` +
       `<span class="legend-dot" style="background:${SUBJECT_COLORS[s] || '#eee'};` +
-      `border:1px solid ${SUBJECT_TEXT[s] || '#999'}60"></span>${s}</span>`
+      `border:1px solid ${SUBJECT_TEXT[s] || '#999'}60"></span>${s}` +
+      (subjectCounts[s] ? ` <span class="legend-count">${subjectCounts[s]}</span>` : '') +
+      `</span>`
     ).join('');
 
   const thead = `<tr><th>Period / Day</th>${activeDays.map(d => `<th>${d}</th>`).join('')}</tr>`;

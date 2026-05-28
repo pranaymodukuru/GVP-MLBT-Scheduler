@@ -19,6 +19,7 @@ export function renderSubjectView() {
 
   let totalPeriods = 0;
   const teacherSet = new Set();
+  const classTeachers = {}; // { secId: { tid: { name, count } } }
 
   const thead = `<tr><th>Period / Day</th>${DAYS.map(d => `<th>${d}</th>`).join('')}</tr>`;
   let tbody = '';
@@ -42,7 +43,15 @@ export function renderSubjectView() {
           const teacher = state.TEACHERS.find(t => t.id === cell.teacherId);
           hits.push({ secId, teacher, locked: cell.locked });
           totalPeriods++;
-          if (cell.teacherId) teacherSet.add(cell.teacherId);
+          if (cell.teacherId) {
+            teacherSet.add(cell.teacherId);
+            if (!classTeachers[secId]) classTeachers[secId] = {};
+            if (!classTeachers[secId][cell.teacherId]) {
+              const t = state.TEACHERS.find(t => t.id === cell.teacherId);
+              classTeachers[secId][cell.teacherId] = { name: t ? t.name : cell.teacherId, count: 0 };
+            }
+            classTeachers[secId][cell.teacherId].count++;
+          }
         }
       });
 
@@ -78,6 +87,28 @@ export function renderSubjectView() {
 
   document.getElementById('subject-table').innerHTML =
     `<thead>${thead}</thead><tbody>${tbody}</tbody>`;
+
+  document.getElementById('subject-legend').innerHTML =
+    Object.entries(classTeachers)
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([sec, teachers]) => {
+        const total = Object.values(teachers).reduce((s, t) => s + t.count, 0);
+        const teacherItems = Object.values(teachers)
+          .sort((a, b) => b.count - a.count)
+          .map(t =>
+            `<span class="legend-item">` +
+            `<span class="legend-dot" style="background:${bg};border:1px solid ${tc}60"></span>${t.name}` +
+            ` <span class="legend-count">${t.count}</span></span>`
+          ).join('');
+        return (
+          `<span class="legend-class-block">` +
+          `<span class="legend-item">` +
+          `<span class="legend-dot" style="background:#e5e7eb;border:1px solid #9ca3af60"></span><strong>${sec}</strong>` +
+          ` <span class="legend-count">${total}</span></span>` +
+          teacherItems +
+          `</span>`
+        );
+      }).join('');
 
   document.getElementById('subject-stats-badge').textContent = `${totalPeriods} periods/week`;
   document.getElementById('subject-stats').innerHTML =

@@ -13,8 +13,9 @@ export function renderTeacherView() {
 
   const secs = allSectionIds();
   let filled = 0;
-  const cc = {}; // classes count
-  const sc = {}; // subjects count
+  const cc  = {}; // classes count
+  const sc  = {}; // subjects count
+  const csc = {}; // per-class subject counts: { sec: { subject: count } }
 
   const thead = `<tr><th>Period / Day</th>${DAYS.map(d => `<th>${d}</th>`).join('')}</tr>`;
   let tbody = '';
@@ -43,6 +44,8 @@ export function renderTeacherView() {
         filled++;
         cc[found.cls]     = (cc[found.cls]     || 0) + 1;
         sc[found.subject] = (sc[found.subject] || 0) + 1;
+        if (!csc[found.cls]) csc[found.cls] = {};
+        csc[found.cls][found.subject] = (csc[found.cls][found.subject] || 0) + 1;
 
         const bg         = SUBJECT_COLORS[found.subject] || '#f5f5f5';
         const tc         = SUBJECT_TEXT[found.subject]   || '#333';
@@ -77,4 +80,25 @@ export function renderTeacherView() {
     `<div class="stat"><div class="stat-val">${Object.keys(cc).length}</div><div class="stat-lbl">Sections</div></div>` +
     `<div class="stat"><div class="stat-val">${Object.keys(sc).length}</div><div class="stat-lbl">Subjects taught</div></div>` +
     `<div class="stat"><div class="stat-val">${Math.round(filled / 6)}</div><div class="stat-lbl">Avg / day</div></div>`;
+
+  document.getElementById('teacher-legend').innerHTML =
+    Object.entries(cc)
+      .sort((a, b) => b[1] - a[1])
+      .map(([sec, count]) => {
+        const subjItems = Object.entries(csc[sec] || {})
+          .sort((a, b) => b[1] - a[1])
+          .map(([subj, cnt]) =>
+            `<span class="legend-item">` +
+            `<span class="legend-dot" style="background:${SUBJECT_COLORS[subj] || '#eee'};border:1px solid ${SUBJECT_TEXT[subj] || '#999'}60"></span>${subj}` +
+            ` <span class="legend-count">${cnt}</span></span>`
+          ).join('');
+        return (
+          `<span class="legend-class-block">` +
+          `<span class="legend-item">` +
+          `<span class="legend-dot" style="background:#e5e7eb;border:1px solid #9ca3af60"></span><strong>${sec}</strong>` +
+          ` <span class="legend-count">${count}</span></span>` +
+          subjItems +
+          `</span>`
+        );
+      }).join('');
 }

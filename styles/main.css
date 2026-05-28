@@ -115,6 +115,8 @@ td:last-child,th:last-child{border-right:none}
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted)}
 .legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.legend-count{font-size:10px;font-weight:600;background:#e5e7eb;color:#6b7280;border-radius:10px;padding:1px 5px;line-height:1.4}
+.legend-class-block{display:flex;align-items:center;gap:6px;padding:3px 8px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px}
 .top-btns{display:flex;gap:6px;flex-wrap:wrap}
 /* Admin */
 .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}

@@ -70,7 +70,7 @@
     "Story Telling":      { "color": "#f3e8ff", "textColor": "#6b21a8", "periodsPerWeek": 2, "minPeriodsPerWeek": 1 },
     "Audio Visual Room":        { "color": "#e0e7ff", "textColor": "#3730a3", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyClassTeacher": true, "sharedRoom": true },
     "Library":            { "color": "#fef9c3", "textColor": "#92400e", "periodsPerWeek": 1, "minPeriodsPerWeek": 1, "anyFreeTeacher": true, "sharedRoom": true },
-    "Computers/AI":        { "color": "#dbeafe", "textColor": "#1e3a8a", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyFreeTeacher": true },
+    "Computers/AI":        { "color": "#dbeafe", "textColor": "#1e3a8a", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyFreeTeacher": true , "sharedRoom": true},
     "Newspaper Reading":  { "color": "#f0fdf4", "textColor": "#065f46", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyFreeTeacher": true },
     "Sports & Games":     { "color": "#ffe4e6", "textColor": "#9f1239", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "sharedRoom": true },
     "Free Period":         { "color": "#f8fafc", "textColor": "#334155" }

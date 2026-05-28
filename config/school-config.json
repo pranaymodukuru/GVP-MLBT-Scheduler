@@ -41,6 +41,7 @@
   ],
 
   "subjects": {
+    "Activity":           { "color": "#fef3c7", "textColor": "#92400e"},
     "English":            { "color": "#dbeafe", "textColor": "#1e40af", "periodsPerWeek": 6, "minPeriodsPerWeek": 4, "mustAppearDaily": true },
     "Maths":              { "color": "#d1fae5", "textColor": "#065f46", "periodsPerWeek": 6, "minPeriodsPerWeek": 4, "mustAppearDaily": true },
     "Hindi":              { "color": "#fef3c7", "textColor": "#92400e", "periodsPerWeek": 6, "minPeriodsPerWeek": 4, "mustAppearDaily": true },
@@ -63,16 +64,17 @@
     "Natural Talk":       { "color": "#fef9c3", "textColor": "#713f12", "periodsPerWeek": 2, "minPeriodsPerWeek": 1 },
     "Health Talk":        { "color": "#fce7f3", "textColor": "#9d174d", "periodsPerWeek": 2, "minPeriodsPerWeek": 1 },
     "Story Telling":      { "color": "#f3e8ff", "textColor": "#6b21a8", "periodsPerWeek": 2, "minPeriodsPerWeek": 1 },
-    "Audio Video":        { "color": "#e0e7ff", "textColor": "#3730a3", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyClassTeacher": true },
+    "Audio Visual Room":        { "color": "#e0e7ff", "textColor": "#3730a3", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyClassTeacher": true },
     "Library":            { "color": "#fef9c3", "textColor": "#92400e", "periodsPerWeek": 1, "minPeriodsPerWeek": 1, "anyFreeTeacher": true },
     "Computer/AI":        { "color": "#dbeafe", "textColor": "#1e3a8a", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyFreeTeacher": true },
     "Newspaper Reading":  { "color": "#f0fdf4", "textColor": "#065f46", "periodsPerWeek": 2, "minPeriodsPerWeek": 1, "anyFreeTeacher": true },
-    "Sports & Games":     { "color": "#ffe4e6", "textColor": "#9f1239", "periodsPerWeek": 2, "minPeriodsPerWeek": 1 }
+    "Sports & Games":     { "color": "#ffe4e6", "textColor": "#9f1239", "periodsPerWeek": 2, "minPeriodsPerWeek": 1 },
+    "Free Period":         { "color": "#f8fafc", "textColor": "#334155" }
   },
 
   "teachers": [
-    { "id": "T01", "name": "N. Tulasi Devi",      "subjects": ["English", "Maths", "Drawing", "GK", "Hindi", "Telugu", "Natural Talk", "Health Talk", "Games", "Story Telling"], "classes": ["PP1"] },
-    { "id": "T02", "name": "U. Mayuri",            "subjects": ["English", "Maths", "Hindi", "Drawing", "GK", "Telugu", "Natural Talk", "Health Talk", "Games", "Story Telling"], "classes": ["PP2", "Class 1", "Class 2"],
+    { "id": "T01", "name": "N. Tulasi Devi",      "subjects": ["English", "Maths", "Drawing", "GK", "Hindi", "Telugu", "Natural Talk", "Health Talk", "Games", "Story Telling", "Activity", "Audio Visual Room"], "classes": ["PP1"] },
+    { "id": "T02", "name": "U. Mayuri",            "subjects": ["English", "Maths", "Hindi", "Drawing", "GK", "Telugu", "Natural Talk", "Health Talk", "Games", "Story Telling", "Activity", "Audio Visual Room"], "classes": ["PP2", "Class 1", "Class 2"],
       "classSubjects": { "Class 1": ["Hindi"], "Class 2": ["Hindi"] } },
     { "id": "T03", "name": "CH.N.B. Lavanya",      "subjects": ["English", "Maths", "Telugu", "EVS", "Drawing", "GK", "Moral Science", "Games"],            "classes": ["Class 1"] },
     { "id": "T04", "name": "S. Syamala",           "subjects": ["English", "Maths", "EVS", "Telugu", "GK", "Drawing", "Games"],                             "classes": ["Class 2", "Class 3"] },
@@ -102,57 +104,57 @@
   "classes": {
     "PP2": {
       "sections": 1,
-      "subjects": ["English", "Maths", "Drawing", "Natural Talk", "Health Talk", "Story Telling", "Games"],
+      "subjects": ["English", "Activity", "Maths", "Drawing", "Natural Talk", "Health Talk", "Story Telling", "Games", "Audio Visual Room", "Free Period"],
       "sectionTeachers": { "A": "T01" }
     },
     "PP1": {
       "sections": 1,
-      "subjects": ["English", "Maths", "Drawing", "Natural Talk", "Health Talk", "Story Telling", "Games"],
+      "subjects": ["English", "Activity", "Maths", "Drawing", "Natural Talk", "Health Talk", "Story Telling", "Games", "Audio Visual Room", "Free Period"],
       "sectionTeachers": { "A": "T02" }
     },
     "Class 1": {
       "sections": 1,
-      "subjects": ["English", "Maths", "Hindi", "Telugu", "EVS", "GK", "Moral Science", "Drawing", "Games"],
+      "subjects": ["English", "Activity", "Maths", "Hindi", "Telugu", "EVS", "GK", "Moral Science", "Drawing", "Games", "Audio Visual Room", "Free Period"],
       "sectionTeachers": { "A": "T03" }
     },
     "Class 2": {
       "sections": 1,
-      "subjects": ["English", "Maths", "Telugu", "Hindi", "EVS", "Moral Science", "GK", "Drawing", "Games"],
+      "subjects": ["English", "Activity", "Maths", "Hindi", "Telugu", "EVS", "GK", "Moral Science", "Drawing", "Games", "Audio Visual Room", "Free Period"],
       "sectionTeachers": { "A": "T04" }
     },
     "Class 3": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "EVS", "Maths", "Drawing", "GK", "Computers", "Moral Science", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "Activity", "English", "EVS", "Maths", "Drawing", "GK", "Computers", "Moral Science", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T05" }
     },
     "Class 4": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "EVS", "Maths", "Drawing", "GK", "Computers", "Moral Science", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "Activity", "English", "EVS", "Maths", "Drawing", "GK", "Computers", "Moral Science", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T06" }
     },
     "Class 5": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "EVS - Social", "EVS - Science", "Maths", "Drawing", "GK", "Computers", "Physical Education", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "Activity", "English", "EVS - Social", "EVS - Science", "Maths", "Drawing", "GK", "Computers", "Physical Education", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T08" }
     },
     "Class 6": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "Gen. Science", "Social", "Maths", "GK", "Computers", "Value Education", "Physical Education", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "Activity", "English", "Gen. Science", "Social", "Maths", "GK", "Computers", "Value Education", "Physical Education", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T09" }
     },
     "Class 7": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "Gen. Science", "Social", "Maths", "GK", "Computers", "Value Education", "Physical Education", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "Activity", "English", "Gen. Science", "Social", "Maths", "GK", "Computers", "Value Education", "Physical Education", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T10" }
     },
     "Class 8": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "Physical Science", "Biology", "Social", "Maths", "GK", "Computers", "Value Education", "Physical Education", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "English", "Physical Science", "Biology", "Social", "Maths", "GK", "Computers", "Value Education", "Physical Education", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T11" }
     },
     "Class 9": {
       "sections": 1,
-      "subjects": ["Telugu", "Hindi", "English", "Physical Science", "Biology", "Social", "Maths", "Computers", "Value Education", "Physical Education", "Audio Video", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games"],
+      "subjects": ["Telugu", "Hindi", "English", "Physical Science", "Biology", "Social", "Maths", "Computers", "Value Education", "Physical Education", "Audio Visual Room", "Library", "Computer/AI", "Newspaper Reading", "Sports & Games", "Free Period"],
       "sectionTeachers": { "A": "T12" }
     },
     "Class 10": {

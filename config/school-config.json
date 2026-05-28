@@ -852,7 +852,6 @@
         "Drawing",
         "GK",
         "Moral Science",
-        "Audio Video",
         "Library",
         "Newspaper Reading",
         "Sports & Games",
@@ -876,7 +875,6 @@
         "Drawing",
         "GK",
         "Moral Science",
-        "Audio Video",
         "Library",
         "Newspaper Reading",
         "Sports & Games",
@@ -901,14 +899,13 @@
         "Drawing",
         "GK",
         "Physical Education",
-        "Audio Video",
         "Library",
-        "Computers/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Activity",
         "Audio Visual Room",
-        "Free Period"
+        "Free Period",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T08"
@@ -926,7 +923,6 @@
         "GK",
         "Value Education",
         "Physical Education",
-        "Audio Video",
         "Library",
         "Newspaper Reading",
         "Sports & Games",
@@ -951,7 +947,6 @@
         "GK",
         "Value Education",
         "Physical Education",
-        "Audio Video",
         "Library",
         "Newspaper Reading",
         "Sports & Games",
@@ -977,7 +972,6 @@
         "GK",
         "Value Education",
         "Physical Education",
-        "Audio Video",
         "Library",
         "Newspaper Reading",
         "Sports & Games",
@@ -1001,7 +995,6 @@
         "Maths",
         "Value Education",
         "Physical Education",
-        "Audio Video",
         "Library",
         "Newspaper Reading",
         "Sports & Games",
@@ -1023,9 +1016,9 @@
         "Biology",
         "Social",
         "Maths",
-        "Computers/AI",
         "Value Education",
-        "Physical Education"
+        "Physical Education",
+        "Computers/AI"
       ],
       "sectionTeachers": {
         "A": "T15",

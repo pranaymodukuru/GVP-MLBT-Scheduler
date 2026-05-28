@@ -476,7 +476,9 @@
         "Moral Science",
         "Sports & Games",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "Story Telling",
+        "Drawing"
       ],
       "classes": [
         "Class 4"
@@ -502,10 +504,13 @@
         "English",
         "Hindi",
         "Telugu",
-        "EVS - Science",
         "Gen. Science",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "EVS",
+        "GK",
+        "Library",
+        "Drawing"
       ],
       "classes": [
         "Class 5",
@@ -526,10 +531,12 @@
       "name": "D. Rajani",
       "subjects": [
         "Maths",
-        "English",
+        "Computers",
         "Activity",
         "Audio Visual Room",
-        "Computers/AI"
+        "Computers/AI",
+        "English",
+        "GK"
       ],
       "classes": [
         "Class 6",
@@ -543,9 +550,9 @@
       "subjects": [
         "Social",
         "English",
-        "EVS - Social",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "GK"
       ],
       "classes": [
         "Class 5",
@@ -579,7 +586,8 @@
       "subjects": [
         "Telugu",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "Library"
       ],
       "classes": [
         "Class 6",
@@ -595,7 +603,8 @@
         "Biology",
         "English",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "Gen. Science"
       ],
       "classes": [
         "Class 8",
@@ -674,7 +683,9 @@
       "subjects": [
         "Physical Science",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "English",
+        "Maths"
       ],
       "classes": [
         "Class 8",
@@ -699,6 +710,7 @@
       "id": "T17",
       "name": "A. Ramani",
       "subjects": [
+        "Computers",
         "Activity",
         "Audio Visual Room",
         "Computers/AI"
@@ -715,7 +727,8 @@
         "Physical Education",
         "Sports & Games",
         "Activity",
-        "Audio Visual Room"
+        "Audio Visual Room",
+        "Newspaper Reading"
       ],
       "classes": [
         "Class 5",
@@ -781,7 +794,8 @@
         "Games",
         "Activity",
         "Audio Visual Room",
-        "Free Period"
+        "Free Period",
+        "Value Education"
       ],
       "sectionTeachers": {
         "A": "T01"
@@ -799,7 +813,8 @@
         "Games",
         "Activity",
         "Audio Visual Room",
-        "Free Period"
+        "Free Period",
+        "Value Education"
       ],
       "sectionTeachers": {
         "A": "T02"
@@ -855,8 +870,11 @@
         "Maths",
         "Drawing",
         "GK",
+        "Computers",
         "Moral Science",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Activity",
@@ -878,8 +896,11 @@
         "Maths",
         "Drawing",
         "GK",
+        "Computers",
         "Moral Science",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Activity",
@@ -897,19 +918,22 @@
         "Telugu",
         "Hindi",
         "English",
-        "EVS - Social",
-        "EVS - Science",
         "Maths",
         "Drawing",
         "GK",
+        "Computers",
         "Physical Education",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Activity",
         "Audio Visual Room",
         "Free Period",
-        "Computers/AI"
+        "Computers/AI",
+        "EVS",
+        "Moral Science"
       ],
       "sectionTeachers": {
         "A": "T08"
@@ -925,9 +949,12 @@
         "Social",
         "Maths",
         "GK",
+        "Computers",
         "Value Education",
         "Physical Education",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Activity",
@@ -949,9 +976,12 @@
         "Social",
         "Maths",
         "GK",
+        "Computers",
         "Value Education",
         "Physical Education",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Activity",
@@ -974,9 +1004,12 @@
         "Social",
         "Maths",
         "GK",
+        "Computers",
         "Value Education",
         "Physical Education",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Audio Visual Room",
@@ -997,9 +1030,12 @@
         "Biology",
         "Social",
         "Maths",
+        "Computers",
         "Value Education",
         "Physical Education",
+        "Audio Video",
         "Library",
+        "Computer/AI",
         "Newspaper Reading",
         "Sports & Games",
         "Audio Visual Room",
@@ -1020,6 +1056,7 @@
         "Biology",
         "Social",
         "Maths",
+        "Computers",
         "Value Education",
         "Physical Education",
         "Computers/AI"

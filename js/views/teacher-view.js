@@ -4,7 +4,7 @@
 
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
-import { allSectionIds, isTeacherAvailable } from '../helpers.js';
+import { allSectionIds, isTeacherAvailable, isActivePeriod } from '../helpers.js';
 
 export function renderTeacherView() {
   const tid = document.getElementById('teacher-select').value;
@@ -33,6 +33,7 @@ export function renderTeacherView() {
     DAYS.forEach(day => {
       let found = null;
       secs.forEach(s => {
+        if (!isActivePeriod(s, per.id)) return;
         const c = (state.timetable[s] || {})[day]?.[per.id];
         if (c?.teacherId === tid) found = { cls: s, subject: c.subject, locked: c.locked };
       });

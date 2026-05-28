@@ -40,6 +40,10 @@
     { "sections": ["Class 10 - A", "Class 10 - B"], "period": "P1", "teacherId": "T20", "subject": "Telugu" }
   ],
 
+  "combinedAfterLunchGroups": [
+    ["PP1", "PP2"]
+  ],
+
   "subjects": {
     "Activity":           { "color": "#fef3c7", "textColor": "#92400e"},
     "English":            { "color": "#dbeafe", "textColor": "#1e40af", "periodsPerWeek": 6, "minPeriodsPerWeek": 4, "mustAppearDaily": true },
@@ -101,16 +105,18 @@
     { "id": "T20", "name": "V. S. R. Murthy",      "subjects": ["Telugu"],                                                                                   "classes": ["Class 10"], "availablePeriods": ["P1"] }
   ],
 
+  "noPeriod8Classes": ["PP1", "PP2"],
+
   "classes": {
     "PP2": {
       "sections": 1,
       "subjects": ["English", "Activity", "Maths", "Drawing", "Natural Talk", "Health Talk", "Story Telling", "Games", "Audio Visual Room", "Free Period"],
-      "sectionTeachers": { "A": "T01" }
+      "sectionTeachers": { "A": "T02" }
     },
     "PP1": {
       "sections": 1,
       "subjects": ["English", "Activity", "Maths", "Drawing", "Natural Talk", "Health Talk", "Story Telling", "Games", "Audio Visual Room", "Free Period"],
-      "sectionTeachers": { "A": "T02" }
+      "sectionTeachers": { "A": "T01" }
     },
     "Class 1": {
       "sections": 1,

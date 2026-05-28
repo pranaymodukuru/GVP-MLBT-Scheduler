@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS } from '../config/school-config.js';
+import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES } from '../config/school-config.js';
 
 /** Returns all section IDs in CLASS_CONFIG order, expanding multi-section classes */
 export function allSectionIds() {
@@ -60,6 +60,12 @@ export function isTeacherAvailable(tid, day, period = null) {
  */
 export function getEffectiveSubjects(teacher, base) {
   return (teacher.classSubjects && teacher.classSubjects[base]) || teacher.subjects;
+}
+
+/** True if a period should be scheduled/shown for the given section */
+export function isActivePeriod(secId, periodId) {
+  if (periodId === 'P8' && NO_P8_CLASSES.includes(parseSection(secId).base)) return false;
+  return true;
 }
 
 /** Fisher–Yates shuffle — returns a new shuffled array */

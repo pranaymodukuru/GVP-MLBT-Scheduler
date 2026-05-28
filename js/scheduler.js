@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { DAYS, WORK_PERIODS, MAX_PD, SUBJECTS_CONFIG, NO_P1_LOCK_CLASSES, COMBINED_SECTIONS } from '../config/school-config.js';
+import { DAYS, WORK_PERIODS, MAX_PD, SUBJECTS_CONFIG, NO_P1_LOCK_CLASSES, COMBINED_SECTIONS, COMBINED_AFTER_LUNCH_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
 import {
   allSectionIds,
   parseSection,
@@ -13,6 +13,7 @@ import {
   getClassTeacherId,
   isSatHalf,
   isTeacherAvailable,
+  isActivePeriod,
   getEffectiveSubjects,
   shuffle,
 } from './helpers.js';
@@ -49,6 +50,7 @@ export function generateTimetable(preserveLocked = false) {
       DAYS.forEach(d => {
         tt[secId][d] = {};
         WORK_PERIODS.forEach(p => {
+          if (!isActivePeriod(secId, p)) return;
           const ex = (state.timetable[secId] || {})[d]?.[p];
           if (ex?.locked) {
             tt[secId][d][p] = { ...ex };
@@ -110,6 +112,7 @@ export function generateTimetable(preserveLocked = false) {
     DAYS.forEach(d => WORK_PERIODS.forEach(p => {
       if (p === 'P1' && !skipP1Lock) return;
       if (d === 'Sat' && half && ['P7', 'P8'].includes(p)) return;
+      if (!isActivePeriod(secId, p)) return;
       if (tt[secId][d]?.[p]?.locked) return;
       slots.push({ d, p });
     }));
@@ -199,6 +202,7 @@ export function generateTimetable(preserveLocked = false) {
   allSectionIds().forEach(secId => {
     const { base } = parseSection(secId);
     DAYS.forEach(d => WORK_PERIODS.forEach(p => {
+      if (!isActivePeriod(secId, p)) return;
       const cell = tt[secId]?.[d]?.[p];
       if (!cell?.subject || cell.teacherId || cell.locked) return;
       const subMeta = SUBJECTS_CONFIG[cell.subject] || {};
@@ -233,6 +237,7 @@ export function generateTimetable(preserveLocked = false) {
     const count = {};
     DAYS.forEach(d => WORK_PERIODS.forEach(p => {
       if (d === 'Sat' && half && ['P7', 'P8'].includes(p)) return;
+      if (!isActivePeriod(secId, p)) return;
       const cell = tt[secId]?.[d]?.[p];
       if (cell?.subject) count[cell.subject] = (count[cell.subject] || 0) + 1;
     }));
@@ -246,6 +251,7 @@ export function generateTimetable(preserveLocked = false) {
         if (deficit <= 0) return;
         WORK_PERIODS.forEach(p => {
           if (deficit <= 0) return;
+          if (!isActivePeriod(secId, p)) return;
           const cell = tt[secId]?.[d]?.[p];
           if (!cell?.subject || cell.locked || cell.subject === subj) return;
 
@@ -301,6 +307,7 @@ export function generateTimetable(preserveLocked = false) {
       dayCount[d] = {};
       WORK_PERIODS.forEach(p => {
         if (d === 'Sat' && half && ['P7', 'P8'].includes(p)) return;
+        if (!isActivePeriod(secId, p)) return;
         const cell = tt[secId]?.[d]?.[p];
         if (cell?.subject) {
           dayCount[d][cell.subject]  = (dayCount[d][cell.subject]  || 0) + 1;
@@ -317,6 +324,7 @@ export function generateTimetable(preserveLocked = false) {
 
         WORK_PERIODS.some(p => {
           if (d === 'Sat' && half && ['P7', 'P8'].includes(p)) return false;
+          if (!isActivePeriod(secId, p)) return false;
           const cell = tt[secId]?.[d]?.[p];
           if (!cell?.subject || cell.locked || cell.subject === subj) return false;
 
@@ -359,17 +367,72 @@ export function generateTimetable(preserveLocked = false) {
     });
   });
 
+  // ── Step 8: Sync combined-after-lunch sections ────────────────────────────
+  // For groups like PP1+PP2, every post-lunch slot should share the same
+  // subject and teacher so they can be taught as a single combined class.
+  if (COMBINED_AFTER_LUNCH_GROUPS.length && AFTER_LUNCH_PERIODS.length) {
+    COMBINED_AFTER_LUNCH_GROUPS.forEach(baseGroup => {
+      const groupSecs = allSectionIds().filter(s => baseGroup.includes(parseSection(s).base));
+      if (groupSecs.length < 2) return;
+
+      DAYS.forEach(d => {
+        AFTER_LUNCH_PERIODS.forEach(p => {
+          if (groupSecs.some(s => !isActivePeriod(s, p))) return;
+          const entries = groupSecs.map(s => ({ s, cell: tt[s]?.[d]?.[p] }));
+          if (entries.every(e => e.cell?.locked)) return;
+
+          // Use the first non-locked cell that has both subject and teacher as the reference
+          const primary = entries.find(e => !e.cell?.locked && e.cell?.subject && e.cell?.teacherId);
+          if (!primary) return;
+
+          const { subject, teacherId } = primary.cell;
+
+          entries.forEach(({ s, cell }) => {
+            if (s === primary.s) return;
+            if (cell?.locked) return;
+            if (cell?.subject === subject && cell?.teacherId === teacherId) return;
+
+            const { base } = parseSection(s);
+            const teacher = state.TEACHERS.find(t => t.id === teacherId);
+            if (!teacher || !getEffectiveSubjects(teacher, base).includes(subject)) return;
+
+            // Release the old teacher's occupancy slot
+            const oldTid = cell?.teacherId;
+            if (oldTid && oldTid !== teacherId && occ[oldTid]?.[d]) {
+              delete occ[oldTid][d][p];
+              dc[oldTid][d] = Math.max(0, (dc[oldTid][d] || 0) - 1);
+            }
+
+            if (!tt[s]) tt[s] = {};
+            if (!tt[s][d]) tt[s][d] = {};
+            tt[s][d][p] = { subject, teacherId };
+            // occ already reflects the primary section's slot; no additional entry needed
+          });
+        });
+      });
+    });
+  }
+
   return tt;
 }
 
 /** True when teacher appears in two sections that are intentionally combined at that period */
-function isCombinedGroup(teacherId, period, sec1, sec2) {
-  return COMBINED_SECTIONS.some(cs =>
+function isCombinedGroup(teacherId, period, sec1, sec2, subject1, subject2) {
+  if (COMBINED_SECTIONS.some(cs =>
     cs.teacherId === teacherId &&
     cs.period    === period    &&
     cs.sections.includes(sec1) &&
     cs.sections.includes(sec2)
-  );
+  )) return true;
+
+  // After-lunch combined groups: same teacher + same subject = intentional combined class
+  if (AFTER_LUNCH_PERIODS.includes(period) && subject1 && subject1 === subject2) {
+    const base1 = parseSection(sec1).base;
+    const base2 = parseSection(sec2).base;
+    return COMBINED_AFTER_LUNCH_GROUPS.some(g => g.includes(base1) && g.includes(base2));
+  }
+
+  return false;
 }
 
 /**
@@ -384,11 +447,13 @@ export function checkConflicts() {
 
   allSectionIds().forEach(secId => {
     DAYS.forEach(d => WORK_PERIODS.forEach(p => {
+      if (!isActivePeriod(secId, p)) return;
       const cell = (state.timetable[secId] || {})[d]?.[p];
       if (cell?.teacherId) {
         const key = `${cell.teacherId}|${d}|${p}`;
         if (occ[key]) {
-          if (!isCombinedGroup(cell.teacherId, p, occ[key], secId)) {
+          const cell1 = (state.timetable[occ[key]] || {})[d]?.[p];
+          if (!isCombinedGroup(cell.teacherId, p, occ[key], secId, cell1?.subject, cell.subject)) {
             const t = state.TEACHERS.find(x => x.id === cell.teacherId);
             state.conflictRecords.push({
               teacherName: t?.name || cell.teacherId,

@@ -4,7 +4,7 @@
 
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
-import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable } from '../helpers.js';
+import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable, isActivePeriod } from '../helpers.js';
 
 export function renderClassView() {
   const secId = document.getElementById('class-select').value;
@@ -38,8 +38,7 @@ export function renderClassView() {
       return;
     }
 
-    const { base } = parseSection(secId);
-    if (per.id === 'P8' && ['PP1', 'PP2'].includes(base)) return;
+    if (!isActivePeriod(secId, per.id)) return;
 
     tbody += `<tr><td>${per.label}<div class="period-label">${per.time}</div></td>`;
 

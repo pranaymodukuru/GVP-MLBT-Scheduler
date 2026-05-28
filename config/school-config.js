@@ -16,8 +16,16 @@ export const SAT_HALF_BASES    = cfg.satHalfDayClasses;
 export const UPPER_BASES       = cfg.upperClasses;
 export const SECTION_LABELS    = cfg.sectionLabels;
 export const MAX_PD            = cfg.maxPeriodsPerDay;
-export const NO_P1_LOCK_CLASSES  = cfg.noP1LockClasses  || [];
-export const COMBINED_SECTIONS   = cfg.combinedSections  || [];
+export const NO_P1_LOCK_CLASSES          = cfg.noP1LockClasses          || [];
+export const COMBINED_SECTIONS          = cfg.combinedSections          || [];
+export const COMBINED_AFTER_LUNCH_GROUPS = cfg.combinedAfterLunchGroups || [];
+export const NO_P8_CLASSES              = cfg.noPeriod8Classes          || [];
+
+// Work periods that fall after the lunch break
+const lchIdx = PERIODS.findIndex(p => p.id === 'LCH');
+export const AFTER_LUNCH_PERIODS = lchIdx >= 0
+  ? PERIODS.slice(lchIdx + 1).filter(p => !p.isBreak).map(p => p.id)
+  : [];
 
 // Derived: only the non-break period IDs (e.g. P1, P2, P3 …)
 export const WORK_PERIODS = PERIODS.filter(p => !p.isBreak).map(p => p.id);

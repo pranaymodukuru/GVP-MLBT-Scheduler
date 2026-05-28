@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { DAYS, WORK_PERIODS, MAX_PD, SUBJECTS_CONFIG, NO_P1_LOCK_CLASSES, COMBINED_SECTIONS, COMBINED_AFTER_LUNCH_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
+import { DAYS, WORK_PERIODS, MAX_PD, SUBJECTS_CONFIG, NO_P1_LOCK_CLASSES, COMBINED_SECTIONS, COMBINABLE_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
 import {
   allSectionIds,
   parseSection,
@@ -370,8 +370,8 @@ export function generateTimetable(preserveLocked = false) {
   // ── Step 8: Sync combined-after-lunch sections ────────────────────────────
   // For groups like PP1+PP2, every post-lunch slot should share the same
   // subject and teacher so they can be taught as a single combined class.
-  if (COMBINED_AFTER_LUNCH_GROUPS.length && AFTER_LUNCH_PERIODS.length) {
-    COMBINED_AFTER_LUNCH_GROUPS.forEach(baseGroup => {
+  if (COMBINABLE_GROUPS.length && AFTER_LUNCH_PERIODS.length) {
+    COMBINABLE_GROUPS.forEach(baseGroup => {
       const groupSecs = allSectionIds().filter(s => baseGroup.includes(parseSection(s).base));
       if (groupSecs.length < 2) return;
 
@@ -427,7 +427,7 @@ function isSectionsCombined(period, sec1, sec2) {
   if (AFTER_LUNCH_PERIODS.includes(period)) {
     const base1 = parseSection(sec1).base;
     const base2 = parseSection(sec2).base;
-    return COMBINED_AFTER_LUNCH_GROUPS.some(g => g.includes(base1) && g.includes(base2));
+    return COMBINABLE_GROUPS.some(g => g.includes(base1) && g.includes(base2));
   }
 
   return false;
@@ -446,7 +446,7 @@ function isCombinedGroup(teacherId, period, sec1, sec2, subject1, subject2) {
   if (AFTER_LUNCH_PERIODS.includes(period) && subject1 && subject1 === subject2) {
     const base1 = parseSection(sec1).base;
     const base2 = parseSection(sec2).base;
-    return COMBINED_AFTER_LUNCH_GROUPS.some(g => g.includes(base1) && g.includes(base2));
+    return COMBINABLE_GROUPS.some(g => g.includes(base1) && g.includes(base2));
   }
 
   return false;

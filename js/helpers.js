@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES, COMBINED_SECTIONS, COMBINED_AFTER_LUNCH_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
+import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES, COMBINED_SECTIONS, COMBINABLE_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
 
 /** Returns all section IDs in CLASS_CONFIG order, expanding multi-section classes */
 export function allSectionIds() {
@@ -97,7 +97,7 @@ export function getCombinedSections(secId, day, periodId) {
     if (fixedGroup) return fixedGroup.sections.includes(s);
 
     if (isAfterLunch) {
-      return COMBINED_AFTER_LUNCH_GROUPS.some(g => g.includes(myBase) && g.includes(otherBase));
+      return COMBINABLE_GROUPS.some(g => g.includes(myBase) && g.includes(otherBase));
     }
 
     return false;

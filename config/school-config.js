@@ -18,7 +18,7 @@ export const SECTION_LABELS    = cfg.sectionLabels;
 export const MAX_PD            = cfg.maxPeriodsPerDay;
 export const NO_P1_LOCK_CLASSES          = cfg.noP1LockClasses          || [];
 export const COMBINED_SECTIONS          = cfg.combinedSections          || [];
-export const COMBINED_AFTER_LUNCH_GROUPS = cfg.combinedAfterLunchGroups || [];
+export const COMBINABLE_GROUPS = cfg.combinableGroups || [];
 export const NO_P8_CLASSES              = cfg.noPeriod8Classes          || [];
 
 // Work periods that fall after the lunch break

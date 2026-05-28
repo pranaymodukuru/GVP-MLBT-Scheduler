@@ -1,0 +1,3466 @@
+{
+  "savedAt": "2026-05-28T09:34:43.951Z",
+  "TEACHERS": [
+    {
+      "id": "T01",
+      "name": "N. Tulasi Devi",
+      "subjects": [
+        "English",
+        "Maths",
+        "Drawing",
+        "GK",
+        "Hindi",
+        "Telugu",
+        "Natural Talk",
+        "Health Talk",
+        "Games",
+        "Story Telling",
+        "Activity",
+        "Audio Visual Room"
+      ],
+      "classes": [
+        "PP1"
+      ]
+    },
+    {
+      "id": "T02",
+      "name": "U. Mayuri",
+      "subjects": [
+        "English",
+        "Maths",
+        "Hindi",
+        "Drawing",
+        "GK",
+        "Telugu",
+        "Natural Talk",
+        "Health Talk",
+        "Games",
+        "Story Telling",
+        "Activity",
+        "Audio Visual Room"
+      ],
+      "classes": [
+        "PP2",
+        "Class 1",
+        "Class 2"
+      ],
+      "classSubjects": {
+        "Class 1": [
+          "Hindi"
+        ],
+        "Class 2": [
+          "Hindi"
+        ]
+      }
+    },
+    {
+      "id": "T03",
+      "name": "CH.N.B. Lavanya",
+      "subjects": [
+        "English",
+        "Maths",
+        "Telugu",
+        "EVS",
+        "Drawing",
+        "GK",
+        "Moral Science",
+        "Games"
+      ],
+      "classes": [
+        "Class 1"
+      ]
+    },
+    {
+      "id": "T04",
+      "name": "S. Syamala",
+      "subjects": [
+        "English",
+        "Maths",
+        "EVS",
+        "Telugu",
+        "GK",
+        "Drawing",
+        "Games"
+      ],
+      "classes": [
+        "Class 2",
+        "Class 3"
+      ]
+    },
+    {
+      "id": "T05",
+      "name": "N.G. Bhavani",
+      "subjects": [
+        "English",
+        "EVS",
+        "Hindi",
+        "GK",
+        "Drawing",
+        "Moral Science",
+        "Sports & Games"
+      ],
+      "classes": [
+        "Class 3",
+        "Class 6",
+        "Class 7"
+      ],
+      "classSubjects": {
+        "Class 6": [
+          "Hindi"
+        ],
+        "Class 7": [
+          "Hindi"
+        ]
+      }
+    },
+    {
+      "id": "T06",
+      "name": "M. Rama Sanyasamma",
+      "subjects": [
+        "English",
+        "EVS",
+        "Telugu",
+        "Hindi",
+        "GK",
+        "Moral Science",
+        "Sports & Games"
+      ],
+      "classes": [
+        "Class 4"
+      ]
+    },
+    {
+      "id": "T07",
+      "name": "Y. MahaLakshmi",
+      "subjects": [
+        "Maths"
+      ],
+      "classes": [
+        "Class 3",
+        "Class 4",
+        "Class 5"
+      ]
+    },
+    {
+      "id": "T08",
+      "name": "V. Aruna Kumari",
+      "subjects": [
+        "English",
+        "Hindi",
+        "Telugu",
+        "EVS - Science",
+        "Gen. Science"
+      ],
+      "classes": [
+        "Class 5",
+        "Class 6",
+        "Class 7"
+      ],
+      "classSubjects": {
+        "Class 6": [
+          "Gen. Science"
+        ],
+        "Class 7": [
+          "Gen. Science"
+        ]
+      }
+    },
+    {
+      "id": "T09",
+      "name": "D. Rajani",
+      "subjects": [
+        "Maths",
+        "Computers",
+        "English"
+      ],
+      "classes": [
+        "Class 6",
+        "Class 7",
+        "Class 8"
+      ]
+    },
+    {
+      "id": "T10",
+      "name": "B. Ramanamma",
+      "subjects": [
+        "Social",
+        "English",
+        "EVS - Social"
+      ],
+      "classes": [
+        "Class 5",
+        "Class 6",
+        "Class 7",
+        "Class 8"
+      ],
+      "classSubjects": {
+        "Class 5": [
+          "EVS - Social"
+        ]
+      }
+    },
+    {
+      "id": "T11",
+      "name": "S. Jyothi",
+      "subjects": [
+        "Hindi"
+      ],
+      "classes": [
+        "Class 8",
+        "Class 9",
+        "Class 10"
+      ]
+    },
+    {
+      "id": "T12",
+      "name": "K. Sandhya Rani",
+      "subjects": [
+        "Telugu"
+      ],
+      "classes": [
+        "Class 6",
+        "Class 7",
+        "Class 8",
+        "Class 9"
+      ]
+    },
+    {
+      "id": "T13",
+      "name": "L. Kiranmayi",
+      "subjects": [
+        "Biology",
+        "English"
+      ],
+      "classes": [
+        "Class 8",
+        "Class 9",
+        "Class 10"
+      ],
+      "classSubjects": {
+        "Class 8": [
+          "Biology"
+        ],
+        "Class 10": [
+          "Biology"
+        ]
+      }
+    },
+    {
+      "id": "T14",
+      "name": "M. Vani Usha Sri",
+      "subjects": [
+        "Social",
+        "English"
+      ],
+      "classes": [
+        "Class 9",
+        "Class 10"
+      ],
+      "classSubjects": {
+        "Class 9": [
+          "Social"
+        ]
+      }
+    },
+    {
+      "id": "T15",
+      "name": "O. Gayatri Kalyani",
+      "subjects": [
+        "Physical Science"
+      ],
+      "classes": [
+        "Class 8",
+        "Class 9",
+        "Class 10"
+      ]
+    },
+    {
+      "id": "T16",
+      "name": "D. Narasimha Murthy",
+      "subjects": [
+        "Maths"
+      ],
+      "classes": [
+        "Class 9",
+        "Class 10"
+      ]
+    },
+    {
+      "id": "T17",
+      "name": "A. Ramani",
+      "subjects": [
+        "Computers"
+      ],
+      "classes": [
+        "Class 9",
+        "Class 10"
+      ]
+    },
+    {
+      "id": "T18",
+      "name": "G. Syamala",
+      "subjects": [
+        "Physical Education",
+        "Sports & Games"
+      ],
+      "classes": [
+        "Class 5",
+        "Class 6",
+        "Class 7",
+        "Class 8",
+        "Class 9",
+        "Class 10"
+      ]
+    },
+    {
+      "id": "T19",
+      "name": "Dr. K. Madhuravani",
+      "subjects": [
+        "English",
+        "Value Education"
+      ],
+      "classes": [
+        "Class 6",
+        "Class 7",
+        "Class 8",
+        "Class 9",
+        "Class 10"
+      ]
+    },
+    {
+      "id": "T20",
+      "name": "V. S. R. Murthy",
+      "subjects": [
+        "Telugu"
+      ],
+      "classes": [
+        "Class 10"
+      ],
+      "availablePeriods": [
+        "P1"
+      ]
+    }
+  ],
+  "CLASS_CONFIG": {
+    "PP2": {
+      "sections": 1,
+      "subjects": [
+        "English",
+        "Maths",
+        "Drawing",
+        "Natural Talk",
+        "Health Talk",
+        "Story Telling",
+        "Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T01"
+      }
+    },
+    "PP1": {
+      "sections": 1,
+      "subjects": [
+        "English",
+        "Maths",
+        "Drawing",
+        "Natural Talk",
+        "Health Talk",
+        "Story Telling",
+        "Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T02"
+      }
+    },
+    "Class 1": {
+      "sections": 1,
+      "subjects": [
+        "English",
+        "Maths",
+        "Hindi",
+        "Telugu",
+        "EVS",
+        "GK",
+        "Moral Science",
+        "Drawing",
+        "Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T03"
+      }
+    },
+    "Class 2": {
+      "sections": 1,
+      "subjects": [
+        "English",
+        "Maths",
+        "Telugu",
+        "Hindi",
+        "EVS",
+        "Moral Science",
+        "GK",
+        "Drawing",
+        "Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T04"
+      }
+    },
+    "Class 3": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "EVS",
+        "Maths",
+        "Drawing",
+        "GK",
+        "Computers",
+        "Moral Science",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T05"
+      }
+    },
+    "Class 4": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "EVS",
+        "Maths",
+        "Drawing",
+        "GK",
+        "Computers",
+        "Moral Science",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T06"
+      }
+    },
+    "Class 5": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "EVS - Social",
+        "EVS - Science",
+        "Maths",
+        "Drawing",
+        "GK",
+        "Computers",
+        "Physical Education",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T08"
+      }
+    },
+    "Class 6": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "Gen. Science",
+        "Social",
+        "Maths",
+        "GK",
+        "Computers",
+        "Value Education",
+        "Physical Education",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T09"
+      }
+    },
+    "Class 7": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "Gen. Science",
+        "Social",
+        "Maths",
+        "GK",
+        "Computers",
+        "Value Education",
+        "Physical Education",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Activity",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T10"
+      }
+    },
+    "Class 8": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "Physical Science",
+        "Biology",
+        "Social",
+        "Maths",
+        "GK",
+        "Computers",
+        "Value Education",
+        "Physical Education",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T11"
+      }
+    },
+    "Class 9": {
+      "sections": 1,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "Physical Science",
+        "Biology",
+        "Social",
+        "Maths",
+        "Computers",
+        "Value Education",
+        "Physical Education",
+        "Audio Video",
+        "Library",
+        "Computer/AI",
+        "Newspaper Reading",
+        "Sports & Games",
+        "Audio Visual Room",
+        "Free Period"
+      ],
+      "sectionTeachers": {
+        "A": "T12"
+      }
+    },
+    "Class 10": {
+      "sections": 2,
+      "subjects": [
+        "Telugu",
+        "Hindi",
+        "English",
+        "Physical Science",
+        "Biology",
+        "Social",
+        "Maths",
+        "Computers",
+        "Value Education",
+        "Physical Education"
+      ],
+      "sectionTeachers": {
+        "A": "T15",
+        "B": "T13"
+      }
+    }
+  },
+  "SUBJECT_FREQ": {
+    "English": 6,
+    "Maths": 6,
+    "Hindi": 6,
+    "Telugu": 6,
+    "EVS": 5,
+    "EVS - Science": 3,
+    "EVS - Social": 3,
+    "Gen. Science": 5,
+    "Physical Science": 5,
+    "Biology": 5,
+    "Social": 5,
+    "GK": 2,
+    "Drawing": 2,
+    "Computers": 2,
+    "AI": 2,
+    "Moral Science": 2,
+    "Value Education": 2,
+    "Physical Education": 2,
+    "Games": 2,
+    "Natural Talk": 2,
+    "Health Talk": 2,
+    "Story Telling": 2,
+    "Audio Video": 2,
+    "Library": 1,
+    "Computer/AI": 2,
+    "Newspaper Reading": 2,
+    "Sports & Games": 2
+  },
+  "SUBJECT_MIN_FREQ": {
+    "English": 4,
+    "Maths": 4,
+    "Hindi": 4,
+    "Telugu": 4,
+    "EVS": 3,
+    "EVS - Science": 2,
+    "EVS - Social": 2,
+    "Gen. Science": 3,
+    "Physical Science": 3,
+    "Biology": 3,
+    "Social": 3,
+    "GK": 1,
+    "Drawing": 1,
+    "Computers": 1,
+    "AI": 1,
+    "Moral Science": 1,
+    "Value Education": 1,
+    "Physical Education": 1,
+    "Games": 1,
+    "Natural Talk": 1,
+    "Health Talk": 1,
+    "Story Telling": 1,
+    "Audio Video": 1,
+    "Library": 1,
+    "Computer/AI": 1,
+    "Newspaper Reading": 1,
+    "Sports & Games": 1
+  },
+  "TEACHER_AVAILABILITY": {},
+  "CONSTRAINTS": {
+    "maxSubjectPeriodsPerDay": 2,
+    "maxTeacherPeriodsPerDay": 6,
+    "peOncePerDay": true
+  },
+  "timetable": {
+    "PP2": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Natural Talk",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Games",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T02"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Health Talk",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Audio Visual Room",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Health Talk",
+          "teacherId": "T02"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Natural Talk",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Audio Visual Room",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Games",
+          "teacherId": "T02"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Health Talk",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Games",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Health Talk",
+          "teacherId": "T02"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Natural Talk",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Games",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T02"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Activity",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Activity",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": true
+        },
+        "P6": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": true
+        }
+      }
+    },
+    "PP1": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Drawing",
+          "teacherId": "T01"
+        },
+        "P7": {
+          "subject": "Games",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Natural Talk",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T02",
+          "locked": true
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Audio Visual Room",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Health Talk",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Drawing",
+          "teacherId": "T01"
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T01"
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Natural Talk",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Audio Visual Room",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Games",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Natural Talk",
+          "teacherId": "T01"
+        },
+        "P4": {
+          "subject": "Natural Talk",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T02",
+          "locked": true
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Health Talk",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Story Telling",
+          "teacherId": "T01",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Drawing",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Activity",
+          "teacherId": "T01"
+        },
+        "P7": {
+          "subject": "Games",
+          "teacherId": "T01",
+          "locked": true
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Activity",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": true
+        },
+        "P3": {
+          "subject": "Activity",
+          "teacherId": "T02",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": true
+        }
+      }
+    },
+    "Class 1": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": false
+        },
+        "P7": {
+          "subject": "Drawing",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P4": {
+          "subject": "EVS",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Games",
+          "teacherId": "T03",
+          "locked": true
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Drawing",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Games",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Moral Science",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": false
+        },
+        "P3": {
+          "subject": "EVS",
+          "teacherId": "T03",
+          "locked": true
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P4": {
+          "subject": "GK",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P7": {
+          "subject": "Moral Science",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P6": {
+          "subject": "EVS",
+          "teacherId": "T03"
+        },
+        "P3": {
+          "subject": "EVS",
+          "teacherId": "T03"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P8": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": false
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P3": {
+          "subject": "EVS",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T03"
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T03"
+        },
+        "P7": {
+          "subject": "Moral Science",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P8": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": false
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T03",
+          "locked": false
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T03"
+        },
+        "P8": {
+          "subject": "Free Period",
+          "teacherId": null,
+          "locked": false
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T02",
+          "locked": false
+        },
+        "P3": {
+          "subject": "EVS",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P7": {
+          "subject": "GK",
+          "teacherId": "T03"
+        },
+        "P4": {
+          "subject": "Drawing",
+          "teacherId": "T03"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T03",
+          "locked": true
+        },
+        "P4": {
+          "subject": "EVS",
+          "teacherId": "T03"
+        },
+        "P5": {
+          "subject": "Games",
+          "teacherId": "T03"
+        },
+        "P6": {
+          "subject": "Games",
+          "teacherId": "T03"
+        },
+        "P3": {
+          "subject": "EVS",
+          "teacherId": "T03",
+          "locked": false
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T03",
+          "locked": false
+        }
+      }
+    },
+    "Class 2": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T04",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P8": {
+          "subject": "EVS",
+          "teacherId": "T04"
+        },
+        "P4": {
+          "subject": "GK",
+          "teacherId": "T04"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P6": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T04",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P2": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P7": {
+          "subject": "EVS",
+          "teacherId": "T04"
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P4": {
+          "subject": "GK",
+          "teacherId": "T04"
+        },
+        "P8": {
+          "subject": "Hindi",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Activity",
+          "teacherId": null
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T04",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P8": {
+          "subject": "EVS",
+          "teacherId": "T04"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P2": {
+          "subject": "Games",
+          "teacherId": "T04"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T04",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P8": {
+          "subject": "Moral Science",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P4": {
+          "subject": "EVS",
+          "teacherId": "T04"
+        },
+        "P7": {
+          "subject": "Drawing",
+          "teacherId": "T04"
+        },
+        "P2": {
+          "subject": "GK",
+          "teacherId": "T04"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T04",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P6": {
+          "subject": "EVS",
+          "teacherId": "T04"
+        },
+        "P8": {
+          "subject": "English",
+          "teacherId": "T04"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P7": {
+          "subject": "EVS",
+          "teacherId": "T04"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P4": {
+          "subject": "Games",
+          "teacherId": "T04"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T04",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T04"
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T02"
+        },
+        "P6": {
+          "subject": "Drawing",
+          "teacherId": "T04"
+        },
+        "P2": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        }
+      }
+    },
+    "Class 3": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T05",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Audio Video",
+          "teacherId": "T07"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P6": {
+          "subject": "GK",
+          "teacherId": "T05"
+        },
+        "P4": {
+          "subject": "Sports & Games",
+          "teacherId": "T05"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Audio Video",
+          "teacherId": "T07"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T05",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P3": {
+          "subject": "EVS",
+          "teacherId": "T05"
+        },
+        "P2": {
+          "subject": "Computer/AI",
+          "teacherId": "T18"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P7": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T13"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T05",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Activity",
+          "teacherId": null
+        },
+        "P6": {
+          "subject": "Drawing",
+          "teacherId": "T05"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P5": {
+          "subject": "EVS",
+          "teacherId": "T05"
+        },
+        "P8": {
+          "subject": "Sports & Games",
+          "teacherId": "T05"
+        },
+        "P4": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T05",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P4": {
+          "subject": "Library",
+          "teacherId": "T19"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": null
+        },
+        "P6": {
+          "subject": "Telugu",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "Computers",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P7": {
+          "subject": "EVS",
+          "teacherId": "T05"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T05",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Activity",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P6": {
+          "subject": "Moral Science",
+          "teacherId": "T05"
+        },
+        "P3": {
+          "subject": "Drawing",
+          "teacherId": "T05"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T05",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T04"
+        },
+        "P2": {
+          "subject": "Moral Science",
+          "teacherId": "T05"
+        },
+        "P6": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        }
+      }
+    },
+    "Class 4": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T06",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Activity",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T13"
+        },
+        "P2": {
+          "subject": "Telugu",
+          "teacherId": "T06"
+        },
+        "P8": {
+          "subject": "Drawing",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T06"
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T06",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Telugu",
+          "teacherId": "T06"
+        },
+        "P2": {
+          "subject": "EVS",
+          "teacherId": "T06"
+        },
+        "P7": {
+          "subject": "Sports & Games",
+          "teacherId": "T06"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P5": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T14"
+        },
+        "P6": {
+          "subject": "Audio Video",
+          "teacherId": "T06"
+        },
+        "P8": {
+          "subject": "Sports & Games",
+          "teacherId": "T06"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T06",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P5": {
+          "subject": "GK",
+          "teacherId": "T06"
+        },
+        "P8": {
+          "subject": "Computers",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T06"
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T06"
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T06"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T06",
+          "locked": true
+        },
+        "P4": {
+          "subject": "EVS",
+          "teacherId": "T06"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P8": {
+          "subject": "Hindi",
+          "teacherId": "T06"
+        },
+        "P2": {
+          "subject": "Moral Science",
+          "teacherId": "T06"
+        },
+        "P7": {
+          "subject": "Audio Video",
+          "teacherId": "T07"
+        },
+        "P6": {
+          "subject": "Computer/AI",
+          "teacherId": "T15"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T06"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T06",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Hindi",
+          "teacherId": "T06"
+        },
+        "P4": {
+          "subject": "Telugu",
+          "teacherId": "T06"
+        },
+        "P2": {
+          "subject": "Computer/AI",
+          "teacherId": "T17"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P5": {
+          "subject": "Moral Science",
+          "teacherId": "T06"
+        },
+        "P6": {
+          "subject": "EVS",
+          "teacherId": "T06"
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T06"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T06",
+          "locked": true
+        },
+        "P3": {
+          "subject": "GK",
+          "teacherId": "T06"
+        },
+        "P5": {
+          "subject": "EVS",
+          "teacherId": "T06"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P4": {
+          "subject": "Library",
+          "teacherId": "T18"
+        },
+        "P6": {
+          "subject": "EVS",
+          "teacherId": "T06"
+        }
+      }
+    },
+    "Class 5": {
+      "Mon": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T08",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T08"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P6": {
+          "subject": "EVS - Social",
+          "teacherId": "T10"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "EVS - Social",
+          "teacherId": "T10"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T08",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P4": {
+          "subject": "Sports & Games",
+          "teacherId": "T18"
+        },
+        "P5": {
+          "subject": "Audio Video",
+          "teacherId": "T07"
+        },
+        "P8": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        },
+        "P7": {
+          "subject": "Computers",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P6": {
+          "subject": "Drawing",
+          "teacherId": null
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T08",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T08"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P3": {
+          "subject": "EVS - Science",
+          "teacherId": "T08"
+        },
+        "P5": {
+          "subject": "Activity",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "Computer/AI",
+          "teacherId": "T15"
+        },
+        "P6": {
+          "subject": "EVS - Science",
+          "teacherId": "T08"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T08",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Audio Video",
+          "teacherId": "T18"
+        },
+        "P7": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T08"
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P8": {
+          "subject": "Telugu",
+          "teacherId": "T08"
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": null
+        },
+        "P5": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T17"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T08",
+          "locked": true
+        },
+        "P6": {
+          "subject": "EVS - Science",
+          "teacherId": "T08"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P3": {
+          "subject": "Computer/AI",
+          "teacherId": "T18"
+        },
+        "P4": {
+          "subject": "Telugu",
+          "teacherId": "T08"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P2": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "English",
+          "teacherId": "T08",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T07"
+        },
+        "P3": {
+          "subject": "GK",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Library",
+          "teacherId": "T19"
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T08"
+        },
+        "P5": {
+          "subject": "Drawing",
+          "teacherId": null
+        }
+      }
+    },
+    "Class 6": {
+      "Mon": {
+        "P1": {
+          "subject": "Maths",
+          "teacherId": "T09",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": null
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P2": {
+          "subject": "Social",
+          "teacherId": "T10"
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": "T09"
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P8": {
+          "subject": "Audio Video",
+          "teacherId": "T18"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "Maths",
+          "teacherId": "T09",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P5": {
+          "subject": "Gen. Science",
+          "teacherId": "T08"
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": "T09"
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P4": {
+          "subject": "Gen. Science",
+          "teacherId": "T08"
+        },
+        "P3": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "Maths",
+          "teacherId": "T09",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T17"
+        },
+        "P5": {
+          "subject": "Gen. Science",
+          "teacherId": "T08"
+        },
+        "P3": {
+          "subject": "Sports & Games",
+          "teacherId": "T18"
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P8": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P6": {
+          "subject": "Hindi",
+          "teacherId": null
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "Maths",
+          "teacherId": "T09",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P3": {
+          "subject": "Social",
+          "teacherId": "T10"
+        },
+        "P7": {
+          "subject": "Computer/AI",
+          "teacherId": "T13"
+        },
+        "P6": {
+          "subject": "GK",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T10"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "Maths",
+          "teacherId": "T09",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        },
+        "P7": {
+          "subject": "Sports & Games",
+          "teacherId": "T18"
+        },
+        "P3": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P8": {
+          "subject": "Gen. Science",
+          "teacherId": "T08"
+        },
+        "P2": {
+          "subject": "Library",
+          "teacherId": "T19"
+        },
+        "P6": {
+          "subject": "Social",
+          "teacherId": "T10"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "Maths",
+          "teacherId": "T09",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Value Education",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P2": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T09"
+        },
+        "P6": {
+          "subject": "Activity",
+          "teacherId": null
+        }
+      }
+    },
+    "Class 7": {
+      "Mon": {
+        "P1": {
+          "subject": "Social",
+          "teacherId": "T10",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P2": {
+          "subject": "Computer/AI",
+          "teacherId": "T17"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T10"
+        },
+        "P7": {
+          "subject": "Activity",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Library",
+          "teacherId": "T02"
+        },
+        "P6": {
+          "subject": "Gen. Science",
+          "teacherId": "T08"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "Social",
+          "teacherId": "T10",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P6": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        },
+        "P7": {
+          "subject": "GK",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P8": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P3": {
+          "subject": "Audio Video",
+          "teacherId": "T19"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "Social",
+          "teacherId": "T10",
+          "locked": true
+        },
+        "P6": {
+          "subject": "GK",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T09"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P3": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T14"
+        },
+        "P5": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T15"
+        },
+        "P8": {
+          "subject": "Sports & Games",
+          "teacherId": "T18"
+        },
+        "P4": {
+          "subject": "Computers",
+          "teacherId": "T09"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "Social",
+          "teacherId": "T10",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Sports & Games",
+          "teacherId": "T18"
+        },
+        "P6": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T09"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P7": {
+          "subject": "Computers",
+          "teacherId": "T09"
+        },
+        "P4": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "Social",
+          "teacherId": "T10",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P4": {
+          "subject": "Gen. Science",
+          "teacherId": null
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "Social",
+          "teacherId": "T10",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T05"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P6": {
+          "subject": "Gen. Science",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Activity",
+          "teacherId": null
+        }
+      }
+    },
+    "Class 8": {
+      "Mon": {
+        "P1": {
+          "subject": "Hindi",
+          "teacherId": "T11",
+          "locked": true
+        },
+        "P3": {
+          "subject": "English",
+          "teacherId": "T09"
+        },
+        "P2": {
+          "subject": "Audio Video",
+          "teacherId": "T15"
+        },
+        "P4": {
+          "subject": "Social",
+          "teacherId": "T10"
+        },
+        "P8": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P7": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P6": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "Hindi",
+          "teacherId": "T11",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T10"
+        },
+        "P4": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P6": {
+          "subject": "Computer/AI",
+          "teacherId": "T17"
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P8": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P2": {
+          "subject": "Social",
+          "teacherId": null
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "Hindi",
+          "teacherId": "T11",
+          "locked": true
+        },
+        "P2": {
+          "subject": "GK",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "English",
+          "teacherId": "T10"
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P4": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P5": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P7": {
+          "subject": "Telugu",
+          "teacherId": null
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "Hindi",
+          "teacherId": "T11",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Computer/AI",
+          "teacherId": "T14"
+        },
+        "P3": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P5": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T16"
+        },
+        "P7": {
+          "subject": "Biology",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P2": {
+          "subject": "GK",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "Telugu",
+          "teacherId": null
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "Hindi",
+          "teacherId": "T11",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Sports & Games",
+          "teacherId": "T18"
+        },
+        "P2": {
+          "subject": "Value Education",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P3": {
+          "subject": "Computers",
+          "teacherId": "T09"
+        },
+        "P6": {
+          "subject": "Telugu",
+          "teacherId": "T12"
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T10"
+        },
+        "P8": {
+          "subject": "Library",
+          "teacherId": "T14"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "Hindi",
+          "teacherId": "T11",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T09"
+        },
+        "P6": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P7": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        },
+        "P3": {
+          "subject": "Social",
+          "teacherId": "T10"
+        },
+        "P2": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P8": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T15"
+        }
+      }
+    },
+    "Class 9": {
+      "Mon": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T12",
+          "locked": true
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T13"
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T13"
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P3": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        },
+        "P8": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P2": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P5": {
+          "subject": "Audio Video",
+          "teacherId": "T14"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T12",
+          "locked": true
+        },
+        "P8": {
+          "subject": "English",
+          "teacherId": "T13"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P4": {
+          "subject": "Physical Science",
+          "teacherId": null
+        },
+        "P6": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P7": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P3": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T13"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T12",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P4": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T13"
+        },
+        "P5": {
+          "subject": "Physical Science",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Computer/AI",
+          "teacherId": "T16"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P3": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T12",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Computers",
+          "teacherId": "T17"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P6": {
+          "subject": "Physical Science",
+          "teacherId": null
+        },
+        "P5": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P4": {
+          "subject": "Sports & Games",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T12",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P2": {
+          "subject": "Newspaper Reading",
+          "teacherId": "T13"
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T13"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P4": {
+          "subject": "Library",
+          "teacherId": "T16"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P6": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T12",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P2": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P6": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T13"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P3": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        }
+      }
+    },
+    "Class 10 - A": {
+      "Mon": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P4": {
+          "subject": "Computers",
+          "teacherId": "T17"
+        },
+        "P8": {
+          "subject": "Social",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": null
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T19"
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P7": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P8": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P4": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P3": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P7": {
+          "subject": "Biology",
+          "teacherId": null
+        },
+        "P3": {
+          "subject": "English",
+          "teacherId": null
+        },
+        "P4": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P6": null
+      },
+      "Thu": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P7": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P5": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P3": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P6": {
+          "subject": "Physical Science",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Physical Education",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P8": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P5": {
+          "subject": "Computers",
+          "teacherId": "T17"
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P3": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P5": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P7": {
+          "subject": "Physical Education",
+          "teacherId": null
+        },
+        "P8": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P4": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P6": {
+          "subject": "Social",
+          "teacherId": "T14"
+        }
+      }
+    },
+    "Class 10 - B": {
+      "Mon": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P8": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": "T17"
+        },
+        "P3": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P5": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        },
+        "P4": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P2": {
+          "subject": "Maths",
+          "teacherId": null
+        }
+      },
+      "Tue": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P4": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P6": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P8": {
+          "subject": "Physical Science",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P5": {
+          "subject": "Social",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        }
+      },
+      "Wed": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P4": {
+          "subject": "Physical Education",
+          "teacherId": "T18"
+        },
+        "P7": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P8": {
+          "subject": "Biology",
+          "teacherId": null
+        },
+        "P5": {
+          "subject": "Physical Science",
+          "teacherId": null
+        },
+        "P6": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        }
+      },
+      "Thu": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P6": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": null
+        },
+        "P2": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P3": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P4": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P5": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P8": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        }
+      },
+      "Fri": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P6": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P3": {
+          "subject": "Social",
+          "teacherId": "T14"
+        },
+        "P2": {
+          "subject": "Physical Science",
+          "teacherId": "T15"
+        },
+        "P4": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P5": {
+          "subject": "English",
+          "teacherId": "T19"
+        },
+        "P8": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P7": {
+          "subject": "Hindi",
+          "teacherId": null
+        }
+      },
+      "Sat": {
+        "P1": {
+          "subject": "Telugu",
+          "teacherId": "T20",
+          "locked": true
+        },
+        "P2": {
+          "subject": "Hindi",
+          "teacherId": "T11"
+        },
+        "P3": {
+          "subject": "Maths",
+          "teacherId": "T16"
+        },
+        "P4": {
+          "subject": "English",
+          "teacherId": "T14"
+        },
+        "P7": {
+          "subject": "Value Education",
+          "teacherId": "T19"
+        },
+        "P5": {
+          "subject": "Maths",
+          "teacherId": null
+        },
+        "P6": {
+          "subject": "Computers",
+          "teacherId": "T17"
+        },
+        "P8": {
+          "subject": "Biology",
+          "teacherId": "T13"
+        }
+      }
+    }
+  }
+}

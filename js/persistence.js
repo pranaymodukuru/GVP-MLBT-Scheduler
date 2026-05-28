@@ -44,9 +44,8 @@ export function applySnap(snap) {
   if (snap.timetable)            state.timetable            = snap.timetable;
 }
 
-/** Download the current state as a JSON file */
-export function exportJSON() {
-  const blob = new Blob([JSON.stringify({
+function buildSnapshot() {
+  return JSON.stringify({
     savedAt:              new Date().toISOString(),
     TEACHERS:             state.TEACHERS,
     CLASS_CONFIG:         state.CLASS_CONFIG,
@@ -55,10 +54,61 @@ export function exportJSON() {
     TEACHER_AVAILABILITY: state.TEACHER_AVAILABILITY,
     CONSTRAINTS:          state.CONSTRAINTS,
     timetable:            state.timetable,
-  }, null, 2)], { type: 'application/json' });
+  }, null, 2);
+}
+
+function timestampedFilename() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const ts = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+  return `timetable_${ts}.json`;
+}
+
+/** Fetch the list of saved schedules from the server. Returns [{filename, mtime}] or null. */
+export async function fetchSavedList() {
+  try {
+    const res = await fetch('/saved-schedules');
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (_) {
+    return null;
+  }
+}
+
+/** Fetch the latest saved schedule from the server. Returns {filename, data} or null. */
+export async function fetchLatest() {
+  try {
+    const res = await fetch('/latest-schedule');
+    if (res.status === 204) return null; // no saves yet
+    if (!res.ok) return null;
+    return await res.json(); // { filename, data }
+  } catch (_) {
+    return null; // server not running
+  }
+}
+
+/** Save the current state — POSTs to /save (server.py) if available, else downloads */
+export async function exportJSON() {
+  const json = buildSnapshot();
+  const filename = timestampedFilename();
+
+  try {
+    const res = await fetch('/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Filename': filename },
+      body: json,
+    });
+    if (res.ok) {
+      const { saved } = await res.json();
+      return { saved };
+    }
+  } catch (_) {
+    // server not running — fall through to download
+  }
 
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `timetable_${new Date().toISOString().slice(0, 10)}.json`;
+  a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+  a.download = filename;
   a.click();
+  return { saved: filename };
 }

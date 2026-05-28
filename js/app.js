@@ -10,7 +10,7 @@ import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_S
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
 import { refreshSelects } from './selects.js';
-import { saveState, loadSavedSnap, applySnap, exportJSON } from './persistence.js';
+import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchSavedList } from './persistence.js';
 import { generateTimetable, checkConflicts } from './scheduler.js';
 import { renderClassView } from './views/class-view.js';
 import { renderTeacherView } from './views/teacher-view.js';
@@ -230,8 +230,54 @@ export function dismissBannerFresh() {
   saveState();
 }
 
-export function triggerImport() {
+export async function triggerImport() {
+  const modal = document.getElementById('import-modal');
+  const list  = document.getElementById('import-saved-list');
+  list.innerHTML = '<div class="import-empty">Loading…</div>';
+  modal.classList.add('open');
+
+  const files = await fetchSavedList();
+  if (!files || files.length === 0) {
+    list.innerHTML = '<div class="import-empty">No saved schedules found.</div>';
+    return;
+  }
+
+  list.innerHTML = files.map(f => {
+    const dt = new Date(f.mtime * 1000).toLocaleString();
+    return `<div class="import-file-row">
+      <span class="import-file-name" title="${f.filename}">${f.filename}</span>
+      <span class="import-file-time">${dt}</span>
+      <button class="btn btn-sm btn-primary" onclick="loadSavedFile('${f.filename}')">Load</button>
+    </div>`;
+  }).join('');
+}
+
+export function closeImportModal() {
+  document.getElementById('import-modal').classList.remove('open');
+}
+
+export function triggerFilePicker() {
+  closeImportModal();
   document.getElementById('import-file').click();
+}
+
+export async function loadSavedFile(filename) {
+  try {
+    const res = await fetch(`/saved_schedules/${encodeURIComponent(filename)}`);
+    if (!res.ok) throw new Error();
+    const snap = await res.json();
+    applySnap(snap);
+    saveState();
+    refreshSelects();
+    checkConflicts();
+    renderClassView();
+    if (state.currentTab === 'admin')     renderAdminView();
+    if (state.currentTab === 'dashboard') renderDashboard();
+    closeImportModal();
+    showToast(`✅ Loaded ${filename}`);
+  } catch (_) {
+    showToast('❌ Could not load file', 'error');
+  }
 }
 
 export function handleImport(e) {
@@ -266,18 +312,27 @@ export function resetToDefaults() {
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
 
-function init() {
+async function init() {
   const snap = loadSavedSnap();
   if (snap) {
     applySnap(snap);
-    const banner = document.getElementById('load-banner');
-    const ts     = new Date(snap.savedAt);
+    const ts = new Date(snap.savedAt);
     document.getElementById('load-banner-time').textContent =
       `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
-    banner.style.display = '';
+    document.getElementById('load-banner').style.display = '';
   } else {
-    state.timetable = generateTimetable(false);
-    saveState();
+    const latest = await fetchLatest();
+    if (latest) {
+      applySnap(latest.data);
+      saveState();
+      const ts = new Date(latest.data.savedAt);
+      document.getElementById('load-banner-time').textContent =
+        `${latest.filename} — ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+      document.getElementById('load-banner').style.display = '';
+    } else {
+      state.timetable = generateTimetable(false);
+      saveState();
+    }
   }
   refreshSelects();
   checkConflicts();
@@ -301,8 +356,11 @@ window.runAndSwitch     = runAndSwitch;
 window.fillEmptySlots   = fillEmptySlots;
 
 // Persistence
-window.exportJSON       = exportJSON;
+window.exportJSON       = () => exportJSON().then(({ saved }) => showToast(`💾 Saved: ${saved}`));
 window.triggerImport    = triggerImport;
+window.closeImportModal = closeImportModal;
+window.triggerFilePicker = triggerFilePicker;
+window.loadSavedFile    = loadSavedFile;
 window.handleImport     = handleImport;
 window.applySavedState  = applySavedState;
 window.dismissBanner    = dismissBanner;

@@ -49,6 +49,11 @@ td:last-child,th:last-child{border-right:none}
 .modal select{width:100%;margin-bottom:14px;padding:9px 12px;border-radius:8px;border:1px solid #d1d5db;font-size:13px;color:#1a1a2e;outline:none}
 .modal select:focus{border-color:#3b82f6}
 .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.import-file-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:6px;gap:10px}
+.import-file-row:hover{background:#f9fafb}
+.import-file-name{font-size:13px;color:#1a1a2e;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.import-file-time{font-size:11px;color:#6b7280;flex-shrink:0}
+.import-empty{font-size:13px;color:#9ca3af;text-align:center;padding:20px 0}
 .lock-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:9px 12px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;cursor:pointer}
 .lock-row input[type=checkbox]{width:15px;height:15px;accent-color:#1d4ed8;cursor:pointer;flex-shrink:0}
 .lock-row span{font-size:12px;color:#374151;line-height:1.4}

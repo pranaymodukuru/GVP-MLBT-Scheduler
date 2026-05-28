@@ -27,7 +27,7 @@
     </div>
     <div class="top-btns">
       <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> Print</button>
-      <button class="btn" onclick="exportJSON()"><i class="ti ti-download"></i> Export</button>
+      <button class="btn" onclick="exportJSON()"><i class="ti ti-device-floppy"></i> Save</button>
       <button class="btn" onclick="triggerImport()"><i class="ti ti-upload"></i> Import</button>
       <button class="btn" id="regen-btn" onclick="regenerate()"><i class="ti ti-refresh"></i> Regenerate</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
@@ -223,6 +223,18 @@
       <button class="btn" onclick="closeTeacherModal()">Cancel</button>
       <button class="btn btn-danger btn-sm" id="tm-delete-btn" onclick="deleteTeacher()" style="display:none"><i class="ti ti-trash"></i> Delete</button>
       <button class="btn btn-primary" onclick="saveTeacher()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import modal -->
+<div class="modal-bg" id="import-modal">
+  <div class="modal">
+    <h3>Import Schedule</h3>
+    <div id="import-saved-list"></div>
+    <div class="modal-btns" style="margin-top:12px">
+      <button class="btn" onclick="closeImportModal()">Cancel</button>
+      <button class="btn" onclick="triggerFilePicker()"><i class="ti ti-folder-open"></i> Browse file…</button>
     </div>
   </div>
 </div>

@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { DAYS, WORK_PERIODS } from '../../config/school-config.js';
+import { DAYS, WORK_PERIODS, NO_P8_CLASSES } from '../../config/school-config.js';
 import { allSectionIds, parseSection, isSatHalf, getSubjects, isTeacherAvailable } from '../helpers.js';
 
 /** Compute all dashboard statistics from current state (pure data, no DOM). */
@@ -29,7 +29,7 @@ export function computeDashboardStats() {
         if (isTeacherAvailable(t.id, d, p)) availableSlots++;
       });
     });
-    ds.byTeacher[t.id] = { id: t.id, name: t.name, periods: 0, availableSlots, byDay: {} };
+    ds.byTeacher[t.id] = { id: t.id, name: t.name, periods: 0, availableSlots, byDay: {}, sections: new Set() };
     DAYS.forEach(d => { ds.byTeacher[t.id].byDay[d] = 0; });
   });
 
@@ -43,7 +43,7 @@ export function computeDashboardStats() {
 
     DAYS.forEach(d => WORK_PERIODS.forEach(p => {
       if (d === 'Sat' && half && ['P7', 'P8'].includes(p)) return;
-      if (p === 'P8' && ['PP1', 'PP2'].includes(base)) return;
+      if (p === 'P8' && NO_P8_CLASSES.includes(base)) return;
 
       ds.totalSlots++;
       ds.byClass[secId].total++;
@@ -53,7 +53,7 @@ export function computeDashboardStats() {
         ds.emptySlots++;
         ds.byClass[secId].empty++;
         ds.emptyList.push({ secId, day: d, period: p });
-      } else if (!cell.teacherId) {
+      } else if (!cell.teacherId && cell.subject !== 'Free Period') {
         ds.unassignedSlots++;
         ds.byClass[secId].unassigned++;
         ds.unassignedList.push({ secId, day: d, period: p, subject: cell.subject });
@@ -61,6 +61,7 @@ export function computeDashboardStats() {
         ds.filledSlots++;
         ds.byClass[secId].filled++;
         if (ds.byTeacher[cell.teacherId]) {
+          ds.byTeacher[cell.teacherId].sections.add(secId);
           const slotKey = `${cell.teacherId}|${d}|${p}`;
           if (!countedTeacherSlots.has(slotKey)) {
             countedTeacherSlots.add(slotKey);
@@ -153,17 +154,41 @@ export function renderDashboard() {
 
   // ── Teacher workload bars ──────────────────────────────────────────────────
   const sorted = Object.values(ds.byTeacher).sort((a, b) => b.periods - a.periods);
-  document.getElementById('dash-workload').innerHTML = sorted.map(t => {
-    const cap   = t.availableSlots || 1;
-    const ratio = t.periods / cap;
-    const pct   = Math.min(100, ratio * 100);
-    const cls   = ratio < 0.4 ? 'wl-low' : ratio <= 0.7 ? 'wl-ok' : ratio <= 0.9 ? 'wl-high' : 'wl-over';
+  const header =
+    `<div class="workload-header">` +
+      `<span class="workload-name wl-hdr-cell">Teacher</span>` +
+      `<span class="workload-count wl-hdr-cell"></span>` +
+      `<div style="width:220px;flex-shrink:0" class="wl-hdr-cell">Workload</div>` +
+      `<div class="workload-stats">` +
+        `<span class="wl-stat wl-hdr-cell">Periods</span>` +
+        `<span class="wl-stat wl-hdr-cell">Avg / Day</span>` +
+        `<span class="wl-stat wl-hdr-cell">Sections</span>` +
+        `<span class="wl-stat wl-hdr-cell">Active Days</span>` +
+        `<span class="wl-stat wl-hdr-cell">Utilized</span>` +
+      `</div>` +
+    `</div>`;
+
+  document.getElementById('dash-workload').innerHTML = header + sorted.map(t => {
+    const cap      = t.availableSlots || 1;
+    const ratio    = t.periods / cap;
+    const pct      = Math.min(100, ratio * 100);
+    const utilPct  = Math.round(ratio * 100);
+    const cls      = ratio < 0.4 ? 'wl-low' : ratio <= 0.7 ? 'wl-ok' : ratio <= 0.9 ? 'wl-high' : 'wl-over';
+    const avgDay   = (t.periods / 6).toFixed(1);
+    const secCount = t.sections.size;
+    const activeDays = Object.values(t.byDay).filter(n => n > 0).length;
     return (
       `<div class="workload-row">` +
-      `<span class="workload-name" title="${t.name}">${t.name}</span>` +
-      `<span class="workload-count">${t.periods}</span>` +
-      `<div class="workload-bar-bg"><div class="workload-bar ${cls}" style="width:${pct}%"></div></div>` +
-      `<span class="workload-avg">${t.periods}/${t.availableSlots}</span>` +
+        `<span class="workload-name" title="${t.name}">${t.name}</span>` +
+        `<span class="workload-count">${t.periods}</span>` +
+        `<div class="workload-bar-bg"><div class="workload-bar ${cls}" style="width:${pct}%"></div></div>` +
+        `<div class="workload-stats">` +
+          `<span class="wl-stat">${t.periods}<em>/${t.availableSlots}</em></span>` +
+          `<span class="wl-stat">${avgDay}</span>` +
+          `<span class="wl-stat">${secCount}</span>` +
+          `<span class="wl-stat">${activeDays}</span>` +
+          `<span class="wl-stat"><span class="wl-badge ${cls}">${utilPct}%</span></span>` +
+        `</div>` +
       `</div>`
     );
   }).join('');

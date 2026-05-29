@@ -52,10 +52,10 @@ html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; ba
 .doc-name { font-size: 15px; font-weight: 800; color: #1a1a2e; }
 .hdr-right { text-align: right; font-size: 10px; color: #9ca3af; line-height: 1.7; flex-shrink: 0; }
 
-table { flex: 1; min-height: 0; width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
+table { flex: 1; min-height: 0; width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
 th {
-  padding: 7px 8px;
-  font-size: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
   font-weight: 700;
   text-align: center;
   color: #374151;
@@ -65,7 +65,7 @@ th {
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
-th:first-child { text-align: left; width: 82px; }
+th:first-child { text-align: left; width: 90px; }
 
 /* height:1px is the standard trick to make height:100% work on cell children */
 td {
@@ -75,21 +75,21 @@ td {
   height: 1px;
 }
 td:first-child {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: #6b7280;
   background: #f9fafb;
   padding: 6px 8px;
   white-space: nowrap;
   vertical-align: middle;
-  width: 82px;
+  width: 90px;
   height: auto;
 }
-.per-time { font-size: 8px; color: #b0b7c3; font-weight: 400; margin-top: 3px; }
+.per-time { font-size: 10px; color: #b0b7c3; font-weight: 400; margin-top: 3px; }
 
 .subj-cell {
   border-radius: 5px;
-  padding: 6px 9px;
+  padding: 7px 10px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -98,13 +98,13 @@ td:first-child {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-.s-name { font-weight: 700; font-size: 12px; line-height: 1.2; }
-.t-name { font-size: 10px; opacity: 0.75; line-height: 1.2; }
+.s-name { font-weight: 700; font-size: 14px; line-height: 1.2; }
+.t-name { font-size: 12px; opacity: 0.75; line-height: 1.2; }
 
 .break-cell {
   background: #f3f4f6;
   color: #b0b7c3;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -120,7 +120,7 @@ td:first-child {
 .empty-cell {
   height: 100%;
   color: #e5e7eb;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,7 +176,7 @@ function buildClassPage(secId) {
     if (per.isBreak) {
       if (per.id === 'WRK' && !upper) return;
       tbody += `<tr>
-        <td><span style="font-size:8px">${per.label}</span><div class="per-time">${per.time}</div></td>
+        <td><span style="font-size:10px">${per.label}</span><div class="per-time">${per.time}</div></td>
         ${activeDays.map(() => `<td><div class="break-cell">${per.label}</div></td>`).join('')}
       </tr>`;
       return;
@@ -227,7 +227,7 @@ function buildTeacherPage(teacher) {
   PERIODS.forEach(per => {
     if (per.isBreak) {
       tbody += `<tr>
-        <td><span style="font-size:8px">${per.label}</span><div class="per-time">${per.time}</div></td>
+        <td><span style="font-size:10px">${per.label}</span><div class="per-time">${per.time}</div></td>
         ${DAYS.map(() => `<td><div class="break-cell">${per.label}</div></td>`).join('')}
       </tr>`;
       return;

@@ -107,6 +107,12 @@ td:first-child {
 }
 `;
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function exportDateStamp() {
+  return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
 // ─── Class page builder ───────────────────────────────────────────────────────
 
 function buildClassPage(secId) {
@@ -159,6 +165,7 @@ function buildClassPage(secId) {
     <div class="page-header">
       <span class="school">Class Timetable</span>
       <span class="title">${secId}</span>
+      <span class="meta">Exported: ${exportDateStamp()}</span>
     </div>
     <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
   </div>`;
@@ -226,7 +233,7 @@ function buildTeacherPage(teacher) {
     <div class="page-header">
       <span class="school">Teacher Timetable</span>
       <span class="title">${teacher.name}</span>
-      <span class="meta">${filled} periods / week</span>
+      <span class="meta">${filled} periods / week · Exported: ${exportDateStamp()}</span>
     </div>
     <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
   </div>`;
@@ -253,23 +260,23 @@ function openPrintWindow(title, pages) {
 
 export function exportClassPDFs() {
   const pages = allSectionIds().map(buildClassPage).join('');
-  openPrintWindow('Class Timetables', pages);
+  openPrintWindow(`Class Timetables — ${exportDateStamp()}`, pages);
 }
 
 export function exportTeacherPDFs() {
   const pages = state.TEACHERS.map(buildTeacherPage).join('');
-  openPrintWindow('Teacher Timetables', pages);
+  openPrintWindow(`Teacher Timetables — ${exportDateStamp()}`, pages);
 }
 
 export function exportCurrentClassPDF() {
   const secId = getSelectorValue('class-select');
   if (!secId) return;
-  openPrintWindow(`Timetable — ${secId}`, buildClassPage(secId));
+  openPrintWindow(`Timetable — ${secId} — ${exportDateStamp()}`, buildClassPage(secId));
 }
 
 export function exportCurrentTeacherPDF() {
   const tid     = getSelectorValue('teacher-select');
   const teacher = state.TEACHERS.find(t => t.id === tid);
   if (!teacher) return;
-  openPrintWindow(`Timetable — ${teacher.name}`, buildTeacherPage(teacher));
+  openPrintWindow(`Timetable — ${teacher.name} — ${exportDateStamp()}`, buildTeacherPage(teacher));
 }

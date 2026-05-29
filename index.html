@@ -28,12 +28,22 @@
     </div>
     <div class="top-btns">
       <button class="btn btn-sm" id="theme-toggle" onclick="toggleDarkMode()" data-tooltip="Toggle dark / light mode" data-tooltip-below><i class="ti ti-moon" id="theme-icon"></i></button>
-      <button class="btn" onclick="window.print()" data-tooltip="Print the current timetable view" data-tooltip-below><i class="ti ti-printer"></i> Print</button>
-      <button class="btn" onclick="exportClassPDFs()" data-tooltip="Export every class timetable as a PDF&#10;(one page per section — opens print dialog)" data-tooltip-below><i class="ti ti-layout-rows"></i> Class PDFs</button>
-      <button class="btn" onclick="exportTeacherPDFs()" data-tooltip="Export every teacher timetable as a PDF&#10;(one page per teacher — opens print dialog)" data-tooltip-below><i class="ti ti-users"></i> Teacher PDFs</button>
+      <div class="btn-group">
+        <button class="btn" onclick="toggleDropdown('export-menu')" data-tooltip="Print or export PDFs" data-tooltip-below><i class="ti ti-download"></i> Export <i class="ti ti-chevron-down" style="font-size:11px;opacity:0.6"></i></button>
+        <div class="btn-dropdown" id="export-menu">
+          <button onclick="window.print();closeDropdowns()"><i class="ti ti-printer"></i> Print</button>
+          <button onclick="exportClassPDFs();closeDropdowns()"><i class="ti ti-layout-rows"></i> Class PDFs</button>
+          <button onclick="exportTeacherPDFs();closeDropdowns()"><i class="ti ti-users"></i> Teacher PDFs</button>
+        </div>
+      </div>
       <button class="btn" onclick="exportJSON()" data-tooltip="Save a timestamped snapshot to saved_schedules/&#10;(falls back to browser download if server is off)" data-tooltip-below><i class="ti ti-device-floppy"></i> Save</button>
-      <button class="btn" onclick="saveBackup()" data-tooltip="Mark this schedule as the default backup.&#10;Loaded automatically on a fresh start&#10;when no session data exists." data-tooltip-below><i class="ti ti-bookmark"></i> Set Backup</button>
-      <button class="btn btn-danger" onclick="resetToBackup()" data-tooltip="Restore the schedule from backup.json.&#10;All unsaved changes will be lost." data-tooltip-below><i class="ti ti-history"></i> Load Backup</button>
+      <div class="btn-group">
+        <button class="btn" onclick="toggleDropdown('backup-menu')" data-tooltip="Set or restore the backup schedule" data-tooltip-below><i class="ti ti-bookmark"></i> Backup <i class="ti ti-chevron-down" style="font-size:11px;opacity:0.6"></i></button>
+        <div class="btn-dropdown" id="backup-menu">
+          <button onclick="saveBackup();closeDropdowns()"><i class="ti ti-bookmark-plus"></i> Set Backup</button>
+          <button class="dd-danger" onclick="resetToBackup();closeDropdowns()"><i class="ti ti-history"></i> Load Backup</button>
+        </div>
+      </div>
       <button class="btn" onclick="triggerImport()" data-tooltip="Load a previously saved schedule from&#10;the server or your local filesystem" data-tooltip-below><i class="ti ti-upload"></i> Import</button>
       <button class="btn" id="regen-btn" onclick="regenerate()" data-tooltip="Regenerate schedule — locked cells 🔒&#10;are preserved, everything else is reshuffled" data-tooltip-below><i class="ti ti-refresh"></i> Regenerate</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">

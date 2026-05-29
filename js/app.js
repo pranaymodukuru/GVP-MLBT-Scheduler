@@ -487,6 +487,21 @@ window.exportTeacherPDFs      = exportTeacherPDFs;
 window.exportCurrentClassPDF  = exportCurrentClassPDF;
 window.exportCurrentTeacherPDF = exportCurrentTeacherPDF;
 
+// Dropdown toggle for toolbar menus
+function toggleDropdown(id) {
+  const menu = document.getElementById(id);
+  const wasOpen = menu.classList.contains('open');
+  closeDropdowns();
+  if (!wasOpen) menu.classList.add('open');
+}
+function closeDropdowns() {
+  document.querySelectorAll('.btn-dropdown').forEach(m => m.classList.remove('open'));
+}
+document.addEventListener('click', e => { if (!e.target.closest('.btn-group')) closeDropdowns(); });
+
+window.toggleDropdown = toggleDropdown;
+window.closeDropdowns = closeDropdowns;
+
 // Expose state + saveState for any remaining inline handlers
 window.state            = state;
 window.saveState        = saveState;

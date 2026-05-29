@@ -128,7 +128,15 @@ td:last-child,th:last-child{border-right:none}
 .legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 .legend-count{font-size:10px;font-weight:600;background:#e5e7eb;color:#6b7280;border-radius:10px;padding:1px 5px;line-height:1.4}
 .legend-class-block{display:flex;align-items:center;gap:6px;padding:3px 8px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px}
-.top-btns{display:flex;gap:6px;flex-wrap:wrap}
+.top-btns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn-group{position:relative}
+.btn-dropdown{position:absolute;top:calc(100% + 4px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14);display:none;flex-direction:column;min-width:160px;z-index:50;overflow:hidden}
+.btn-dropdown.open{display:flex}
+.btn-dropdown button{padding:9px 14px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text);cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:background .1s;border-radius:0;white-space:nowrap}
+.btn-dropdown button:hover{background:var(--surface-subtle)}
+.btn-dropdown button.dd-danger{color:#dc2626}
+.btn-dropdown button.dd-danger:hover{background:#fef2f2}
+[data-theme="dark"] .btn-dropdown button.dd-danger:hover{background:#2d1111}
 /* Admin */
 .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media(max-width:900px){.admin-grid{grid-column:1fr}}

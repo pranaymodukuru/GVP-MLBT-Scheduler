@@ -16,14 +16,12 @@ const PRINT_CSS = `
 html, body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #1a1a2e; }
 
 @media print {
-  /* margin:0 removes the margin area where the browser places its default
-     headers/footers (URL, date, page number). Padding on .page replaces it. */
-  @page { size: A4 landscape; margin: 0; }
-  .page { width: 297mm; height: 210mm; padding: 8mm 10mm; }
+  @page { size: A4 landscape; margin: 8mm 10mm; }
 }
 
-/* Screen: show at exact A4 content size (297-20mm × 210-16mm = 277×194mm)
-   so overflow detection and zoom are accurate before printing. */
+/* Explicit A4 landscape content area (297mm - 20mm margins × 210mm - 16mm margins).
+   Using mm here means screen preview and print output have the same dimensions,
+   so overflow detection and zoom are accurate in both contexts. */
 .page {
   width: 277mm;
   height: 194mm;

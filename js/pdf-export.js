@@ -297,7 +297,8 @@ function fitOverflowingPages(doc) {
 }
 
 function openPrintWindow(title, pages) {
-  const win = window.open('', '_blank');
+  // Open wide enough that the 277mm page (≈1047px) never clips horizontally
+  const win = window.open('', '_blank', 'width=1200,height=860');
   if (!win) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
   win.document.write(`<!DOCTYPE html>
 <html>

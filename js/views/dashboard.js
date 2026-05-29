@@ -5,7 +5,7 @@
 
 import { state } from '../state.js';
 import { DAYS, WORK_PERIODS } from '../../config/school-config.js';
-import { allSectionIds, parseSection, isSatHalf, getSubjects } from '../helpers.js';
+import { allSectionIds, parseSection, isSatHalf, getSubjects, isTeacherAvailable } from '../helpers.js';
 
 /** Compute all dashboard statistics from current state (pure data, no DOM). */
 export function computeDashboardStats() {
@@ -23,9 +23,18 @@ export function computeDashboardStats() {
   };
 
   state.TEACHERS.forEach(t => {
-    ds.byTeacher[t.id] = { id: t.id, name: t.name, periods: 0, byDay: {} };
+    let availableSlots = 0;
+    DAYS.forEach(d => {
+      WORK_PERIODS.forEach(p => {
+        if (isTeacherAvailable(t.id, d, p)) availableSlots++;
+      });
+    });
+    ds.byTeacher[t.id] = { id: t.id, name: t.name, periods: 0, availableSlots, byDay: {} };
     DAYS.forEach(d => { ds.byTeacher[t.id].byDay[d] = 0; });
   });
+
+  // Track (teacherId|day|period) already counted to avoid double-counting combined classes
+  const countedTeacherSlots = new Set();
 
   allSectionIds().forEach(secId => {
     const { base } = parseSection(secId);
@@ -52,8 +61,12 @@ export function computeDashboardStats() {
         ds.filledSlots++;
         ds.byClass[secId].filled++;
         if (ds.byTeacher[cell.teacherId]) {
-          ds.byTeacher[cell.teacherId].periods++;
-          ds.byTeacher[cell.teacherId].byDay[d]++;
+          const slotKey = `${cell.teacherId}|${d}|${p}`;
+          if (!countedTeacherSlots.has(slotKey)) {
+            countedTeacherSlots.add(slotKey);
+            ds.byTeacher[cell.teacherId].periods++;
+            ds.byTeacher[cell.teacherId].byDay[d]++;
+          }
         }
       }
     }));
@@ -140,18 +153,17 @@ export function renderDashboard() {
 
   // ── Teacher workload bars ──────────────────────────────────────────────────
   const sorted = Object.values(ds.byTeacher).sort((a, b) => b.periods - a.periods);
-  const wlMax  = 48; // theoretical max: 8 periods × 6 days
   document.getElementById('dash-workload').innerHTML = sorted.map(t => {
-    const pct   = Math.min(100, (t.periods / wlMax) * 100);
-    const avg   = (t.periods / 6).toFixed(1);
-    const cls   = t.periods < 10 ? 'wl-low' : t.periods <= 30 ? 'wl-ok' : t.periods <= 40 ? 'wl-high' : 'wl-over';
-    const label = t.name;
+    const cap   = t.availableSlots || 1;
+    const ratio = t.periods / cap;
+    const pct   = Math.min(100, ratio * 100);
+    const cls   = ratio < 0.4 ? 'wl-low' : ratio <= 0.7 ? 'wl-ok' : ratio <= 0.9 ? 'wl-high' : 'wl-over';
     return (
       `<div class="workload-row">` +
-      `<span class="workload-name" title="${t.name}">${label}</span>` +
+      `<span class="workload-name" title="${t.name}">${t.name}</span>` +
       `<span class="workload-count">${t.periods}</span>` +
       `<div class="workload-bar-bg"><div class="workload-bar ${cls}" style="width:${pct}%"></div></div>` +
-      `<span class="workload-avg">${avg}/day</span>` +
+      `<span class="workload-avg">${t.periods}/${t.availableSlots}</span>` +
       `</div>`
     );
   }).join('');

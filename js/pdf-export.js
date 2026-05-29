@@ -17,11 +17,14 @@ html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; ba
 
 @media print {
   @page { size: A4 landscape; margin: 8mm 10mm; }
+  /* A4 landscape content height = 210mm - 16mm margins = 194mm */
+  .page { height: 194mm; }
 }
 
 .page {
   width: 100%;
   height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   page-break-after: always;

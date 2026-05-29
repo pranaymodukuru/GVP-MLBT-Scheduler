@@ -281,6 +281,15 @@ function buildTeacherPage(teacher) {
 
 // ─── Public export functions ──────────────────────────────────────────────────
 
+function fitOverflowingPages(doc) {
+  doc.querySelectorAll('.page').forEach(page => {
+    const overflow = page.scrollHeight / page.clientHeight;
+    if (overflow <= 1) return;
+    // Scale the whole page down proportionally; floor at 72% to stay legible
+    page.style.zoom = Math.max(0.72, 1 / overflow).toFixed(3);
+  });
+}
+
 function openPrintWindow(title, pages) {
   const win = window.open('', '_blank');
   if (!win) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
@@ -294,8 +303,12 @@ function openPrintWindow(title, pages) {
 <body>${pages}</body>
 </html>`);
   win.document.close();
-  // Give the browser a tick to render before showing the print dialog
-  setTimeout(() => { win.focus(); win.print(); }, 300);
+  // Wait for render, shrink any overflowing pages, then open print dialog
+  setTimeout(() => {
+    fitOverflowingPages(win.document);
+    win.focus();
+    win.print();
+  }, 400);
 }
 
 export function exportClassPDFs() {

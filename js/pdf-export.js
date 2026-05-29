@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT, SCHOOL_NAME, SCHOOL_PLACE } from '../config/school-config.js';
+import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT, SCHOOL_NAME, SCHOOL_PLACE, APP_NAME } from '../config/school-config.js';
 import { allSectionIds, isSatHalf, isUpper, isActivePeriod, shortSec } from './helpers.js';
 import { getSelectorValue } from './selects.js';
 
@@ -42,7 +42,9 @@ html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; ba
 .logo { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
 .hdr-center { flex: 1; }
 .school-name { font-size: 17px; font-weight: 800; color: #1a1a2e; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.2; }
-.school-place { font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+.school-sub { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+.school-place { font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
+.app-badge { font-size: 9px; font-weight: 700; color: #1d4ed8; background: #dbeafe; padding: 1px 8px; border-radius: 20px; letter-spacing: 0.05em; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .hdr-divider { border: none; border-top: 1.5px solid #e5e7eb; margin: 6px 0; }
 .doc-row { display: flex; align-items: baseline; gap: 8px; }
 .doc-type { font-size: 10px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
@@ -142,7 +144,10 @@ function pageHeader(docType, docName, rightLines) {
       <img class="logo" src="${logoUrl()}" />
       <div class="hdr-center">
         <div class="school-name">${SCHOOL_NAME}</div>
-        <div class="school-place">${SCHOOL_PLACE}</div>
+        <div class="school-sub">
+          <span class="school-place">${SCHOOL_PLACE}</span>
+          <span class="app-badge">${APP_NAME}</span>
+        </div>
         <hr class="hdr-divider" />
         <div class="doc-row">
           <span class="doc-type">${docType}</span>

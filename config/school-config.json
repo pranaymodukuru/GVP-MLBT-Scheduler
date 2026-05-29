@@ -1,6 +1,7 @@
 {
   "schoolName": "Gayatri Vidya Parishad MLBT School",
   "schoolPlace": "Visakhapatnam",
+  "appName": "Timetable Scheduler",
   "storageKey": "mlbt_timetable_v2",
   "maxPeriodsPerDay": 6,
   "constraints": {

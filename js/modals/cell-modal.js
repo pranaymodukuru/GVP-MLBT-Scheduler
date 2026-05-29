@@ -69,19 +69,19 @@ export function fillTeacherDropdown(subject, selTid) {
   let html = `<option value="">-- Unassigned --</option>`;
 
   if (day && period) {
-    // Teachers busy in another section this slot
-    const busyIds = new Set();
+    // Teachers busy in another section this slot → tid → { cls, subject }
+    const busyMap = new Map();
     Object.entries(state.timetable).forEach(([sid, days]) => {
       if (sid === secId) return;
       const c = days[day]?.[period];
-      if (c?.teacherId) busyIds.add(c.teacherId);
+      if (c?.teacherId) busyMap.set(c.teacherId, { cls: sid, subject: c.subject });
     });
 
-    // Teachers with a duty assignment this slot
-    const dutyIds = new Set(
+    // Teachers with a duty assignment this slot → tid → duty type string
+    const dutyMap = new Map(
       (state.DUTY_ASSIGNMENTS || [])
         .filter(a => a.day === day && a.period === period && a.teacherId)
-        .map(a => a.teacherId)
+        .map(a => [a.teacherId, a.type])
     );
 
     const grpAvailable     = [];
@@ -91,21 +91,27 @@ export function fillTeacherDropdown(subject, selTid) {
 
     teachers.forEach(t => {
       if (!isTeacherAvailable(t.id, day, period)) grpUnavailable.push(t);
-      else if (dutyIds.has(t.id))                 grpOnDuty.push(t);
-      else if (busyIds.has(t.id))                 grpTeachingOther.push(t);
+      else if (dutyMap.has(t.id))                 grpOnDuty.push(t);
+      else if (busyMap.has(t.id))                 grpTeachingOther.push(t);
       else                                         grpAvailable.push(t);
     });
 
-    const opt = (t, prefix = '') =>
-      `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${prefix}${t.name}</option>`;
+    const opt = (t, prefix = '', detail = '') =>
+      `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${prefix}${t.name}${detail ? ` (${detail})` : ''}</option>`;
 
-    html += grpAvailable.map(t => opt(t)).join('');
+    if (grpAvailable.length)
+      html += `<optgroup label="── Available ──">${grpAvailable.map(t => opt(t)).join('')}</optgroup>`;
 
     if (grpTeachingOther.length)
-      html += `<optgroup label="── Teaching other class ──">${grpTeachingOther.map(t => opt(t, '↔ ')).join('')}</optgroup>`;
+      html += `<optgroup label="── Teaching other class ──">${grpTeachingOther.map(t => {
+        const info = busyMap.get(t.id);
+        return opt(t, '↔ ', info ? `${shortSec(info.cls)} · ${info.subject}` : '');
+      }).join('')}</optgroup>`;
 
     if (grpOnDuty.length)
-      html += `<optgroup label="── On duty ──">${grpOnDuty.map(t => opt(t, '⊕ ')).join('')}</optgroup>`;
+      html += `<optgroup label="── On duty ──">${grpOnDuty.map(t =>
+        opt(t, '⊕ ', dutyMap.get(t.id) || '')
+      ).join('')}</optgroup>`;
 
     if (grpUnavailable.length)
       html += `<optgroup label="── Unavailable this slot ──">${grpUnavailable.map(t => opt(t, '⚠ ')).join('')}</optgroup>`;

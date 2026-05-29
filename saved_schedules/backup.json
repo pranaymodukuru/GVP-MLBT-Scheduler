@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-05-29T09:10:59.141Z",
+  "savedAt": "2026-05-29T09:38:33.685Z",
   "TEACHERS": [
     {
       "id": "T01",
@@ -861,13 +861,7 @@
         ]
       }
     },
-    "T05": {
-      "blockedPeriods": {
-        "Mon": [
-          "P1"
-        ]
-      }
-    }
+    "T05": {}
   },
   "CONSTRAINTS": {
     "maxSubjectPeriodsPerDay": 2,
@@ -3913,6 +3907,16 @@
       }
     }
   },
+  "DUTY_TYPES": [
+    "Library Maintenance",
+    "Uniform Checking & Late Comers Checking",
+    "Exam Work",
+    "Notes Verification",
+    "Exam Paper Correction",
+    "Admin Work",
+    "Parent Communication",
+    "Student Teacher Communication"
+  ],
   "DUTY_ASSIGNMENTS": [
     {
       "id": "d1780043759421",
@@ -3976,6 +3980,13 @@
       "day": "Sat",
       "period": "P1",
       "teacherId": "T18"
+    },
+    {
+      "id": "d1780047260483",
+      "type": "Exam Work",
+      "day": "Sat",
+      "period": "P3",
+      "teacherId": "T12"
     }
   ]
 }

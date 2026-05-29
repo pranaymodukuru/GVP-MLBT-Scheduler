@@ -13,17 +13,18 @@ import { getSelectorValue } from './selects.js';
 
 const PRINT_CSS = `
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #1a1a2e; }
+html, body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #1a1a2e; }
 
 @media print {
   @page { size: A4 landscape; margin: 8mm 10mm; }
-  /* A4 landscape content height = 210mm - 16mm margins = 194mm */
-  .page { height: 194mm; }
 }
 
+/* Explicit A4 landscape content area (297mm - 20mm margins × 210mm - 16mm margins).
+   Using mm here means screen preview and print output have the same dimensions,
+   so overflow detection and zoom are accurate in both contexts. */
 .page {
-  width: 100%;
-  height: 100vh;
+  width: 277mm;
+  height: 194mm;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -283,9 +284,14 @@ function buildTeacherPage(teacher) {
 
 function fitOverflowingPages(doc) {
   doc.querySelectorAll('.page').forEach(page => {
-    const overflow = page.scrollHeight / page.clientHeight;
+    // Lift overflow:hidden so scrollWidth/scrollHeight reflect actual content size
+    page.style.overflow = 'visible';
+    const overflowX = page.scrollWidth  / page.offsetWidth;
+    const overflowY = page.scrollHeight / page.offsetHeight;
+    page.style.overflow = 'hidden';
+    const overflow = Math.max(overflowX, overflowY);
     if (overflow <= 1) return;
-    // Scale the whole page down proportionally; floor at 72% to stay legible
+    // Scale down proportionally; floor at 72% to keep text legible
     page.style.zoom = Math.max(0.72, 1 / overflow).toFixed(3);
   });
 }

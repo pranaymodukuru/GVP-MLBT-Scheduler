@@ -56,10 +56,10 @@ html, body { font-family: system-ui, -apple-system, sans-serif; background: #fff
 .doc-name { font-size: 15px; font-weight: 800; color: #1a1a2e; }
 .hdr-right { text-align: right; font-size: 10px; color: #9ca3af; line-height: 1.7; flex-shrink: 0; }
 
-table { flex: 1; min-height: 0; width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+table { flex: 1; min-height: 0; width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
 th {
   padding: 8px 10px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-align: center;
   color: #374151;
@@ -79,7 +79,7 @@ td {
   height: 1px;
 }
 td:first-child {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #6b7280;
   background: #f9fafb;
@@ -89,7 +89,7 @@ td:first-child {
   width: 90px;
   height: auto;
 }
-.per-time { font-size: 10px; color: #b0b7c3; font-weight: 400; margin-top: 3px; }
+.per-time { font-size: 9px; color: #b0b7c3; font-weight: 400; margin-top: 3px; }
 
 .subj-cell {
   border-radius: 5px;
@@ -102,13 +102,13 @@ td:first-child {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-.s-name { font-weight: 700; font-size: 14px; line-height: 1.2; }
-.t-name { font-size: 12px; opacity: 0.75; line-height: 1.2; }
+.s-name { font-weight: 700; font-size: 13px; line-height: 1.2; }
+.t-name { font-size: 11px; opacity: 0.75; line-height: 1.2; }
 
 .break-cell {
   background: #f3f4f6;
   color: #b0b7c3;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;

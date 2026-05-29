@@ -31,35 +31,38 @@ html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; ba
 
 .page-header {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid #1a1a2e;
+  padding-bottom: 7px;
+  border-bottom: 2.5px solid #1a1a2e;
   flex-shrink: 0;
 }
-.page-header .school { font-size: 11px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; }
-.page-header .title  { font-size: 20px; font-weight: 700; color: #1a1a2e; }
-.page-header .meta   { font-size: 11px; color: #9ca3af; margin-left: auto; }
+.page-header .school { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; }
+.page-header .title  { font-size: 22px; font-weight: 800; color: #1a1a2e; letter-spacing: -0.02em; }
+.page-header .meta   { font-size: 10px; color: #9ca3af; margin-left: auto; }
 
 table { flex: 1; min-height: 0; width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
 th {
-  padding: 6px 8px;
+  padding: 7px 8px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
-  color: #6b7280;
+  color: #374151;
   background: #f3f4f6;
   border: 1px solid #d1d5db;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
 }
-th:first-child { text-align: left; width: 80px; }
+th:first-child { text-align: left; width: 82px; }
+
+/* height:1px is the standard trick to make height:100% work on cell children */
 td {
-  padding: 3px 4px;
+  padding: 2px;
   border: 1px solid #e5e7eb;
   vertical-align: top;
+  height: 1px;
 }
 td:first-child {
   font-size: 10px;
@@ -69,31 +72,34 @@ td:first-child {
   padding: 6px 8px;
   white-space: nowrap;
   vertical-align: middle;
-  width: 80px;
+  width: 82px;
+  height: auto;
 }
-.per-time { font-size: 8px; color: #9ca3af; font-weight: 400; margin-top: 2px; }
+.per-time { font-size: 8px; color: #b0b7c3; font-weight: 400; margin-top: 3px; }
 
 .subj-cell {
-  border-radius: 4px;
-  padding: 5px 7px;
+  border-radius: 5px;
+  padding: 6px 9px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-.s-name { font-weight: 700; font-size: 11px; line-height: 1.3; }
-.t-name { font-size: 9.5px; opacity: 0.78; line-height: 1.3; }
+.s-name { font-weight: 700; font-size: 12px; line-height: 1.2; }
+.t-name { font-size: 10px; opacity: 0.75; line-height: 1.2; }
 
 .break-cell {
   background: #f3f4f6;
-  color: #9ca3af;
+  color: #b0b7c3;
   font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   text-align: center;
-  border-radius: 3px;
-  padding: 4px;
+  border-radius: 4px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -103,8 +109,8 @@ td:first-child {
 }
 .empty-cell {
   height: 100%;
-  color: #d1d5db;
-  font-size: 10px;
+  color: #e5e7eb;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -29,18 +29,26 @@ html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; ba
 }
 .page:last-child { page-break-after: avoid; break-after: avoid; }
 
+/* ── Header ── */
 .page-header {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 8px;
-  padding-bottom: 7px;
-  border-bottom: 2.5px solid #1a1a2e;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 3px solid #1a1a2e;
   flex-shrink: 0;
 }
-.page-header .school { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; }
-.page-header .title  { font-size: 22px; font-weight: 800; color: #1a1a2e; letter-spacing: -0.02em; }
-.page-header .meta   { font-size: 10px; color: #9ca3af; margin-left: auto; }
+.logo { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
+.hdr-center { flex: 1; }
+.school-name { font-size: 17px; font-weight: 800; color: #1a1a2e; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.2; }
+.school-place { font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+.hdr-divider { border: none; border-top: 1.5px solid #e5e7eb; margin: 6px 0; }
+.doc-row { display: flex; align-items: baseline; gap: 8px; }
+.doc-type { font-size: 10px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
+.doc-sep { color: #d1d5db; font-size: 12px; }
+.doc-name { font-size: 15px; font-weight: 800; color: #1a1a2e; }
+.hdr-right { text-align: right; font-size: 10px; color: #9ca3af; line-height: 1.7; flex-shrink: 0; }
 
 table { flex: 1; min-height: 0; width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
 th {
@@ -123,6 +131,29 @@ function exportDateStamp() {
   return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
+function logoUrl() {
+  return `${window.location.origin}/assets/logo.png`;
+}
+
+function pageHeader(docType, docName, rightLines) {
+  const right = rightLines.map(l => `<div>${l}</div>`).join('');
+  return `
+    <div class="page-header">
+      <img class="logo" src="${logoUrl()}" />
+      <div class="hdr-center">
+        <div class="school-name">Gayatri Vidya Parishad</div>
+        <div class="school-place">Visakhapatnam</div>
+        <hr class="hdr-divider" />
+        <div class="doc-row">
+          <span class="doc-type">${docType}</span>
+          <span class="doc-sep">·</span>
+          <span class="doc-name">${docName}</span>
+        </div>
+      </div>
+      <div class="hdr-right">${right}</div>
+    </div>`;
+}
+
 // ─── Class page builder ───────────────────────────────────────────────────────
 
 function buildClassPage(secId) {
@@ -172,11 +203,7 @@ function buildClassPage(secId) {
   });
 
   return `<div class="page">
-    <div class="page-header">
-      <span class="school">Class Timetable</span>
-      <span class="title">${secId}</span>
-      <span class="meta">Exported: ${exportDateStamp()}</span>
-    </div>
+    ${pageHeader('Class Timetable', secId, [`Exported: ${exportDateStamp()}`])}
     <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
   </div>`;
 }
@@ -240,11 +267,7 @@ function buildTeacherPage(teacher) {
   });
 
   return `<div class="page">
-    <div class="page-header">
-      <span class="school">Teacher Timetable</span>
-      <span class="title">${teacher.name}</span>
-      <span class="meta">${filled} periods / week · Exported: ${exportDateStamp()}</span>
-    </div>
+    ${pageHeader('Teacher Timetable', teacher.name, [`${filled} periods / week`, `Exported: ${exportDateStamp()}`])}
     <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
   </div>`;
 }

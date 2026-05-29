@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-05-29T09:38:33.685Z",
+  "savedAt": "2026-05-29T11:25:38.072Z",
   "TEACHERS": [
     {
       "id": "T01",
@@ -3919,27 +3919,6 @@
   ],
   "DUTY_ASSIGNMENTS": [
     {
-      "id": "d1780043759421",
-      "type": "Admin Work",
-      "day": "Mon",
-      "period": "P2",
-      "teacherId": "T17"
-    },
-    {
-      "id": "d1780045774624",
-      "type": "Admin Work",
-      "day": "Mon",
-      "period": "P3",
-      "teacherId": "T17"
-    },
-    {
-      "id": "d1780045787707",
-      "type": "Admin Work",
-      "day": "Mon",
-      "period": "P4",
-      "teacherId": "T17"
-    },
-    {
       "id": "d1780045825507",
       "type": "Uniform Checking & Late Comers Checking",
       "day": "Mon",
@@ -3980,13 +3959,6 @@
       "day": "Sat",
       "period": "P1",
       "teacherId": "T18"
-    },
-    {
-      "id": "d1780047260483",
-      "type": "Exam Work",
-      "day": "Sat",
-      "period": "P3",
-      "teacherId": "T12"
     }
   ]
 }

@@ -146,7 +146,6 @@ function pageHeader(docType, docName, rightLines) {
         <div class="school-name">${SCHOOL_NAME}</div>
         <div class="school-sub">
           <span class="school-place">${SCHOOL_PLACE}</span>
-          <span class="app-badge">${APP_NAME}</span>
         </div>
         <hr class="hdr-divider" />
         <div class="doc-row">

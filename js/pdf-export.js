@@ -208,7 +208,7 @@ function buildClassPage(secId) {
   });
 
   return `<div class="page">
-    ${pageHeader('Class Timetable', secId, [`Exported: ${exportDateStamp()}`])}
+    ${pageHeader('Class Timetable', secId, [`Created: ${exportDateStamp()}`])}
     <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
   </div>`;
 }
@@ -272,7 +272,7 @@ function buildTeacherPage(teacher) {
   });
 
   return `<div class="page">
-    ${pageHeader('Teacher Timetable', teacher.name, [`${filled} periods / week`, `Exported: ${exportDateStamp()}`])}
+    ${pageHeader('Teacher Timetable', teacher.name, [`${filled} periods / week`, `Created: ${exportDateStamp()}`])}
     <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
   </div>`;
 }

@@ -4,7 +4,7 @@
 
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
-import { allSectionIds, isTeacherAvailable, isActivePeriod, shortSec } from '../helpers.js';
+import { allSectionIds, isTeacherAvailable, isActivePeriod, shortSec, getGamesVenue } from '../helpers.js';
 import { getSelectorValue } from '../selects.js';
 
 export function renderTeacherView() {
@@ -64,6 +64,7 @@ export function renderTeacherView() {
         const isConflict = matches.some(f => state.conflictSet.has(`${f.cls}|${day}|${per.id}`));
         const lockIcon   = primary.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
         const clsLabel   = matches.map(f => shortSec(f.cls)).join(' + ');
+        const venue      = getGamesVenue(primary.cls, day, per.id);
 
         tbody +=
           `<td><div class="cell${primary.locked ? ' cell-locked' : ''}${isConflict ? ' cell-conflict' : ''}"` +
@@ -73,6 +74,7 @@ export function renderTeacherView() {
           (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
           `<span class="cell-subj">${primary.subject}</span>` +
           `<span class="cell-teacher">${clsLabel}</span>` +
+          (venue ? `<span class="venue-badge venue-${venue.toLowerCase()}">${venue}</span>` : '') +
           `</div></td>`;
       } else {
         const absent = !isTeacherAvailable(tid, day);

@@ -3,7 +3,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { getSubjects, isTeacherAvailable, getCombinedSections, shortSec } from '../helpers.js';
+import { getSubjects, isTeacherAvailable, getCombinedSections, shortSec, getGamesVenue } from '../helpers.js';
+import { SUBJECTS_CONFIG } from '../../config/school-config.js';
 import { saveState } from '../persistence.js';
 import { checkConflicts } from '../scheduler.js';
 import { showToast } from '../toast.js';
@@ -43,7 +44,22 @@ export function openEdit(secId, day, period) {
   subjSel.onchange = () => fillTeacherDropdown(subjSel.value, null);
 
   document.getElementById('modal-lock').checked = !!cell?.locked;
+
+  const subject = cell?.subject || getSubjects(secId)[0];
+  const venueRow = document.getElementById('modal-venue-row');
+  if (SUBJECTS_CONFIG[subject]?.allowParallelGroups && getGamesVenue(secId, day, period)) {
+    venueRow.style.display = '';
+    setModalVenue(getGamesVenue(secId, day, period));
+  } else {
+    venueRow.style.display = 'none';
+  }
+
   document.getElementById('modal').classList.add('open');
+}
+
+export function setModalVenue(venue) {
+  document.getElementById('modal-venue-indoor') .classList.toggle('active', venue === 'Indoor');
+  document.getElementById('modal-venue-outdoor').classList.toggle('active', venue === 'Outdoor');
 }
 
 export function fillTeacherDropdown(subject, selTid) {
@@ -93,6 +109,17 @@ export function saveCell() {
   if (!state.timetable[secId])       state.timetable[secId]       = {};
   if (!state.timetable[secId][day])  state.timetable[secId][day]  = {};
   state.timetable[secId][day][period] = { subject: subj, teacherId: tid || null, locked };
+
+  // Persist venue selection if the venue row was visible
+  if (document.getElementById('modal-venue-row').style.display !== 'none') {
+    const chosen   = document.getElementById('modal-venue-indoor').classList.contains('active') ? 'Indoor' : 'Outdoor';
+    const key      = `${subj}|${day}|${period}`;
+    // Determine what the un-flipped default would be for this section
+    const flipped  = !!state.venueFlips[key];
+    const defaultV = getGamesVenue(secId, day, period); // current (may already be flipped)
+    if (chosen !== defaultV) state.venueFlips[key] = !flipped;
+    else                     state.venueFlips[key] = flipped;
+  }
 
   closeModal();
   checkConflicts();

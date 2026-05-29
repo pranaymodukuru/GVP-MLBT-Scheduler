@@ -201,6 +201,13 @@
     <select id="modal-subject"></select>
     <label>Teacher</label>
     <select id="modal-teacher"></select>
+    <div id="modal-venue-row" style="display:none">
+      <label>Venue</label>
+      <div class="venue-toggle">
+        <button id="modal-venue-indoor"  class="venue-btn" onclick="setModalVenue('Indoor')">Indoor</button>
+        <button id="modal-venue-outdoor" class="venue-btn" onclick="setModalVenue('Outdoor')">Outdoor</button>
+      </div>
+    </div>
     <div class="lock-row" onclick="document.getElementById('modal-lock').click()">
       <input type="checkbox" id="modal-lock">
       <span>🔒 Lock — won't change on Regenerate</span>

@@ -470,7 +470,9 @@ export function checkConflicts() {
         const key = `${cell.teacherId}|${d}|${p}`;
         if (occ[key]) {
           const cell1 = (state.timetable[occ[key]] || {})[d]?.[p];
-          if (!isCombinedGroup(cell.teacherId, p, occ[key], secId, cell1?.subject, cell.subject)) {
+          const bothParallel = SUBJECTS_CONFIG[cell.subject]?.allowParallelGroups &&
+                               SUBJECTS_CONFIG[cell1?.subject]?.allowParallelGroups;
+          if (!bothParallel && !isCombinedGroup(cell.teacherId, p, occ[key], secId, cell1?.subject, cell.subject)) {
             const t = state.TEACHERS.find(x => x.id === cell.teacherId);
             state.conflictRecords.push({
               teacherName: t?.name || cell.teacherId,
@@ -526,12 +528,70 @@ export function checkConflicts() {
     });
   }
 
+  // ── Venue conflicts (allowParallelGroups subjects) ────────────────────────
+  // Flag when two non-combinable sections with different teachers share the
+  // same venue (both Indoor or both Outdoor) at the same slot.
+  const parallelSubjects = new Set(
+    Object.entries(SUBJECTS_CONFIG)
+      .filter(([, s]) => s.allowParallelGroups)
+      .map(([name]) => name)
+  );
+
+  if (parallelSubjects.size > 0) {
+    DAYS.forEach(d => {
+      WORK_PERIODS.forEach(p => {
+        const bySubject = {};
+        allSectionIds().forEach(secId => {
+          if (!isActivePeriod(secId, p)) return;
+          const cell = (state.timetable[secId] || {})[d]?.[p];
+          if (cell?.subject && parallelSubjects.has(cell.subject)) {
+            const tid = cell.teacherId || '__none__';
+            ((bySubject[cell.subject] ||= {})[tid] ||= []).push(secId);
+          }
+        });
+
+        Object.entries(bySubject).forEach(([subj, teacherGroups]) => {
+          const sortedTeachers = Object.keys(teacherGroups).sort();
+          if (sortedTeachers.length <= 1) return;
+
+          // Assign venue to each teacher group (respects venueFlips)
+          const flipped = !!state.venueFlips[`${subj}|${d}|${p}`];
+          const venueOf = {}; // secId → 'Indoor'|'Outdoor'
+          sortedTeachers.forEach((tid, idx) => {
+            const venue = (idx === 0) !== flipped ? 'Indoor' : 'Outdoor';
+            teacherGroups[tid].forEach(secId => { venueOf[secId] = venue; });
+          });
+
+          // For each venue, check all pairs with different teachers
+          ['Indoor', 'Outdoor'].forEach(venue => {
+            const secs = Object.keys(venueOf).filter(s => venueOf[s] === venue);
+            for (let i = 0; i < secs.length; i++) {
+              for (let j = i + 1; j < secs.length; j++) {
+                const s1 = secs[i], s2 = secs[j];
+                const t1 = (state.timetable[s1]?.[d]?.[p])?.teacherId;
+                const t2 = (state.timetable[s2]?.[d]?.[p])?.teacherId;
+                if (t1 === t2) continue;
+                if (isSectionsCombined(p, s1, s2)) continue;
+                state.conflictRecords.push({ venueSubject: subj, venue, day: d, period: p, sec1: s1, sec2: s2 });
+                state.conflictSet.add(`${s1}|${d}|${p}`);
+                state.conflictSet.add(`${s2}|${d}|${p}`);
+              }
+            }
+          });
+        });
+      });
+    });
+  }
+
   const panel = document.getElementById('conflict-panel');
   if (state.conflictRecords.length) {
     panel.innerHTML =
       `<strong>⚠️ ${state.conflictRecords.length} conflict(s)</strong>` +
       `<ul style="margin:6px 0 0 18px">` +
-      state.conflictRecords.map(c => c.room
+      state.conflictRecords.map(c => c.venueSubject
+        ? `<li style="margin-bottom:3px"><strong>${c.venueSubject}</strong> ` +
+          `${c.venue} clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
+        : c.room
         ? `<li style="margin-bottom:3px"><strong>${c.room}</strong> ` +
           `room clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
         : `<li style="margin-bottom:3px"><strong>${c.teacherName}</strong> ` +

@@ -20,6 +20,7 @@ export function saveState() {
       TEACHER_AVAILABILITY: state.TEACHER_AVAILABILITY,
       CONSTRAINTS:          state.CONSTRAINTS,
       timetable:            state.timetable,
+      venueFlips:           state.venueFlips,
     }));
   } catch (e) { /* storage full or unavailable — silently ignore */ }
 }
@@ -110,6 +111,7 @@ export function applySnap(snap) {
   }
   if (snap.CONSTRAINTS)          state.CONSTRAINTS          = snap.CONSTRAINTS;
   if (snap.timetable)            state.timetable            = snap.timetable;
+  if (snap.venueFlips)           state.venueFlips           = snap.venueFlips;
 }
 
 /**

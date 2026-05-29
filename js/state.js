@@ -38,6 +38,9 @@ export const state = {
   conflictRecords:      [],   // [{ teacherName, teacherId, day, period, sec1, sec2 }]
   conflictSet:          new Set(), // 'secId|day|period'
 
+  // ── Venue overrides for parallel-groups subjects (e.g. Games) ──
+  venueFlips:           {},   // 'subject|day|period' → true (flipped from default)
+
   // ── UI state ──
   currentTab:           'class',
   modalState:           {},

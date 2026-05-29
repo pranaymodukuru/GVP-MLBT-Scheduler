@@ -4,7 +4,7 @@
 
 import { state } from '../state.js';
 import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
-import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable, isActivePeriod, getCombinedSections, getCombinableDiffTeacher, shortSec } from '../helpers.js';
+import { parseSection, getSubjects, isSatHalf, isUpper, isTeacherAvailable, isActivePeriod, getCombinedSections, getCombinableDiffTeacher, shortSec, getGamesVenue } from '../helpers.js';
 import { getSelectorValue } from '../selects.js';
 
 export function renderClassView() {
@@ -78,6 +78,7 @@ export function renderClassView() {
         const lockIcon   = cell.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
         const combined      = getCombinedSections(secId, realDay, per.id);
         const combinedDiff  = getCombinableDiffTeacher(secId, realDay, per.id);
+        const venue         = getGamesVenue(secId, realDay, per.id);
         const classes    = [
           'cell',
           cell.locked  ? 'cell-locked'   : '',
@@ -97,6 +98,7 @@ export function renderClassView() {
           (combinedDiff.length ? combinedDiff.map(({secId: s, teacherName}) =>
             `<span class="cell-combined cell-combined-diff">+ ${shortSec(s)}, ${teacherName}</span>`
           ).join('') : '') +
+          (venue ? `<span class="venue-badge venue-${venue.toLowerCase()}">${venue}</span>` : '') +
           `</div></td>`;
       } else {
         tbody +=

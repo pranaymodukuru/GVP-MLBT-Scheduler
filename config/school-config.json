@@ -145,28 +145,28 @@
       "textColor": "#1e40af",
       "periodsPerWeek": 6,
       "minPeriodsPerWeek": 4,
-      "mustAppearDaily": true
+      "mustAppearDaily": false
     },
     "Maths": {
       "color": "#d1fae5",
       "textColor": "#065f46",
       "periodsPerWeek": 6,
       "minPeriodsPerWeek": 4,
-      "mustAppearDaily": true
+      "mustAppearDaily": false
     },
     "Hindi": {
       "color": "#fef3c7",
       "textColor": "#92400e",
       "periodsPerWeek": 6,
       "minPeriodsPerWeek": 4,
-      "mustAppearDaily": true
+      "mustAppearDaily": false
     },
     "Telugu": {
       "color": "#fce7f3",
       "textColor": "#831843",
       "periodsPerWeek": 6,
       "minPeriodsPerWeek": 4,
-      "mustAppearDaily": true
+      "mustAppearDaily": false
     },
     "EVS": {
       "color": "#d1fae5",
@@ -264,7 +264,7 @@
       "textColor": "#14532d",
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
-      "sharedRoom": true,
+      "allowParallelGroups": true,
       "mustAppearDaily": false
     },
     "Natural Talk": {
@@ -328,7 +328,7 @@
       "textColor": "#9f1239",
       "periodsPerWeek": 2,
       "minPeriodsPerWeek": 1,
-      "sharedRoom": true,
+      "allowParallelGroups": true,
       "mustAppearDaily": false
     },
     "Free Period": {

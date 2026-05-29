@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES, COMBINED_SECTIONS, COMBINABLE_GROUPS, AFTER_LUNCH_PERIODS } from '../config/school-config.js';
+import { SAT_HALF_BASES, UPPER_BASES, SECTION_LABELS, NO_P8_CLASSES, COMBINED_SECTIONS, COMBINABLE_GROUPS, AFTER_LUNCH_PERIODS, SUBJECTS_CONFIG } from '../config/school-config.js';
 
 /** Returns all section IDs in CLASS_CONFIG order, expanding multi-section classes */
 export function allSectionIds() {
@@ -140,6 +140,34 @@ export function getCombinableDiffTeacher(secId, day, periodId) {
 /** Compact section label — strips "Class " prefix and converts " - " to "-" */
 export function shortSec(secId) {
   return secId.replace(/^Class /, '').replace(' - ', '-');
+}
+
+/**
+ * For subjects with allowParallelGroups (e.g. Games), returns 'Indoor' or 'Outdoor'
+ * based on a deterministic split of concurrent teacher groups.
+ * Returns null if the subject doesn't support parallel groups or only one teacher group exists.
+ */
+export function getGamesVenue(secId, day, periodId) {
+  const cell = (state.timetable[secId] || {})[day]?.[periodId];
+  if (!cell?.subject || !SUBJECTS_CONFIG[cell.subject]?.allowParallelGroups) return null;
+
+  // Group all concurrent sections by teacher
+  const teacherGroups = {};
+  allSectionIds().forEach(s => {
+    const c = (state.timetable[s] || {})[day]?.[periodId];
+    if (c?.subject === cell.subject) {
+      const tid = c.teacherId || '__none__';
+      (teacherGroups[tid] ||= []).push(s);
+    }
+  });
+
+  const sortedTeachers = Object.keys(teacherGroups).sort();
+  if (sortedTeachers.length <= 1) return null;
+
+  const flipped   = !!state.venueFlips[`${cell.subject}|${day}|${periodId}`];
+  const myTeacher = cell.teacherId || '__none__';
+  const isFirst   = sortedTeachers.indexOf(myTeacher) === 0;
+  return (isFirst !== flipped) ? 'Indoor' : 'Outdoor';
 }
 
 /** Fisher–Yates shuffle — returns a new shuffled array */

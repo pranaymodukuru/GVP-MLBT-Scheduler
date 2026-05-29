@@ -38,6 +38,9 @@ export const state = {
   conflictRecords:      [],   // [{ teacherName, teacherId, day, period, sec1, sec2 }]
   conflictSet:          new Set(), // 'secId|day|period'
 
+  // ── Duty assignments (teacher responsibilities beyond class teaching) ──
+  DUTY_ASSIGNMENTS:     [],   // [{ id, type, day, period, teacherId }]
+
   // ── Venue overrides for parallel-groups subjects (e.g. Games) ──
   venueFlips:           {},   // 'subject|day|period' → true (flipped from default)
 

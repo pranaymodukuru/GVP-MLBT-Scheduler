@@ -70,6 +70,7 @@
     <div class="stats" id="teacher-stats"></div>
     <div class="legend" id="teacher-legend"></div>
     <div class="timetable-wrap"><table id="teacher-table"></table></div>
+    <div id="teacher-duties"></div>
   </div>
 
   <!-- SUBJECT VIEW -->
@@ -191,6 +192,21 @@
 
 <!-- Toast -->
 <div id="toast" class="toast"></div>
+
+<!-- Duty picker modal -->
+<div class="modal-bg" id="duty-picker-modal" onclick="if(event.target===this)closeDutyPicker()">
+  <div class="modal" style="max-width:360px">
+    <h3 id="duty-picker-title">Assign Duty</h3>
+    <div id="duty-picker-slot" style="font-size:12px;color:var(--text-muted);margin-bottom:10px"></div>
+    <label>Duty type</label>
+    <select id="duty-picker-sel"></select>
+    <div class="modal-btns" style="margin-top:16px">
+      <button class="btn" onclick="closeDutyPicker()">Cancel</button>
+      <button class="btn btn-danger" id="duty-picker-remove-btn" style="display:none" onclick="removeDutyFromPicker()">Remove</button>
+      <button class="btn btn-primary" id="duty-picker-save-btn" onclick="saveDutyFromPicker()">Assign</button>
+    </div>
+  </div>
+</div>
 
 <!-- Cell edit modal -->
 <div class="modal-bg" id="modal">

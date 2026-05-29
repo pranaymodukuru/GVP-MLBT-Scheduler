@@ -73,8 +73,10 @@ td:last-child,th:last-child{border-right:none}
 .cell-break{background:var(--surface-subtle);color:var(--text-dim);font-size:10px;align-items:center;text-align:center;border-radius:7px;padding:5px;min-height:28px;display:flex;justify-content:center}
 .cell-locked{outline:2px solid var(--cell-lock-outline)!important}
 .cell-conflict{outline:2px solid #ef4444!important;box-shadow:inset 0 0 0 1px #ef444430}
-.cell-absent{opacity:0.45;filter:grayscale(0.5)}
+.cell-absent{outline:2px solid #ef4444!important;box-shadow:inset 0 0 0 1px #ef444430}
 .lock-badge{position:absolute;top:4px;right:5px;font-size:9px;opacity:0.55;line-height:1}
+.absent-badge{position:absolute;top:5px;left:6px;font-size:10px;color:#ef4444;line-height:1}
+.cell-absent .cell-subj{padding-left:14px}
 .venue-badge{display:inline-block;font-size:8px;font-weight:600;letter-spacing:0.04em;padding:1px 5px;border-radius:3px;margin-top:2px;text-transform:uppercase;opacity:0.85}
 .venue-indoor{background:rgba(0,0,0,0.12);color:inherit}
 .venue-outdoor{background:rgba(255,255,255,0.35);color:inherit}
@@ -284,7 +286,7 @@ td:last-child,th:last-child{border-right:none}
 .wl-badge.wl-high{background:#fffbeb;color:#d97706}
 .wl-badge.wl-over{background:#fef2f2;color:#dc2626}
 .workload-avg{font-size:10px;color:var(--text-dim);width:42px;text-align:right;flex-shrink:0}
-.issues-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border-light);border-top:1px solid var(--border-light)}
+.issues-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px;background:var(--border-light);border-top:1px solid var(--border-light)}
 .issue-group{background:var(--surface);display:flex;flex-direction:column;min-width:0}
 .ig-empty{opacity:.55}
 .ig-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border-light)}
@@ -295,6 +297,7 @@ td:last-child,th:last-child{border-right:none}
 .igc-belowmin .ig-title,.igc-belowmin .ig-count{color:#ea580c}
 .igc-noteacher .ig-title,.igc-noteacher .ig-count{color:#d97706}
 .igc-empty .ig-title,.igc-empty .ig-count{color:#6b7280}
+.igc-duty .ig-title,.igc-duty .ig-count{color:#6366f1}
 .ig-ok{padding:12px 14px;font-size:11px;color:#16a34a;font-weight:500}
 .issue-cards{display:flex;flex-direction:column;overflow-y:auto;max-height:260px}
 .issue-card{padding:8px 14px;border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .1s;flex-shrink:0}
@@ -308,6 +311,9 @@ td:last-child,th:last-child{border-right:none}
 .ic-belowmin{border-left:3px solid #ea580c;cursor:default}
 .ic-noteacher{border-left:3px solid #f59e0b}
 .ic-empty{border-left:3px solid #d1d5db}
+.ic-duty{border-left:3px solid #6366f1;cursor:default}
+.igc-unavail .ig-title,.igc-unavail .ig-count{color:#ef4444}
+.ic-unavail{border-left:3px solid #ef4444}
 .issues-all-clear{padding:3rem;text-align:center;color:#16a34a;font-size:14px;font-weight:500}
 .issue-section{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;padding:8px 16px 4px;background:var(--surface-subtle);border-bottom:1px solid var(--border-light)}
 .issue-arrow{color:var(--text-xdim);font-size:14px;flex-shrink:0;margin-top:1px}
@@ -319,6 +325,39 @@ td:last-child,th:last-child{border-right:none}
 .coverage-table td:first-child{text-align:left;font-weight:500;color:var(--text);background:var(--surface-subtle)}
 .coverage-table td:last-child{border-right:none}
 .coverage-table tr:last-child td{border-bottom:none}
+/* ── Duty cells in teacher grid ── */
+.cell-duty{background:#e0e7ff;color:#3730a3;border-color:#818cf8;cursor:pointer}
+.cell-duty:hover{background:#c7d2fe}
+[data-theme="dark"] .cell-duty{background:#1e1b4b;color:#a5b4fc;border-color:#4f46e5}
+[data-theme="dark"] .cell-duty:hover{background:#2e2a6b}
+.cell-duty-add{cursor:pointer}
+.cell-duty-add:hover{border-color:#818cf8;background:#f0f0ff}
+[data-theme="dark"] .cell-duty-add:hover{border-color:#4f46e5;background:#1a1a3e}
+.duty-add-hint{font-size:10px;color:#a5b4fc;font-weight:500;letter-spacing:0.03em}
+.cell-duty-add:hover .duty-add-hint{color:#6366f1}
+
+/* ── Duty panel (Teacher View) ── */
+#teacher-duties{margin-top:20px}
+.duty-panel{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.duty-panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--surface-subtle);border-bottom:1px solid var(--border)}
+.duty-panel-title{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+.duty-panel-meta{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+.duty-conflict-count{background:#fee2e2;color:#991b1b;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+[data-theme="dark"] .duty-conflict-count{background:#3d0f0f;color:#f87171}
+.duty-row{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--border-light);flex-wrap:wrap}
+.duty-row:last-of-type{border-bottom:none}
+.duty-row-conflict{background:#fffbeb}
+[data-theme="dark"] .duty-row-conflict{background:#2a1f00}
+.duty-type-tag{background:#e0e7ff;color:#3730a3;font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+[data-theme="dark"] .duty-type-tag{background:#1e1b4b;color:#a5b4fc}
+.duty-slot-info{font-size:12px;color:var(--text-muted)}
+.duty-conflict-badge{font-size:11px;color:#d97706;background:#fef3c7;padding:2px 8px;border-radius:4px;white-space:nowrap}
+[data-theme="dark"] .duty-conflict-badge{color:#fbbf24;background:#3d2a0a}
+.duty-remove-btn{margin-left:auto;font-size:11px;padding:2px 10px;flex-shrink:0}
+.duty-empty-msg{padding:12px 16px;font-size:12px;color:var(--text-muted);font-style:italic}
+.duty-add-row{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--surface-subtle);border-top:1px solid var(--border);flex-wrap:wrap}
+.duty-sel{font-size:12px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);min-width:0;flex:1}
+
 @media print{
   .top-btns,.tabs,.stats,.conflict-panel,.controls button,.load-banner,.hint-bar{display:none!important}
   body{background:#fff}

@@ -63,25 +63,52 @@ export function setModalVenue(venue) {
 }
 
 export function fillTeacherDropdown(subject, selTid) {
-  const { day, period } = state.modalState;
+  const { secId, day, period } = state.modalState;
   const teachers = state.TEACHERS.filter(t => t.subjects.includes(subject));
 
   let html = `<option value="">-- Unassigned --</option>`;
 
   if (day && period) {
-    const available   = teachers.filter(t =>  isTeacherAvailable(t.id, day, period));
-    const unavailable = teachers.filter(t => !isTeacherAvailable(t.id, day, period));
-    html += available.map(t =>
-      `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${t.name}</option>`
-    ).join('');
-    if (unavailable.length) {
-      html +=
-        `<optgroup label="─── Unavailable this slot ───">` +
-        unavailable.map(t =>
-          `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>⚠ ${t.name}</option>`
-        ).join('') +
-        `</optgroup>`;
-    }
+    // Teachers busy in another section this slot
+    const busyIds = new Set();
+    Object.entries(state.timetable).forEach(([sid, days]) => {
+      if (sid === secId) return;
+      const c = days[day]?.[period];
+      if (c?.teacherId) busyIds.add(c.teacherId);
+    });
+
+    // Teachers with a duty assignment this slot
+    const dutyIds = new Set(
+      (state.DUTY_ASSIGNMENTS || [])
+        .filter(a => a.day === day && a.period === period && a.teacherId)
+        .map(a => a.teacherId)
+    );
+
+    const grpAvailable     = [];
+    const grpTeachingOther = [];
+    const grpOnDuty        = [];
+    const grpUnavailable   = [];
+
+    teachers.forEach(t => {
+      if (!isTeacherAvailable(t.id, day, period)) grpUnavailable.push(t);
+      else if (dutyIds.has(t.id))                 grpOnDuty.push(t);
+      else if (busyIds.has(t.id))                 grpTeachingOther.push(t);
+      else                                         grpAvailable.push(t);
+    });
+
+    const opt = (t, prefix = '') =>
+      `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${prefix}${t.name}</option>`;
+
+    html += grpAvailable.map(t => opt(t)).join('');
+
+    if (grpTeachingOther.length)
+      html += `<optgroup label="── Teaching other class ──">${grpTeachingOther.map(t => opt(t, '↔ ')).join('')}</optgroup>`;
+
+    if (grpOnDuty.length)
+      html += `<optgroup label="── On duty ──">${grpOnDuty.map(t => opt(t, '⊕ ')).join('')}</optgroup>`;
+
+    if (grpUnavailable.length)
+      html += `<optgroup label="── Unavailable this slot ──">${grpUnavailable.map(t => opt(t, '⚠ ')).join('')}</optgroup>`;
   } else {
     html += teachers.map(t =>
       `<option value="${t.id}" ${t.id === selTid ? 'selected' : ''}>${t.name}</option>`
@@ -90,9 +117,11 @@ export function fillTeacherDropdown(subject, selTid) {
 
   const sel = document.getElementById('modal-teacher');
   sel.innerHTML = html;
-  // Tint the select red when the selected teacher is in the unavailable group
+
   const selectedText = sel.options[sel.selectedIndex]?.text || '';
-  sel.style.color = selectedText.startsWith('⚠') ? '#dc2626' : '';
+  sel.style.color = selectedText.startsWith('⚠') ? '#dc2626'
+                  : selectedText.startsWith('↔') || selectedText.startsWith('⊕') ? '#d97706'
+                  : '';
 }
 
 export function closeModal() {

@@ -56,6 +56,10 @@ import {
   closeTeacherModal,
   populateClassSelectModal,
 } from './modals/teacher-modal.js';
+import {
+  addDutyAssignment, removeDutyAssignment,
+  openDutyPicker, closeDutyPicker, saveDutyFromPicker, removeDutyFromPicker,
+} from './views/teacher-view.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DARK MODE
@@ -437,6 +441,14 @@ window.setConstraint        = setConstraint;
 window.setSubjectFreq             = setSubjectFreq;
 window.setSubjectMinFreq          = setSubjectMinFreq;
 window.setSubjectMustAppearDaily  = setSubjectMustAppearDaily;
+
+// Duty assignments
+window.addDutyAssignment    = addDutyAssignment;
+window.removeDutyAssignment = removeDutyAssignment;
+window.openDutyPicker       = openDutyPicker;
+window.closeDutyPicker      = closeDutyPicker;
+window.saveDutyFromPicker   = saveDutyFromPicker;
+window.removeDutyFromPicker = removeDutyFromPicker;
 
 // View renders called by select onchange handlers
 window.renderClassView   = renderClassView;

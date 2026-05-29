@@ -74,7 +74,7 @@ export function renderClassView() {
         const bg         = SUBJECT_COLORS[cell.subject] || '#f5f5f5';
         const tc         = SUBJECT_TEXT[cell.subject]   || '#333';
         const isConflict = state.conflictSet.has(`${secId}|${realDay}|${per.id}`);
-        const isAbsent   = cell.teacherId && !isTeacherAvailable(cell.teacherId, realDay);
+        const isAbsent   = cell.teacherId && !isTeacherAvailable(cell.teacherId, realDay, per.id);
         const lockIcon   = cell.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
         const combined      = getCombinedSections(secId, realDay, per.id);
         const combinedDiff  = getCombinableDiffTeacher(secId, realDay, per.id);
@@ -92,6 +92,7 @@ export function renderClassView() {
           ` oncontextmenu="toggleCellLock('${secId}','${realDay}','${per.id}',event)"` +
           ` title="${cell.locked ? 'Locked — right-click to unlock' : 'Right-click to lock'}">` +
           (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
+          (isAbsent ? `<span class="absent-badge">&#9888;</span>` : '') +
           `<span class="cell-subj">${cell.subject}</span>` +
           `<span class="cell-teacher">${t ? t.name : '⚠️ Unassigned'}</span>` +
           (combined.length ? `<span class="cell-combined">+ ${combined.map(shortSec).join(', ')}</span>` : '') +

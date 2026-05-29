@@ -14,12 +14,15 @@ export function computeDashboardStats() {
     filledSlots:    0,
     emptySlots:     0,
     unassignedSlots: 0,
+    unavailableSlots: 0,
     byTeacher:      {},
     byClass:        {},
     emptyList:      [],
     unassignedList: [],
+    unavailableList: [],
     belowMinList:   [],
     missingDailyList: [],
+    openDutyList:   [],
   };
 
   state.TEACHERS.forEach(t => {
@@ -57,6 +60,12 @@ export function computeDashboardStats() {
         ds.unassignedSlots++;
         ds.byClass[secId].unassigned++;
         ds.unassignedList.push({ secId, day: d, period: p, subject: cell.subject });
+      } else if (cell.teacherId && !isTeacherAvailable(cell.teacherId, d, p)) {
+        ds.unavailableSlots++;
+        ds.filledSlots++;
+        ds.byClass[secId].filled++;
+        const teacherName = state.TEACHERS.find(t => t.id === cell.teacherId)?.name || 'Unknown';
+        ds.unavailableList.push({ secId, day: d, period: p, subject: cell.subject, teacherName });
       } else {
         ds.filledSlots++;
         ds.byClass[secId].filled++;
@@ -116,6 +125,19 @@ export function computeDashboardStats() {
       });
     });
   }
+
+  // Open duties: unassigned or teacher has a timetable conflict in that slot
+  (state.DUTY_ASSIGNMENTS || []).forEach(a => {
+    const conflicted = a.teacherId && allSectionIds().some(secId =>
+      (state.timetable[secId]?.[a.day]?.[a.period])?.teacherId === a.teacherId
+    );
+    if (!a.teacherId || conflicted) {
+      const teacherName = a.teacherId
+        ? (state.TEACHERS.find(t => t.id === a.teacherId)?.name || 'Unknown')
+        : null;
+      ds.openDutyList.push({ ...a, conflicted: !!conflicted, teacherName });
+    }
+  });
 
   return ds;
 }
@@ -195,7 +217,8 @@ export function renderDashboard() {
 
   // ── Issues panel ───────────────────────────────────────────────────────────
   const totalIssues = state.conflictRecords.length + ds.missingDailyList.length +
-                      ds.belowMinList.length + ds.unassignedSlots + ds.emptySlots;
+                      ds.belowMinList.length + ds.unassignedSlots + ds.emptySlots +
+                      ds.openDutyList.length + ds.unavailableSlots;
 
   function issueCards(items, fn) {
     return `<div class="issue-cards">${items.map(fn).join('')}</div>`;
@@ -236,6 +259,22 @@ export function renderDashboard() {
       `<div class="ic-sub">No subject assigned</div>` +
     `</div>`) : '';
 
+  const openDutyCards = ds.openDutyList.length ? issueCards(ds.openDutyList, u =>
+    `<div class="issue-card ic-duty">` +
+      `<div class="ic-label">${u.type}</div>` +
+      `<div class="ic-title">${u.day} · ${u.period}</div>` +
+      `<div class="ic-sub">${u.conflicted
+        ? `&#9888; ${u.teacherName} has a class — needs pickup`
+        : 'Unassigned — open for pickup'}</div>` +
+    `</div>`) : '';
+
+  const unavailCards = ds.unavailableSlots ? issueCards(ds.unavailableList, u =>
+    `<div class="issue-card ic-unavail" onclick="jumpToSlot('${u.secId}','${u.day}','${u.period}')">` +
+      `<div class="ic-label">${u.secId}</div>` +
+      `<div class="ic-title">${u.teacherName} · ${u.subject}</div>` +
+      `<div class="ic-sub">${u.day} · ${u.period} — teacher unavailable</div>` +
+    `</div>`) : '';
+
   function issueGroup(title, count, colorCls, cards) {
     if (!count) return `<div class="issue-group ig-empty"><div class="ig-head ${colorCls}"><span class="ig-title">${title}</span><span class="ig-count">0</span></div><div class="ig-ok">All clear</div></div>`;
     return `<div class="issue-group"><div class="ig-head ${colorCls}"><span class="ig-title">${title}</span><span class="ig-count">${count}</span></div>${cards}</div>`;
@@ -245,10 +284,12 @@ export function renderDashboard() {
     ? `<div class="issues-all-clear">✅ No issues — schedule is fully covered!</div>`
     : `<div class="issues-grid">` +
         issueGroup('Conflicts', state.conflictRecords.length, 'igc-conflict', conflictCards) +
+        issueGroup('Unavailable Teacher', ds.unavailableSlots, 'igc-unavail', unavailCards) +
         issueGroup('Missing Daily', ds.missingDailyList.length, 'igc-missing', missingCards) +
         issueGroup('Below Minimum', ds.belowMinList.length, 'igc-belowmin', belowMinCards) +
         issueGroup('No Teacher', ds.unassignedSlots, 'igc-noteacher', noTeacherCards) +
         issueGroup('Empty Slots', ds.emptySlots, 'igc-empty', emptyCards) +
+        issueGroup('Open Duties', ds.openDutyList.length, 'igc-duty', openDutyCards) +
       `</div>`;
 
   document.getElementById('dash-issues').innerHTML = issuesHtml;

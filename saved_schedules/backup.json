@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-05-29T07:37:54.294Z",
+  "savedAt": "2026-05-29T09:10:59.141Z",
   "TEACHERS": [
     {
       "id": "T01",
@@ -858,6 +858,13 @@
           "P6",
           "P7",
           "P8"
+        ]
+      }
+    },
+    "T05": {
+      "blockedPeriods": {
+        "Mon": [
+          "P1"
         ]
       }
     }
@@ -3905,5 +3912,70 @@
         }
       }
     }
-  }
+  },
+  "DUTY_ASSIGNMENTS": [
+    {
+      "id": "d1780043759421",
+      "type": "Admin Work",
+      "day": "Mon",
+      "period": "P2",
+      "teacherId": "T17"
+    },
+    {
+      "id": "d1780045774624",
+      "type": "Admin Work",
+      "day": "Mon",
+      "period": "P3",
+      "teacherId": "T17"
+    },
+    {
+      "id": "d1780045787707",
+      "type": "Admin Work",
+      "day": "Mon",
+      "period": "P4",
+      "teacherId": "T17"
+    },
+    {
+      "id": "d1780045825507",
+      "type": "Uniform Checking & Late Comers Checking",
+      "day": "Mon",
+      "period": "P1",
+      "teacherId": "T18"
+    },
+    {
+      "id": "d1780045828024",
+      "type": "Uniform Checking & Late Comers Checking",
+      "day": "Tue",
+      "period": "P1",
+      "teacherId": "T18"
+    },
+    {
+      "id": "d1780045831024",
+      "type": "Uniform Checking & Late Comers Checking",
+      "day": "Wed",
+      "period": "P1",
+      "teacherId": "T18"
+    },
+    {
+      "id": "d1780045833874",
+      "type": "Uniform Checking & Late Comers Checking",
+      "day": "Thu",
+      "period": "P1",
+      "teacherId": "T18"
+    },
+    {
+      "id": "d1780045836391",
+      "type": "Uniform Checking & Late Comers Checking",
+      "day": "Fri",
+      "period": "P1",
+      "teacherId": "T18"
+    },
+    {
+      "id": "d1780045839541",
+      "type": "Uniform Checking & Late Comers Checking",
+      "day": "Sat",
+      "period": "P1",
+      "teacherId": "T18"
+    }
+  ]
 }

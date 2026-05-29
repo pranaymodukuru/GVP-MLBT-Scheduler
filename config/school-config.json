@@ -1134,5 +1134,13 @@
         "B": "T13"
       }
     }
-  }
+  },
+  "duties": [
+    "Library Maintenance",
+    "Uniform Checking & Late Comers Checking",
+    "Exam Work",
+    "Notes Verification",
+    "Exam Paper Correction",
+    "Admin Work"
+  ]
 }

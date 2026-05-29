@@ -21,6 +21,7 @@ export function saveState() {
       CONSTRAINTS:          state.CONSTRAINTS,
       timetable:            state.timetable,
       venueFlips:           state.venueFlips,
+      DUTY_ASSIGNMENTS:     state.DUTY_ASSIGNMENTS,
     }));
   } catch (e) { /* storage full or unavailable — silently ignore */ }
 }
@@ -112,6 +113,7 @@ export function applySnap(snap) {
   if (snap.CONSTRAINTS)          state.CONSTRAINTS          = snap.CONSTRAINTS;
   if (snap.timetable)            state.timetable            = snap.timetable;
   if (snap.venueFlips)           state.venueFlips           = snap.venueFlips;
+  if (snap.DUTY_ASSIGNMENTS)     state.DUTY_ASSIGNMENTS     = snap.DUTY_ASSIGNMENTS;
 }
 
 /**
@@ -189,6 +191,7 @@ function buildSnapshot() {
     TEACHER_AVAILABILITY: state.TEACHER_AVAILABILITY,
     CONSTRAINTS:          state.CONSTRAINTS,
     timetable:            state.timetable,
+    DUTY_ASSIGNMENTS:     state.DUTY_ASSIGNMENTS,
   }, null, 2);
 }
 

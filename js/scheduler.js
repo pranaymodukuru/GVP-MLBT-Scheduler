@@ -583,21 +583,41 @@ export function checkConflicts() {
     });
   }
 
+  // Count unavailable-teacher slots across all sections
+  let unavailCount = 0;
+  allSectionIds().forEach(secId => {
+    DAYS.forEach(d => WORK_PERIODS.forEach(p => {
+      const cell = state.timetable[secId]?.[d]?.[p];
+      if (cell?.teacherId && !isTeacherAvailable(cell.teacherId, d, p)) unavailCount++;
+    }));
+  });
+  state.unavailableCount = unavailCount;
+
   const panel = document.getElementById('conflict-panel');
-  if (state.conflictRecords.length) {
-    panel.innerHTML =
-      `<strong>⚠️ ${state.conflictRecords.length} conflict(s)</strong>` +
-      `<ul style="margin:6px 0 0 18px">` +
-      state.conflictRecords.map(c => c.venueSubject
-        ? `<li style="margin-bottom:3px"><strong>${c.venueSubject}</strong> ` +
-          `${c.venue} clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
-        : c.room
-        ? `<li style="margin-bottom:3px"><strong>${c.room}</strong> ` +
-          `room clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
-        : `<li style="margin-bottom:3px"><strong>${c.teacherName}</strong> ` +
-          `double-booked ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
-      ).join('') +
-      `</ul>`;
+  const hasConflicts  = state.conflictRecords.length > 0;
+  const hasUnavail    = unavailCount > 0;
+
+  if (hasConflicts || hasUnavail) {
+    let html = '';
+    if (hasConflicts) {
+      html +=
+        `<strong>⚠️ ${state.conflictRecords.length} conflict(s)</strong>` +
+        `<ul style="margin:6px 0 0 18px">` +
+        state.conflictRecords.map(c => c.venueSubject
+          ? `<li style="margin-bottom:3px"><strong>${c.venueSubject}</strong> ` +
+            `${c.venue} clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
+          : c.room
+          ? `<li style="margin-bottom:3px"><strong>${c.room}</strong> ` +
+            `room clash ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
+          : `<li style="margin-bottom:3px"><strong>${c.teacherName}</strong> ` +
+            `double-booked ${c.day} ${c.period}: <strong>${c.sec1}</strong> &amp; <strong>${c.sec2}</strong></li>`
+        ).join('') +
+        `</ul>`;
+    }
+    if (hasUnavail) {
+      html += `<strong>&#9888; ${unavailCount} unavailable teacher slot(s) — check Dashboard for details</strong>`;
+    }
+    panel.innerHTML = html;
     panel.style.cssText =
       'background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;' +
       'border-radius:10px;padding:10px 16px;margin-bottom:1rem;font-size:12px;display:block';

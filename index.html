@@ -29,8 +29,11 @@
     <div class="top-btns">
       <button class="btn btn-sm" id="theme-toggle" onclick="toggleDarkMode()" data-tooltip="Toggle dark / light mode" data-tooltip-below><i class="ti ti-moon" id="theme-icon"></i></button>
       <button class="btn" onclick="window.print()" data-tooltip="Print the current timetable view" data-tooltip-below><i class="ti ti-printer"></i> Print</button>
+      <button class="btn" onclick="exportClassPDFs()" data-tooltip="Export every class timetable as a PDF&#10;(one page per section — opens print dialog)" data-tooltip-below><i class="ti ti-layout-rows"></i> Class PDFs</button>
+      <button class="btn" onclick="exportTeacherPDFs()" data-tooltip="Export every teacher timetable as a PDF&#10;(one page per teacher — opens print dialog)" data-tooltip-below><i class="ti ti-users"></i> Teacher PDFs</button>
       <button class="btn" onclick="exportJSON()" data-tooltip="Save a timestamped snapshot to saved_schedules/&#10;(falls back to browser download if server is off)" data-tooltip-below><i class="ti ti-device-floppy"></i> Save</button>
       <button class="btn" onclick="saveBackup()" data-tooltip="Mark this schedule as the default backup.&#10;Loaded automatically on a fresh start&#10;when no session data exists." data-tooltip-below><i class="ti ti-bookmark"></i> Set Backup</button>
+      <button class="btn btn-danger" onclick="resetToBackup()" data-tooltip="Restore the schedule from backup.json.&#10;All unsaved changes will be lost." data-tooltip-below><i class="ti ti-history"></i> Load Backup</button>
       <button class="btn" onclick="triggerImport()" data-tooltip="Load a previously saved schedule from&#10;the server or your local filesystem" data-tooltip-below><i class="ti ti-upload"></i> Import</button>
       <button class="btn" id="regen-btn" onclick="regenerate()" data-tooltip="Regenerate schedule — locked cells 🔒&#10;are preserved, everything else is reshuffled" data-tooltip-below><i class="ti ti-refresh"></i> Regenerate</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
@@ -52,6 +55,7 @@
     <div class="controls">
       <div id="class-select" class="btn-selector"></div>
       <span id="class-stats-badge" class="badge badge-info"></span>
+      <button class="btn btn-sm" style="margin-left:auto" onclick="exportCurrentClassPDF()" data-tooltip="Export this class timetable as a PDF" data-tooltip-below><i class="ti ti-file-export"></i> Export PDF</button>
     </div>
     <div class="hint-bar">
       <span>🖱️ Left-click to edit</span>
@@ -66,6 +70,7 @@
     <div class="controls">
       <div id="teacher-select" class="btn-selector"></div>
       <span id="teacher-stats-badge" class="badge badge-info"></span>
+      <button class="btn btn-sm" style="margin-left:auto" onclick="exportCurrentTeacherPDF()" data-tooltip="Export this teacher's timetable as a PDF" data-tooltip-below><i class="ti ti-file-export"></i> Export PDF</button>
     </div>
     <div class="stats" id="teacher-stats"></div>
     <div class="legend" id="teacher-legend"></div>

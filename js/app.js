@@ -63,6 +63,7 @@ import {
   addDutyAssignment, removeDutyAssignment,
   openDutyPicker, closeDutyPicker, saveDutyFromPicker, removeDutyFromPicker,
 } from './views/teacher-view.js';
+import { exportClassPDFs, exportTeacherPDFs, exportCurrentClassPDF, exportCurrentTeacherPDF } from './pdf-export.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DARK MODE
@@ -384,6 +385,22 @@ export async function saveBackup() {
   showToast(serverSaved ? '📌 Backup saved — this is now your default schedule' : '📌 Backup downloaded as backup.json');
 }
 
+export async function resetToBackup() {
+  if (!confirm('Reset everything to backup.json? All unsaved changes will be lost.')) return;
+  const backup = await fetchBackup();
+  if (!backup) { showToast('No backup.json found on server.'); return; }
+  applySnap(backup.data);
+  saveState();
+  const ts = new Date(backup.data.savedAt);
+  document.getElementById('load-banner-msg').textContent = '📌 Restored from backup';
+  document.getElementById('load-banner-time').textContent =
+    `Backed up ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+  document.getElementById('load-banner').style.display = '';
+  checkConflicts();
+  renderClassView();
+  showToast('📌 Restored from backup.json');
+}
+
 init();
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -404,6 +421,7 @@ window.fillEmptySlots   = fillEmptySlots;
 // Persistence
 window.exportJSON       = () => exportJSON().then(({ saved }) => showToast(`💾 Saved: ${saved}`));
 window.saveBackup       = saveBackup;
+window.resetToBackup    = resetToBackup;
 window.triggerImport    = triggerImport;
 window.closeImportModal = closeImportModal;
 window.triggerFilePicker = triggerFilePicker;
@@ -462,6 +480,12 @@ window.removeDutyFromPicker = removeDutyFromPicker;
 window.renderClassView   = renderClassView;
 window.renderTeacherView = renderTeacherView;
 window.renderSubjectView = renderSubjectView;
+
+// PDF export
+window.exportClassPDFs        = exportClassPDFs;
+window.exportTeacherPDFs      = exportTeacherPDFs;
+window.exportCurrentClassPDF  = exportCurrentClassPDF;
+window.exportCurrentTeacherPDF = exportCurrentTeacherPDF;
 
 // Expose state + saveState for any remaining inline handlers
 window.state            = state;

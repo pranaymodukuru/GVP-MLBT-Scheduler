@@ -194,63 +194,64 @@ export function renderDashboard() {
   }).join('');
 
   // ── Issues panel ───────────────────────────────────────────────────────────
-  let html = '';
+  const totalIssues = state.conflictRecords.length + ds.missingDailyList.length +
+                      ds.belowMinList.length + ds.unassignedSlots + ds.emptySlots;
 
-  if (ds.missingDailyList.length) {
-    html += `<div class="issue-section">🔴 Missing Daily (${ds.missingDailyList.length})</div>`;
-    html += ds.missingDailyList.map(u =>
-      `<div class="issue-item issue-missing-daily">` +
-      `<div><strong>${u.subject}</strong> in <strong>${u.secId}</strong><br>` +
-      `<span style="color:#6b7280;font-size:11px">Not scheduled on: ${u.missingDays.join(', ')}</span></div>` +
-      `</div>`
-    ).join('');
+  function issueCards(items, fn) {
+    return `<div class="issue-cards">${items.map(fn).join('')}</div>`;
   }
 
-  if (ds.belowMinList.length) {
-    html += `<div class="issue-section">🟠 Below Minimum (${ds.belowMinList.length})</div>`;
-    html += ds.belowMinList.map(u =>
-      `<div class="issue-item issue-below-min">` +
-      `<div><strong>${u.subject}</strong> in <strong>${u.secId}</strong><br>` +
-      `<span style="color:#6b7280;font-size:11px">${u.actual} assigned, min ${u.min}/week</span></div>` +
-      `</div>`
-    ).join('');
+  const conflictCards = state.conflictRecords.length ? issueCards(state.conflictRecords, c =>
+    `<div class="issue-card ic-conflict" onclick="jumpToSlot('${c.sec1}','${c.day}','${c.period}')">` +
+      `<div class="ic-label">${c.sec1} &amp; ${c.sec2}</div>` +
+      `<div class="ic-title">${c.teacherName}</div>` +
+      `<div class="ic-sub">${c.day} · ${c.period}</div>` +
+    `</div>`) : '';
+
+  const missingCards = ds.missingDailyList.length ? issueCards(ds.missingDailyList, u =>
+    `<div class="issue-card ic-missing">` +
+      `<div class="ic-label">${u.secId}</div>` +
+      `<div class="ic-title">${u.subject}</div>` +
+      `<div class="ic-sub">Missing: ${u.missingDays.join(', ')}</div>` +
+    `</div>`) : '';
+
+  const belowMinCards = ds.belowMinList.length ? issueCards(ds.belowMinList, u =>
+    `<div class="issue-card ic-belowmin">` +
+      `<div class="ic-label">${u.secId}</div>` +
+      `<div class="ic-title">${u.subject}</div>` +
+      `<div class="ic-sub">${u.actual} periods · min ${u.min}/week</div>` +
+    `</div>`) : '';
+
+  const noTeacherCards = ds.unassignedSlots ? issueCards(ds.unassignedList, u =>
+    `<div class="issue-card ic-noteacher" onclick="jumpToSlot('${u.secId}','${u.day}','${u.period}')">` +
+      `<div class="ic-label">${u.secId}</div>` +
+      `<div class="ic-title">${u.subject}</div>` +
+      `<div class="ic-sub">${u.day} · ${u.period}</div>` +
+    `</div>`) : '';
+
+  const emptyCards = ds.emptySlots ? issueCards(ds.emptyList, u =>
+    `<div class="issue-card ic-empty" onclick="jumpToSlot('${u.secId}','${u.day}','${u.period}')">` +
+      `<div class="ic-label">${u.secId}</div>` +
+      `<div class="ic-title">${u.day} · ${u.period}</div>` +
+      `<div class="ic-sub">No subject assigned</div>` +
+    `</div>`) : '';
+
+  function issueGroup(title, count, colorCls, cards) {
+    if (!count) return `<div class="issue-group ig-empty"><div class="ig-head ${colorCls}"><span class="ig-title">${title}</span><span class="ig-count">0</span></div><div class="ig-ok">All clear</div></div>`;
+    return `<div class="issue-group"><div class="ig-head ${colorCls}"><span class="ig-title">${title}</span><span class="ig-count">${count}</span></div>${cards}</div>`;
   }
 
-  if (state.conflictRecords.length) {
-    html += `<div class="issue-section">🔴 Conflicts (${state.conflictRecords.length})</div>`;
-    html += state.conflictRecords.map(c =>
-      `<div class="issue-item issue-conflict" onclick="jumpToSlot('${c.sec1}','${c.day}','${c.period}')">` +
-      `<div><strong>${c.teacherName}</strong><span style="color:#9ca3af"> ${c.day} ${c.period}</span><br>` +
-      `<span style="color:#6b7280;font-size:11px">${c.sec1} &amp; ${c.sec2}</span></div>` +
-      `<span class="issue-arrow">→</span></div>`
-    ).join('');
-  }
+  const issuesHtml = totalIssues === 0
+    ? `<div class="issues-all-clear">✅ No issues — schedule is fully covered!</div>`
+    : `<div class="issues-grid">` +
+        issueGroup('Conflicts', state.conflictRecords.length, 'igc-conflict', conflictCards) +
+        issueGroup('Missing Daily', ds.missingDailyList.length, 'igc-missing', missingCards) +
+        issueGroup('Below Minimum', ds.belowMinList.length, 'igc-belowmin', belowMinCards) +
+        issueGroup('No Teacher', ds.unassignedSlots, 'igc-noteacher', noTeacherCards) +
+        issueGroup('Empty Slots', ds.emptySlots, 'igc-empty', emptyCards) +
+      `</div>`;
 
-  if (ds.unassignedSlots) {
-    html += `<div class="issue-section">🟡 Need a Teacher (${ds.unassignedSlots})</div>`;
-    html += ds.unassignedList.map(u =>
-      `<div class="issue-item issue-unassigned" onclick="jumpToSlot('${u.secId}','${u.day}','${u.period}')">` +
-      `<div><strong>${u.subject}</strong><span style="color:#9ca3af"> ${u.day} ${u.period}</span><br>` +
-      `<span style="color:#6b7280;font-size:11px">${u.secId}</span></div>` +
-      `<span class="issue-arrow">→</span></div>`
-    ).join('');
-  }
-
-  if (ds.emptySlots) {
-    html += `<div class="issue-section">⬜ Empty Slots (${ds.emptySlots})</div>`;
-    html += ds.emptyList.map(u =>
-      `<div class="issue-item issue-empty" onclick="jumpToSlot('${u.secId}','${u.day}','${u.period}')">` +
-      `<div><span style="color:#374151;font-weight:500">${u.secId}</span>` +
-      `<span style="color:#9ca3af"> ${u.day} ${u.period}</span></div>` +
-      `<span class="issue-arrow">→</span></div>`
-    ).join('');
-  }
-
-  if (!html) {
-    html = `<div style="padding:3rem;text-align:center;color:#16a34a;font-size:14px;font-weight:500">` +
-           `✅ No issues — schedule is fully covered!</div>`;
-  }
-  document.getElementById('dash-issues').innerHTML = html;
+  document.getElementById('dash-issues').innerHTML = issuesHtml;
 
   // ── Class coverage table ───────────────────────────────────────────────────
   const perfect = Object.values(ds.byClass).filter(c => c.empty === 0 && c.unassigned === 0).length;

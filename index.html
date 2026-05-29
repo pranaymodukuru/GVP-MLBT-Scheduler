@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>School Timetable</title>
+<title>GVP MLBT — Timetable</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <link rel="stylesheet" href="styles/main.css">
 <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
@@ -22,9 +22,13 @@
   </div>
 
   <div class="header">
-    <div>
-      <div class="title">🏫 School Timetable</div>
-      <div class="subtitle">Right-click any cell to lock/unlock · Click to edit · Changes auto-saved</div>
+    <div class="header-brand">
+      <img src="/assets/logo.png" class="header-logo" alt="School Logo" />
+      <div>
+        <div class="header-school-name" id="header-school-name"></div>
+        <div class="header-school-place" id="header-school-place"></div>
+        <div class="subtitle">Right-click any cell to lock/unlock · Click to edit · Changes auto-saved</div>
+      </div>
     </div>
     <div class="top-btns">
       <button class="btn btn-sm" id="theme-toggle" onclick="toggleDarkMode()" data-tooltip="Toggle dark / light mode" data-tooltip-below><i class="ti ti-moon" id="theme-icon"></i></button>

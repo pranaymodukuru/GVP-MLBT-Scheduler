@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT } from '../config/school-config.js';
+import { PERIODS, DAYS, SUBJECT_COLORS, SUBJECT_TEXT, SCHOOL_NAME, SCHOOL_PLACE } from '../config/school-config.js';
 import { allSectionIds, isSatHalf, isUpper, isActivePeriod, shortSec } from './helpers.js';
 import { getSelectorValue } from './selects.js';
 
@@ -141,8 +141,8 @@ function pageHeader(docType, docName, rightLines) {
     <div class="page-header">
       <img class="logo" src="${logoUrl()}" />
       <div class="hdr-center">
-        <div class="school-name">Gayatri Vidya Parishad</div>
-        <div class="school-place">Visakhapatnam</div>
+        <div class="school-name">${SCHOOL_NAME}</div>
+        <div class="school-place">${SCHOOL_PLACE}</div>
         <hr class="hdr-divider" />
         <div class="doc-row">
           <span class="doc-type">${docType}</span>

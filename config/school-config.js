@@ -9,6 +9,8 @@ const cfg = await fetch(new URL('school-config.json', import.meta.url))
   .then(r => r.json());
 
 // ─── Simple re-exports ────────────────────────────────────────────────────────
+export const SCHOOL_NAME       = cfg.schoolName  || 'School Timetable';
+export const SCHOOL_PLACE      = cfg.schoolPlace || '';
 export const STORAGE_KEY       = cfg.storageKey;
 export const DAYS              = cfg.days;
 export const PERIODS           = cfg.periods;

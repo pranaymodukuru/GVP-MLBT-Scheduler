@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from './state.js';
-import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_SUBJECT_MIN_FREQ, DEFAULT_SUBJECT_MUST_APPEAR_DAILY, STORAGE_KEY } from '../config/school-config.js';
+import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_SUBJECT_MIN_FREQ, DEFAULT_SUBJECT_MUST_APPEAR_DAILY, STORAGE_KEY, SCHOOL_NAME, SCHOOL_PLACE } from '../config/school-config.js';
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
 import { refreshSelects, setSelectorValue } from './selects.js';
@@ -340,6 +340,10 @@ async function init() {
   const savedTheme = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
   document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+
+  document.getElementById('header-school-name').textContent = SCHOOL_NAME;
+  const placeEl = document.getElementById('header-school-place');
+  if (SCHOOL_PLACE) placeEl.textContent = SCHOOL_PLACE;
 
   const snap = loadSavedSnap();
   if (snap) {

@@ -24,6 +24,7 @@ import {
   renderAttendanceTable,
   renderConstraintsPanel,
   renderPeriodUnavailabilityPanel,
+  renderDutiesPanel,
   setSectionCount,
   setSectionTeacher,
   addSubject,
@@ -36,6 +37,8 @@ import {
   setSubjectFreq,
   setSubjectMinFreq,
   setSubjectMustAppearDaily,
+  addDutyType,
+  removeDutyType,
 } from './views/admin-view.js';
 import {
   openEdit,
@@ -441,6 +444,11 @@ window.setConstraint        = setConstraint;
 window.setSubjectFreq             = setSubjectFreq;
 window.setSubjectMinFreq          = setSubjectMinFreq;
 window.setSubjectMustAppearDaily  = setSubjectMustAppearDaily;
+
+// Duty types
+window.renderDutiesPanel = renderDutiesPanel;
+window.addDutyType       = addDutyType;
+window.removeDutyType    = removeDutyType;
 
 // Duty assignments
 window.addDutyAssignment    = addDutyAssignment;

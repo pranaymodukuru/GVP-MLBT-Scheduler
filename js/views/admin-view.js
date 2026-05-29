@@ -25,6 +25,7 @@ export function renderAdminView() {
     ?.querySelector('.pu-teacher-select')?.value || '';
   renderPeriodUnavailabilityPanel(prevTid);
   renderConstraintsPanel();
+  renderDutiesPanel();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -446,4 +447,61 @@ export function setConstraint(key, value) {
   saveState();
   saveConfig();
   showToast(`Constraint updated`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DUTIES PANEL
+// ─────────────────────────────────────────────────────────────────────────────
+
+export function renderDutiesPanel() {
+  const el = document.getElementById('duties-panel');
+  if (!el) return;
+
+  const list = state.DUTY_TYPES.length
+    ? state.DUTY_TYPES.map((d, i) =>
+        `<div class="admin-row" style="padding:8px 12px;align-items:center">` +
+        `<div class="admin-row-info"><div class="admin-row-name">${d}</div></div>` +
+        `<div class="admin-row-actions">` +
+          `<button class="btn btn-sm" style="color:#dc2626;border-color:#fca5a5" onclick="removeDutyType(${i})">` +
+          `<i class="ti ti-trash"></i></button>` +
+        `</div>` +
+        `</div>`
+      ).join('')
+    : `<div class="empty-state">No duty types defined.</div>`;
+
+  el.innerHTML =
+    list +
+    `<div style="display:flex;gap:8px;margin-top:12px;padding:0 12px 4px;align-items:center">` +
+    `<input type="text" id="new-duty-input" placeholder="New duty type…" style="flex:1"` +
+    ` onkeydown="if(event.key==='Enter')addDutyType()">` +
+    `<button class="btn btn-sm btn-primary" onclick="addDutyType()"><i class="ti ti-plus"></i> Add</button>` +
+    `</div>`;
+}
+
+export function addDutyType() {
+  const inp = document.getElementById('new-duty-input');
+  const val = inp?.value.trim();
+  if (!val) return;
+  if (state.DUTY_TYPES.includes(val)) {
+    showToast('Duty type already exists', 'error');
+    return;
+  }
+  state.DUTY_TYPES.push(val);
+  inp.value = '';
+  renderDutiesPanel();
+  saveState();
+  saveConfig();
+  showToast(`Added: ${val}`);
+}
+
+export function removeDutyType(idx) {
+  const name = state.DUTY_TYPES[idx];
+  if (name === undefined) return;
+  const usedCount = state.DUTY_ASSIGNMENTS.filter(a => a.type === name).length;
+  if (usedCount && !confirm(`"${name}" is assigned to ${usedCount} slot(s). Remove anyway?`)) return;
+  state.DUTY_TYPES.splice(idx, 1);
+  renderDutiesPanel();
+  saveState();
+  saveConfig();
+  showToast(`Removed: ${name}`);
 }

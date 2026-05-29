@@ -72,7 +72,8 @@ export const DEFAULT_CONSTRAINTS = cfg.constraints || {
 };
 
 // Duty types (teacher responsibilities outside of class teaching)
-export const DUTY_TYPES = cfg.duties || [];
+export const DUTY_TYPES         = cfg.duties || [];
+export const DEFAULT_DUTY_TYPES = cfg.duties || [];
 
 // Raw config object — used by persistence.js to build a config-file snapshot
 // that preserves static fields (periods, colors, etc.) not tracked in state.

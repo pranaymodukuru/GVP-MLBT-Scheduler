@@ -13,6 +13,7 @@ import {
   DEFAULT_SUBJECT_MUST_APPEAR_DAILY,
   DEFAULT_TEACHER_AVAILABILITY,
   DEFAULT_CONSTRAINTS,
+  DEFAULT_DUTY_TYPES,
 } from '../config/school-config.js';
 
 export const state = {
@@ -37,6 +38,9 @@ export const state = {
   // ── Conflict tracking ──
   conflictRecords:      [],   // [{ teacherName, teacherId, day, period, sec1, sec2 }]
   conflictSet:          new Set(), // 'secId|day|period'
+
+  // ── Duty types (editable list of duty categories) ──
+  DUTY_TYPES:           [...DEFAULT_DUTY_TYPES],
 
   // ── Duty assignments (teacher responsibilities beyond class teaching) ──
   DUTY_ASSIGNMENTS:     [],   // [{ id, type, day, period, teacherId }]

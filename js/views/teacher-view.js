@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { PERIODS, DAYS, WORK_PERIODS, SUBJECT_COLORS, SUBJECT_TEXT, DUTY_TYPES } from '../../config/school-config.js';
+import { PERIODS, DAYS, WORK_PERIODS, SUBJECT_COLORS, SUBJECT_TEXT } from '../../config/school-config.js';
 import { allSectionIds, isTeacherAvailable, isActivePeriod, shortSec, getGamesVenue } from '../helpers.js';
 import { getSelectorValue } from '../selects.js';
 import { showToast } from '../toast.js';
@@ -175,7 +175,7 @@ function renderDutiesSection(tid) {
     `<div class="duty-add-row">` +
     `<select id="duty-type-sel" class="duty-sel">` +
     `<option value="">Select duty…</option>` +
-    DUTY_TYPES.map(d => `<option value="${d}">${d}</option>`).join('') +
+    state.DUTY_TYPES.map(d => `<option value="${d}">${d}</option>`).join('') +
     `</select>` +
     `<select id="duty-day-sel" class="duty-sel">` +
     `<option value="">Day…</option>` +
@@ -220,7 +220,7 @@ export function openDutyPicker(tid, day, period) {
   document.getElementById('duty-picker-slot').textContent = '';
 
   const sel = document.getElementById('duty-picker-sel');
-  sel.innerHTML = DUTY_TYPES.map(d =>
+  sel.innerHTML = state.DUTY_TYPES.map(d =>
     `<option value="${d}"${existing?.type === d ? ' selected' : ''}>${d}</option>`
   ).join('');
 

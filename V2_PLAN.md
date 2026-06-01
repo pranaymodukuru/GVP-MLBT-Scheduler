@@ -99,7 +99,7 @@ Rough sizing that drives the split (≈360 students, ~200 school days/yr): atten
 **72k rows/yr daily, ~575k per-period** — loading that as one JSON array and rewriting it on
 every roll-call is not sustainable. Everything else stays in the KB–low-thousands range.
 
-### 3a. JSON store (Phases 1–7) — `/data/<name>`
+### 3.1 JSON store (Phases 1–7) — `/data/<name>`
 Add a generic JSON store to `server.py` (≈20 lines), mirroring the existing `/save`
 fallback pattern. **Write atomically** (write to temp + `os.rename`) — the current
 `open('w'); json.dump` truncates first, so a crash mid-write corrupts the whole file.
@@ -116,7 +116,7 @@ are the source of truth. Falls back to localStorage-only when the server isn't r
 > **Done-when:** `PUT`/`GET /data/calendar` round-trips a file; an interrupted write never
 > corrupts the existing file; the app boots unchanged; every box in §2 still passes.
 
-### 3b. SQLite system-of-record (introduce just before Phase 9.3)
+### 3.2 SQLite system-of-record (introduce just before Phase 9.4)
 When student attendance arrives, introduce SQLite via stdlib `sqlite3` in `server.py` —
 **no daemon, no Docker, no new dependency**, fully within the current stack. **Only the
 server's storage layer changes; the frontend keeps talking to REST endpoints** (`/data/*`
@@ -131,15 +131,15 @@ GET/PUT just read/write tables instead of files for the operational tiers).
 - `school-config.json` stays JSON (hand-editable, git-tracked); the timetable template
   stays a JSON snapshot (small; `applySnap()`/versioning already work on it).
 
-> **Sequencing:** JSON (3a) is fine through Phase 7. SQLite (3b) lands as the step directly
-> before **9.3 Student attendance** — the first collection that needs it. Nothing earlier is
+> **Sequencing:** JSON (3.1) is fine through Phase 7. SQLite (3.2) lands as the step directly
+> before **9.4 Student attendance** — the first collection that needs it. Nothing earlier is
 > blocked on it.
 >
 > **Done-when:** attendance/marks read & write through SQLite; a 100k-row attendance query
 > for one student returns instantly; a fresh DB auto-creates its schema on first run; §2
 > still passes.
 
-### 3.1 Backups & restore points  *(evolves with each storage tier)*
+### 3.3 Backups & restore points  *(evolves with each storage tier)*
 
 Same buttons (Save / Set Backup / Reset), same flat-file spirit — but what a backup
 captures grows with the tiers. Two concepts stay deliberately separate:
@@ -181,7 +181,7 @@ backup becomes a **timestamped set**, not one file:
 
 ## 4. Data model for later phases (students / exams / marks)
 
-Introduced only when their phase arrives. These land in **SQLite** (§3b) — they are the
+Introduced only when their phase arrives. These land in **SQLite** (§3.2) — they are the
 operational/time-series tier — and carry an `academic_year` column once Phase 14 lands.
 Shown as logical schemas; the same shapes port ≈1:1 to Postgres later.
 
@@ -306,25 +306,25 @@ isolation.
 - **Goal:** monthly per-teacher calendar (present by default; absences from 7.1) + CSV.
 - **Done-when:** monthly grid colour-codes each teacher's days; CSV downloads.
 
-### 9.2 Student roster · M  *(new data — gate for 9.3 & 11)*
+### 9.2 Student roster · M  *(new data — gate for 9.4 & 11)*
 - **Goal:** student lists per section.
 - **Files:** `data/students.json` initially; admin import (paste/CSV) + edit UI in
-  `admin-view.js`. (Migrates into SQLite in 9.2.5 alongside attendance.)
+  `admin-view.js`. (Migrates into SQLite in 9.3 alongside attendance.)
 - **Done-when:** each section has an editable, persisted student list.
 
-### 9.2.5 Introduce SQLite (§3b) · M  *(storage upgrade — gate for high-volume data)*
+### 9.3 Introduce SQLite (§3.2) · M  *(storage upgrade — gate for high-volume data)*
 - **Goal:** stand up `school.db` as the system of record for operational/time-series data
   **before** attendance writes its first row, so high-volume data never touches JSON.
 - **Files:** `server.py` (stdlib `sqlite3`: connection, schema auto-create on first run,
   `/data/*` GET/PUT routed to tables for the operational tiers); migrate `students` (9.2)
-  and any `absences`/`override` history into tables; backups switch to the §3.1 db-set form.
-- **Scope guard:** frontend REST calls are unchanged; config + template stay JSON (§3b).
+  and any `absences`/`override` history into tables; backups switch to the §3.3 db-set form.
+- **Scope guard:** frontend REST calls are unchanged; config + template stay JSON (§3.2).
 - **Done-when:** a fresh DB self-creates its schema; students read/write via SQLite; a
   100k-row test query returns instantly; a `VACUUM INTO` backup + restore round-trips; §2
   still passes.
 
-### 9.3 Student attendance · M
-- **Goal:** daily (optionally per-period) roll-call → `attendance` table (SQLite, 9.2.5).
+### 9.4 Student attendance · M
+- **Goal:** daily (optionally per-period) roll-call → `attendance` table (SQLite, 9.3).
 - **Files:** new roll-call modal; "all present" default + toggles; low-attendance flag
   (configurable threshold, default 75%); `GET /attendance?student_id=&date_from=&date_to=`.
 - **Done-when:** marking a class persists; a student's term % computes from an indexed
@@ -419,7 +419,7 @@ stays client-side.
 
 ### 11.1 Exams + marks entry · M
 - **Goal:** admin creates exams; teacher enters marks spreadsheet-style.
-- **Files:** `exams` + `marks` tables (SQLite, §3b); marks-entry view (students × marks
+- **Files:** `exams` + `marks` tables (SQLite, §3.2); marks-entry view (students × marks
   grid); validation (`marks ≤ max`); grade auto-compute from configurable boundaries.
 - **Done-when:** a full class's marks save in one transaction.
 
@@ -434,12 +434,12 @@ stays client-side.
 - **12.1 Coverage heatmap** — teacher × subject % covered vs scheduled; "at-risk subjects"
   where the primary teacher missed > N% (data from `absences` + `overrides`). M.
 - **12.2 Attendance ↔ performance** — scatter (attendance % vs marks %), correlation,
-  "needs intervention" list (<75% attendance AND <40% marks). M. Needs 9.3 + 11.1.
+  "needs intervention" list (<75% attendance AND <40% marks). M. Needs 9.4 + 11.1.
 - **12.3 Section comparison** — avg marks per subject across sections. S.
 - **12.4 Dashboard rollup** — today's absent teachers, uncovered periods, low-attendance
   count on the main dashboard. S.
 - Charts: add Chart.js via CDN (still no bundler).
-- **Storage payoff:** all four are SQL aggregate queries over the SQLite tables (§3b) — the
+- **Storage payoff:** all four are SQL aggregate queries over the SQLite tables (§3.2) — the
   server returns small pre-computed result sets, not raw rows, so the browser never loads
   the full attendance/marks history.
 
@@ -450,9 +450,13 @@ stays client-side.
   + PDF export. Files: `views/teacher-view.js`, new `js/duty-roster.js`, `pdf-export.js`.
 - **Done-when:** "Generate roster" distributes duties evenly; export produces a PDF.
 
+---
+
 ## 14. Phase — Multi-academic-year · S–M  *(low; do at first rollover)*
 - Tag dated collections with `academicYear`; rollover action carries teachers + class config
   forward and resets timetable/attendance/marks; historical years stay queryable.
+
+---
 
 ## 15. Phase — Auto-scheduling enhancements · M  *(LOW priority)*
 - The current generator is **frozen and must keep working** (§2). Only when everything above
@@ -463,7 +467,7 @@ stays client-side.
 
 ## 16. Suggested first sprint (1–2 days each, all testable, §2 green throughout)
 
-1. **§3** — `/data/*` store in `server.py` + the four empty collections in state.
+1. **§3.1** — `/data/*` store in `server.py` + the four empty collections in state.
 2. **6.1 + 6.2** — calendar data layer + holiday/term admin panel.
 3. **6.3** — dated weekly class view (smallest, most-requested visible win).
 4. **6.4** — month calendar as the main tab.
@@ -484,7 +488,7 @@ present need — then migrate the backend to FastAPI + Postgres (frontend last):
    fine for 1–2 admins sharing one machine, not for many networked writers).
 3. The app must be **hosted/accessed remotely** rather than run on one local machine.
 
-Note the deliberate stepping stone: SQLite (§3b) is **not** throwaway — its schema and queries
+Note the deliberate stepping stone: SQLite (§3.2) is **not** throwaway — its schema and queries
 port ≈1:1 to Postgres, so adopting it now both solves today's volume/query needs *and*
 de-risks the eventual rewrite. Combined with the template-vs-instance split, the port becomes
 a mechanical lift, not a redesign — `scheduler.js` and the data shapes move across unchanged.

@@ -48,6 +48,12 @@ export const state = {
   // ── Venue overrides for parallel-groups subjects (e.g. Games) ──
   venueFlips:           {},   // 'subject|day|period' → true (flipped from default)
 
+  // ── Dated calendar layer (keyed by ISO date 'YYYY-MM-DD') ──
+  HOLIDAYS:         [],  // [{ date, name, type }]
+  EVENTS:           [],  // [{ id, date, endDate?, title, type, scope, note }]
+  TEACHER_ABSENCES: [],  // [{ id, teacherId, date, endDate?, kind, reason }]
+  OVERRIDES:        {},  // overrides[date][sectionId][period] = { subject?, teacherId?, substituteId?, cancelled?, note? }
+
   // ── UI state ──
   currentTab:           'class',
   modalState:           {},

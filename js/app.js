@@ -10,11 +10,20 @@ import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_S
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
 import { refreshSelects, setSelectorValue } from './selects.js';
-import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchBackup, fetchSavedList, saveConfig, saveAsBackup } from './persistence.js';
+import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchBackup, fetchSavedList, saveConfig, saveAsBackup, loadData } from './persistence.js';
 import { generateTimetable, checkConflicts } from './scheduler.js';
-import { renderClassView } from './views/class-view.js';
-import { renderTeacherView } from './views/teacher-view.js';
-import { renderSubjectView } from './views/subject-view.js';
+import {
+  renderClassView,
+  setClassViewMode, navigateClassWeek, navigateClassMonth, navigateClassToday, navigateClassToDate,
+} from './views/class-view.js';
+import {
+  renderTeacherView,
+  setTeacherViewMode, navigateTeacherWeek, navigateTeacherMonth, navigateTeacherToday, navigateTeacherToDate,
+} from './views/teacher-view.js';
+import {
+  renderSubjectView,
+  setSubjectViewMode, navigateSubjectWeek, navigateSubjectMonth, navigateSubjectToday, navigateSubjectToDate,
+} from './views/subject-view.js';
 import { renderDashboard } from './views/dashboard.js';
 import {
   renderAdminView,
@@ -39,6 +48,8 @@ import {
   setSubjectMustAppearDaily,
   addDutyType,
   removeDutyType,
+  addHoliday,
+  removeHoliday,
 } from './views/admin-view.js';
 import {
   openEdit,
@@ -379,6 +390,18 @@ async function init() {
       }
     }
   }
+  // Load dated calendar collections (parallel fetch; fall back to empty defaults)
+  const [holidays, events, absences, overrides] = await Promise.all([
+    loadData('holidays',         []),
+    loadData('events',           []),
+    loadData('teacher-absences', []),
+    loadData('overrides',        {}),
+  ]);
+  state.HOLIDAYS         = holidays;
+  state.EVENTS           = events;
+  state.TEACHER_ABSENCES = absences;
+  state.OVERRIDES        = overrides;
+
   refreshSelects();
   checkConflicts();
   renderClassView();
@@ -471,6 +494,8 @@ window.setSubjectMustAppearDaily  = setSubjectMustAppearDaily;
 window.renderDutiesPanel = renderDutiesPanel;
 window.addDutyType       = addDutyType;
 window.removeDutyType    = removeDutyType;
+window.addHoliday        = addHoliday;
+window.removeHoliday     = removeHoliday;
 
 // Duty assignments
 window.addDutyAssignment    = addDutyAssignment;
@@ -484,6 +509,23 @@ window.removeDutyFromPicker = removeDutyFromPicker;
 window.renderClassView   = renderClassView;
 window.renderTeacherView = renderTeacherView;
 window.renderSubjectView = renderSubjectView;
+
+// Calendar view mode + navigation
+window.setClassViewMode        = setClassViewMode;
+window.navigateClassWeek       = navigateClassWeek;
+window.navigateClassMonth      = navigateClassMonth;
+window.navigateClassToday      = navigateClassToday;
+window.navigateClassToDate     = navigateClassToDate;
+window.setTeacherViewMode      = setTeacherViewMode;
+window.navigateTeacherWeek     = navigateTeacherWeek;
+window.navigateTeacherMonth    = navigateTeacherMonth;
+window.navigateTeacherToday    = navigateTeacherToday;
+window.navigateTeacherToDate   = navigateTeacherToDate;
+window.setSubjectViewMode      = setSubjectViewMode;
+window.navigateSubjectWeek     = navigateSubjectWeek;
+window.navigateSubjectMonth    = navigateSubjectMonth;
+window.navigateSubjectToday    = navigateSubjectToday;
+window.navigateSubjectToDate   = navigateSubjectToDate;
 
 // PDF export
 window.exportClassPDFs        = exportClassPDFs;

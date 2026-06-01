@@ -2,6 +2,24 @@
   "schoolName": "Gayatri Vidya Parishad MLBT School",
   "schoolPlace": "Visakhapatnam",
   "appName": "Timetable Scheduler",
+  "academicYear": "2025-2026",
+  "terms": [
+    {
+      "name": "Term 1",
+      "start": "2025-06-01",
+      "end": "2025-09-30"
+    },
+    {
+      "name": "Term 2",
+      "start": "2025-10-01",
+      "end": "2025-12-31"
+    },
+    {
+      "name": "Term 3",
+      "start": "2026-01-01",
+      "end": "2026-03-31"
+    }
+  ],
   "storageKey": "mlbt_timetable_v2",
   "maxPeriodsPerDay": 6,
   "constraints": {
@@ -29,65 +47,65 @@
     {
       "id": "P1",
       "label": "Period 1",
-      "time": "9:00\u201310:00"
+      "time": "9:00–10:00"
     },
     {
       "id": "P2",
       "label": "Period 2",
-      "time": "10:00\u201310:50"
+      "time": "10:00–10:50"
     },
     {
       "id": "BRK",
       "label": "Break",
-      "time": "10:50\u201311:00",
+      "time": "10:50–11:00",
       "isBreak": true
     },
     {
       "id": "P3",
       "label": "Period 3",
-      "time": "11:00\u201311:45"
+      "time": "11:00–11:45"
     },
     {
       "id": "P4",
       "label": "Period 4",
-      "time": "11:45\u201312:30"
+      "time": "11:45–12:30"
     },
     {
       "id": "LCH",
       "label": "Lunch",
-      "time": "12:30\u20131:00",
+      "time": "12:30–1:00",
       "isBreak": true
     },
     {
       "id": "P5",
       "label": "Period 5",
-      "time": "1:00\u20132:00"
+      "time": "1:00–2:00"
     },
     {
       "id": "P6",
       "label": "Period 6",
-      "time": "2:00\u20132:50"
+      "time": "2:00–2:50"
     },
     {
       "id": "WBK",
       "label": "Water Break",
-      "time": "2:50\u20133:00",
+      "time": "2:50–3:00",
       "isBreak": true
     },
     {
       "id": "P7",
       "label": "Period 7",
-      "time": "3:00\u20133:45"
+      "time": "3:00–3:45"
     },
     {
       "id": "P8",
       "label": "Period 8",
-      "time": "3:45\u20134:30"
+      "time": "3:45–4:30"
     },
     {
       "id": "WRK",
       "label": "Work Review",
-      "time": "4:30\u20135:00",
+      "time": "4:30–5:00",
       "isBreak": true
     }
   ],

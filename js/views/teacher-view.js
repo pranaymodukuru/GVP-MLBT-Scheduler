@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// TEACHER VIEW — renders the per-teacher timetable grid + duty assignments
+// TEACHER VIEW — grid, week (Outlook), and month (Notion) modes + duty assignments
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
@@ -8,11 +8,55 @@ import { allSectionIds, isTeacherAvailable, isActivePeriod, shortSec, getGamesVe
 import { getSelectorValue } from '../selects.js';
 import { showToast } from '../toast.js';
 import { saveState } from '../persistence.js';
+import { weekdayOf } from '../calendar.js';
+import {
+  today, schoolWeekDates, isHoliday,
+  viewModeToggleHtml, weekNavHtml, monthNavHtml,
+  buildWeekTable, buildMonthGrid,
+  shiftWeek, shiftMonth,
+} from './cal-shared.js';
+
+// ── Per-view UI state ─────────────────────────────────────────────────────────
+let _mode      = 'grid';
+let _weekDate  = null;
+let _monthYear = null;
+let _monthMon  = null;
+
+function ensureDates() {
+  if (!_weekDate) _weekDate = today();
+  if (_monthYear === null) { const t = new Date(); _monthYear = t.getFullYear(); _monthMon = t.getMonth(); }
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+export function setTeacherViewMode(mode) { _mode = mode; renderTeacherView(); }
+export function navigateTeacherWeek(delta) { ensureDates(); _weekDate = shiftWeek(_weekDate, delta); renderTeacherView(); }
+export function navigateTeacherMonth(delta) { ensureDates(); ({ year: _monthYear, month: _monthMon } = shiftMonth({ year: _monthYear, month: _monthMon }, delta)); renderTeacherView(); }
+export function navigateTeacherToday() { _weekDate = today(); const t = new Date(); _monthYear = t.getFullYear(); _monthMon = t.getMonth(); renderTeacherView(); }
+export function navigateTeacherToDate(iso) { _weekDate = iso; _mode = 'week'; renderTeacherView(); }
 
 export function renderTeacherView() {
   const tid = getSelectorValue('teacher-select');
   if (!tid) return;
+  ensureDates();
 
+  // Inject view toggle
+  const toggleEl = document.getElementById('teacher-view-toggle');
+  if (toggleEl) toggleEl.innerHTML = viewModeToggleHtml('teacher', _mode);
+
+  // Nav bar
+  const navEl = document.getElementById('teacher-cal-nav');
+  if (navEl) {
+    navEl.style.display = _mode === 'grid' ? 'none' : '';
+    if (_mode === 'week')  navEl.innerHTML = weekNavHtml('teacher', _weekDate);
+    if (_mode === 'month') navEl.innerHTML = monthNavHtml('teacher', _monthYear, _monthMon);
+  }
+
+  const wrap = document.getElementById('teacher-timetable-wrap');
+
+  if (_mode === 'week')  { renderTeacherWeek(tid, wrap); return; }
+  if (_mode === 'month') { renderTeacherMonth(tid, wrap); return; }
+
+  // ── GRID mode ─────────────────────────────────────────────────────────────
   const secs = allSectionIds();
   let filled = 0;
   const cc  = {}; // classes count
@@ -110,7 +154,7 @@ export function renderTeacherView() {
     tbody += '</tr>';
   });
 
-  document.getElementById('teacher-table').innerHTML = `<thead>${thead}</thead><tbody>${tbody}</tbody>`;
+  wrap.innerHTML = `<table id="teacher-table" class="timetable-table"><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
   document.getElementById('teacher-stats-badge').textContent = `${filled} periods/week`;
   document.getElementById('teacher-stats').innerHTML =
     `<div class="stat"><div class="stat-val">${filled}</div><div class="stat-lbl">Periods / week</div></div>` +
@@ -140,6 +184,107 @@ export function renderTeacherView() {
       }).join('');
 
   document.getElementById('teacher-duties').innerHTML = renderDutiesSection(tid);
+}
+
+// ── WEEK mode ─────────────────────────────────────────────────────────────────
+function renderTeacherWeek(tid, wrap) {
+  const secs = allSectionIds();
+  let filled = 0, total = 0;
+
+  const table = buildWeekTable({
+    viewType: 'teacher',
+    weekDate: _weekDate,
+    PERIODS,
+    isUpperFn:          () => false,
+    isActivePeriodFn:   () => true,
+    renderCell(iso, per) {
+      const weekday = weekdayOf(iso);
+      const blocked = !isTeacherAvailable(tid, weekday);
+      const pbBlocked = !isTeacherAvailable(tid, weekday, per.id);
+      total++;
+
+      const allMatches = [];
+      secs.forEach(s => {
+        if (!isActivePeriod(s, per.id)) return;
+        const c = (state.timetable[s] || {})[weekday]?.[per.id];
+        if (c?.teacherId === tid) allMatches.push({ cls: s, subject: c.subject, locked: c.locked });
+      });
+
+      if (allMatches.length) {
+        filled++;
+        const primary = allMatches[0];
+        const bg = SUBJECT_COLORS[primary.subject] || '#f5f5f5';
+        const tc = SUBJECT_TEXT[primary.subject]   || '#333';
+        const isConflict = allMatches.some(f => state.conflictSet.has(`${f.cls}|${weekday}|${per.id}`));
+        const lockIcon   = primary.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
+        const clsLabel   = allMatches.map(f => shortSec(f.cls)).join(' + ');
+        const venue      = getGamesVenue(primary.cls, weekday, per.id);
+        const cls = ['cal-cell-inner', 'cal-cell-block', primary.locked ? 'cell-locked' : '', isConflict ? 'cell-conflict' : ''].filter(Boolean).join(' ');
+        return (
+          `<div class="${cls}" style="background:${bg};color:${tc}"` +
+          ` onclick="openEdit('${primary.cls}','${weekday}','${per.id}')"` +
+          ` oncontextmenu="toggleCellLock('${primary.cls}','${weekday}','${per.id}',event)">` +
+          (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
+          `<span class="cell-subj">${primary.subject}</span>` +
+          `<span class="cell-teacher">${clsLabel}</span>` +
+          (venue ? `<span class="venue-badge venue-${venue.toLowerCase()}">${venue}</span>` : '') +
+          `</div>`
+        );
+      }
+
+      if (blocked || pbBlocked) {
+        return `<div class="cal-cell-inner cal-cell-blocked" style="${pbBlocked ? 'background:#fef2f2;color:#dc2626' : ''}">${blocked ? '🚫' : '⛔'}</div>`;
+      }
+
+      const duty = state.DUTY_ASSIGNMENTS.find(a => a.teacherId === tid && a.day === weekday && a.period === per.id);
+      if (duty) {
+        return `<div class="cal-cell-inner cal-cell-block cell-duty" onclick="openDutyPicker('${tid}','${weekday}','${per.id}')"><span class="cell-subj">${duty.type}</span><span class="cell-teacher">Duty</span></div>`;
+      }
+      return `<div class="cal-cell-inner cal-cell-empty cal-cell-duty-add" onclick="openDutyPicker('${tid}','${weekday}','${per.id}')"><span class="cal-empty-plus duty-add-hint">+ duty</span></div>`;
+    },
+  });
+
+  wrap.innerHTML = table;
+  document.getElementById('teacher-stats-badge').textContent = `${filled} periods/week`;
+}
+
+// ── MONTH mode ────────────────────────────────────────────────────────────────
+function renderTeacherMonth(tid, wrap) {
+  const secs = allSectionIds();
+  const grid = buildMonthGrid({
+    viewType: 'teacher',
+    year:  _monthYear,
+    month: _monthMon,
+    renderDayChips(iso) {
+      const weekday = weekdayOf(iso);
+      if (!weekday) return '';
+      const chips = [];
+      PERIODS.forEach(per => {
+        if (per.isBreak) return;
+        secs.forEach(s => {
+          if (!isActivePeriod(s, per.id)) return;
+          const c = (state.timetable[s] || {})[weekday]?.[per.id];
+          if (c?.teacherId === tid && c.subject) {
+            const bg = SUBJECT_COLORS[c.subject] || '#e5e7eb';
+            const tc = SUBJECT_TEXT[c.subject]   || '#374151';
+            chips.push({ label: `${shortSec(s)} — ${c.subject}`, bg, tc });
+          }
+        });
+      });
+      if (!chips.length) return `<div class="cal-month-empty-day">Free</div>`;
+      const unique = [...new Map(chips.map(c => [c.label, c])).values()];
+      const visible = unique.slice(0, 4);
+      const more = unique.length - visible.length;
+      return (
+        `<div class="cal-month-chips">` +
+        visible.map(c => `<div class="cal-month-chip" style="background:${c.bg};color:${c.tc}">${c.label}</div>`).join('') +
+        (more > 0 ? `<div class="cal-month-more">+${more} more</div>` : '') +
+        `</div>`
+      );
+    },
+  });
+  wrap.innerHTML = grid;
+  document.getElementById('teacher-stats-badge').textContent = '';
 }
 
 // ─── Duty helpers ──────────────────────────────────────────────────────────────

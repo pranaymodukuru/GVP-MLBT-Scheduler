@@ -72,14 +72,16 @@
     <div class="controls">
       <div id="class-select" class="btn-selector"></div>
       <span id="class-stats-badge" class="badge badge-info"></span>
-      <button class="btn btn-sm" style="margin-left:auto" onclick="exportCurrentClassPDF()" data-tooltip="Export this class timetable as a PDF" data-tooltip-below><i class="ti ti-file-export"></i> Export PDF</button>
+      <div id="class-view-toggle" style="margin-left:auto;display:flex;align-items:center;gap:.5rem"></div>
+      <button class="btn btn-sm" onclick="exportCurrentClassPDF()" data-tooltip="Export this class timetable as a PDF" data-tooltip-below><i class="ti ti-file-export"></i> Export PDF</button>
     </div>
     <div class="hint-bar">
       <span>🖱️ Left-click to edit</span>
       <span>🔒 Right-click to lock/unlock (locked cells survive Regenerate)</span>
     </div>
+    <div id="class-cal-nav" style="display:none"></div>
     <div class="legend" id="class-legend"></div>
-    <div class="timetable-wrap"><table id="class-table"></table></div>
+    <div class="timetable-wrap" id="class-timetable-wrap"></div>
   </div>
 
   <!-- TEACHER VIEW -->
@@ -87,11 +89,13 @@
     <div class="controls">
       <div id="teacher-select" class="btn-selector"></div>
       <span id="teacher-stats-badge" class="badge badge-info"></span>
-      <button class="btn btn-sm" style="margin-left:auto" onclick="exportCurrentTeacherPDF()" data-tooltip="Export this teacher's timetable as a PDF" data-tooltip-below><i class="ti ti-file-export"></i> Export PDF</button>
+      <div id="teacher-view-toggle" style="margin-left:auto;display:flex;align-items:center;gap:.5rem"></div>
+      <button class="btn btn-sm" onclick="exportCurrentTeacherPDF()" data-tooltip="Export this teacher's timetable as a PDF" data-tooltip-below><i class="ti ti-file-export"></i> Export PDF</button>
     </div>
     <div class="stats" id="teacher-stats"></div>
+    <div id="teacher-cal-nav" style="display:none"></div>
     <div class="legend" id="teacher-legend"></div>
-    <div class="timetable-wrap"><table id="teacher-table"></table></div>
+    <div class="timetable-wrap" id="teacher-timetable-wrap"></div>
     <div id="teacher-duties"></div>
   </div>
 
@@ -100,10 +104,12 @@
     <div class="controls">
       <div id="subject-select" class="btn-selector"></div>
       <span id="subject-stats-badge" class="badge badge-info"></span>
+      <div id="subject-view-toggle" style="margin-left:auto;display:flex;align-items:center;gap:.5rem"></div>
     </div>
     <div class="stats" id="subject-stats"></div>
+    <div id="subject-cal-nav" style="display:none"></div>
     <div class="legend" id="subject-legend"></div>
-    <div class="timetable-wrap"><table id="subject-table"></table></div>
+    <div class="timetable-wrap" id="subject-timetable-wrap"></div>
   </div>
 
   <!-- DASHBOARD -->
@@ -202,6 +208,14 @@
           <span>Categories of duties that can be assigned to teachers</span>
         </div>
         <div id="duties-panel"></div>
+      </div>
+
+      <div class="admin-card admin-full">
+        <div class="admin-card-header">
+          <h2><i class="ti ti-calendar"></i> Calendar — Holidays &amp; Terms</h2>
+          <span>Declare holidays and view term boundaries. Holidays grey out the corresponding day in all timetable views.</span>
+        </div>
+        <div id="calendar-admin-panel" style="padding:1rem 1.25rem"></div>
       </div>
 
     </div>

@@ -206,6 +206,54 @@ function timestampedFilename() {
   return `timetable_${ts}.json`;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Dated-layer data store  (GET/PUT /data/<name>  with localStorage fallback)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DATA_LS_PREFIX = 'mlbt_data_';
+
+/**
+ * Load a named data collection from the server (saved_schedules/data/<name>.json).
+ * Falls back to localStorage when the server isn't running.
+ * Returns the parsed value, or the provided `defaultValue` if nothing is stored yet.
+ */
+export async function loadData(name, defaultValue = null) {
+  try {
+    const res = await fetch(`/data/${name}`);
+    if (res.status === 204) return defaultValue;
+    if (res.ok) return await res.json();
+  } catch (_) {
+    // server not running — fall through to localStorage
+  }
+  try {
+    const raw = localStorage.getItem(DATA_LS_PREFIX + name);
+    return raw ? JSON.parse(raw) : defaultValue;
+  } catch (_) {
+    return defaultValue;
+  }
+}
+
+/**
+ * Persist a named data collection.
+ * PUTs to the server (atomic write) and mirrors to localStorage as a fast cache.
+ * Returns true if the server accepted it, false if localStorage-only.
+ */
+export async function saveData(name, payload) {
+  const body = JSON.stringify(payload);
+  // Always update localStorage so reads are fast even without a server round-trip.
+  try { localStorage.setItem(DATA_LS_PREFIX + name, body); } catch (_) { /* ignore */ }
+  try {
+    const res = await fetch(`/data/${name}`, {
+      method:  'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    return res.ok;
+  } catch (_) {
+    return false; // server not running — localStorage copy is the fallback
+  }
+}
+
 /** Fetch the list of saved schedules from the server. Returns [{filename, mtime}] or null. */
 export async function fetchSavedList() {
   try {

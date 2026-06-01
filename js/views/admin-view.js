@@ -6,10 +6,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { state } from '../state.js';
-import { DAYS, WORK_PERIODS, PERIODS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES } from '../../config/school-config.js';
+import { DAYS, WORK_PERIODS, PERIODS, SECTION_LABELS, NO_P1_LOCK_CLASSES, SAT_HALF_BASES, ACADEMIC_YEAR, TERMS } from '../../config/school-config.js';
 import { parseSection } from '../helpers.js';
 import { refreshSelects } from '../selects.js';
-import { saveState, saveConfig } from '../persistence.js';
+import { saveState, saveConfig, saveData } from '../persistence.js';
 import { showToast } from '../toast.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,6 +26,7 @@ export function renderAdminView() {
   renderPeriodUnavailabilityPanel(prevTid);
   renderConstraintsPanel();
   renderDutiesPanel();
+  renderCalendarPanel();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -504,4 +505,129 @@ export function removeDutyType(idx) {
   saveState();
   saveConfig();
   showToast(`Removed: ${name}`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALENDAR PANEL — holidays & term boundaries
+// ─────────────────────────────────────────────────────────────────────────────
+
+const HOLIDAY_TYPES = ['national', 'regional', 'school', 'exam', 'other'];
+
+export function renderCalendarPanel() {
+  const panel = document.getElementById('calendar-admin-panel');
+  if (!panel) return;
+
+  const terms = TERMS.length ? TERMS : [];
+  const holidays = state.HOLIDAYS || [];
+
+  // ── Terms section ──────────────────────────────────────────────────────────
+  const termsHtml = terms.length
+    ? `<div class="cal-terms">` +
+      terms.map(t =>
+        `<div class="cal-term-chip">` +
+        `<span class="cal-term-name">${t.name}</span>` +
+        `<span class="cal-term-dates">${fmtDate(t.start)} – ${fmtDate(t.end)}</span>` +
+        `</div>`
+      ).join('') +
+      `</div>`
+    : `<p style="color:var(--text-muted);font-size:.85rem">No terms defined in school-config.json.</p>`;
+
+  // ── Holiday list ───────────────────────────────────────────────────────────
+  const holidayRows = holidays.length
+    ? holidays
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map((h, i) => {
+          const range = h.endDate
+            ? `${fmtDate(h.date)} – ${fmtDate(h.endDate)}`
+            : fmtDate(h.date);
+          return (
+            `<div class="cal-holiday-row" data-idx="${i}">` +
+            `<div class="cal-holiday-info">` +
+              `<span class="cal-holiday-name">${escHtml(h.name)}</span>` +
+              `<span class="cal-holiday-date">${range}</span>` +
+              `<span class="tag tag-holiday-type tag-type-${h.type || 'other'}">${h.type || 'other'}</span>` +
+            `</div>` +
+            `<button class="btn btn-sm btn-danger" onclick="removeHoliday(${i})" data-tooltip="Remove holiday">` +
+              `<i class="ti ti-trash"></i>` +
+            `</button>` +
+            `</div>`
+          );
+        })
+        .join('')
+    : `<div class="empty-state">No holidays added yet.</div>`;
+
+  // ── Add-holiday form ───────────────────────────────────────────────────────
+  const typeOptions = HOLIDAY_TYPES
+    .map(t => `<option value="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</option>`)
+    .join('');
+
+  panel.innerHTML =
+    `<div class="cal-section">` +
+      `<h3 class="cal-section-title"><i class="ti ti-calendar-event"></i> Academic Year &amp; Terms</h3>` +
+      `<div class="cal-academic-year">Academic Year: <strong>${ACADEMIC_YEAR || '—'}</strong></div>` +
+      termsHtml +
+    `</div>` +
+
+    `<div class="cal-section">` +
+      `<h3 class="cal-section-title"><i class="ti ti-beach"></i> Holidays</h3>` +
+      `<div id="holiday-list" class="cal-holiday-list">${holidayRows}</div>` +
+    `</div>` +
+
+    `<div class="cal-section">` +
+      `<h3 class="cal-section-title"><i class="ti ti-plus"></i> Add Holiday</h3>` +
+      `<div class="cal-add-form">` +
+        `<input  id="holiday-name"     class="admin-input" type="text"  placeholder="Holiday name" />` +
+        `<input  id="holiday-date"     class="admin-input" type="date"  />` +
+        `<input  id="holiday-end-date" class="admin-input" type="date"  placeholder="End date (optional)" />` +
+        `<select id="holiday-type"     class="admin-input">${typeOptions}</select>` +
+        `<button class="btn btn-sm btn-primary" onclick="addHoliday()"><i class="ti ti-plus"></i> Add</button>` +
+      `</div>` +
+    `</div>`;
+}
+
+export async function addHoliday() {
+  const name    = document.getElementById('holiday-name')?.value.trim();
+  const date    = document.getElementById('holiday-date')?.value;
+  const endDate = document.getElementById('holiday-end-date')?.value || null;
+  const type    = document.getElementById('holiday-type')?.value || 'other';
+
+  if (!name) { showToast('Enter a holiday name', 'error'); return; }
+  if (!date) { showToast('Pick a date', 'error'); return; }
+  if (endDate && endDate < date) { showToast('End date must be after start date', 'error'); return; }
+
+  const entry = { date, name, type };
+  if (endDate) entry.endDate = endDate;
+
+  state.HOLIDAYS.push(entry);
+  await saveData('holidays', state.HOLIDAYS);
+  renderCalendarPanel();
+  showToast(`🗓️ Holiday added: ${name}`, 'success');
+}
+
+export async function removeHoliday(idx) {
+  const h = state.HOLIDAYS[idx];
+  if (!h) return;
+  if (!confirm(`Remove holiday "${h.name}"?`)) return;
+  state.HOLIDAYS.splice(idx, 1);
+  await saveData('holidays', state.HOLIDAYS);
+  renderCalendarPanel();
+  showToast(`Removed: ${h.name}`);
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const [y, m, d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${d} ${months[parseInt(m, 10) - 1]} ${y}`;
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }

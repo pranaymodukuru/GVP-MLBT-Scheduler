@@ -6,18 +6,165 @@ Serves static files and handles POST /save to write schedules to saved_schedules
 Usage:
     python3 server.py          # serves on port 8080
     python3 server.py 3000     # serves on a custom port
+
+Auth:
+    Set APP_PASSWORD env var to enable password protection.
+    Leave it unset for open access (local dev default).
 """
 
 import json
 import os
+import secrets
 import sys
 import tempfile
 from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+from dotenv import load_dotenv
+load_dotenv()  # loads .env into os.environ (no-op if file doesn't exist)
 
 SAVE_DIR    = os.path.join(os.path.dirname(__file__), "saved_schedules")
 DATA_DIR    = os.path.join(SAVE_DIR, "data")
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "school-config.json")
 BACKUP_PATH = os.path.join(SAVE_DIR, "backup.json")
+
+# Auth — only active when APP_PASSWORD is set
+APP_PASSWORD   = os.environ.get("APP_PASSWORD", "")
+VALID_SESSIONS = set()   # in-memory; cleared on server restart (fine for this use case)
+
+LOGIN_HTML = """\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GVP MLBT Scheduler — Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1d4ed8;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #e5e7eb;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .15s;
+      margin-bottom: 1rem;
+      background: #f9fafb;
+    }
+    input[type="password"]:focus { border-color: #1d4ed8; background: #fff; }
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #1d4ed8;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    button:hover { background: #1e40af; }
+    .error {
+      font-size: 13px;
+      color: #dc2626;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">MLBT</div>
+    <div class="subtitle">Timetable Scheduler</div>
+    {error}
+    <form method="POST" action="/login">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autofocus autocomplete="current-password" placeholder="Enter password">
+      <button type="submit">Sign in</button>
+    </form>
+  </div>
+</body>
+</html>
+"""
+
+
+def _parse_cookies(handler):
+    """Return a dict of cookie name→value from the request headers."""
+    cookies = {}
+    header = handler.headers.get("Cookie", "")
+    for part in header.split(";"):
+        k, _, v = part.strip().partition("=")
+        if k:
+            cookies[k.strip()] = v.strip()
+    return cookies
+
+
+def _is_authenticated(handler):
+    """Return True if auth is disabled or the request carries a valid session cookie."""
+    if not APP_PASSWORD:
+        return True
+    cookies = _parse_cookies(handler)
+    return cookies.get("session", "") in VALID_SESSIONS
+
+
+def _serve_login(handler, error=""):
+    """Send the login page, optionally with an error message."""
+    error_html = f'<div class="error">{error}</div>' if error else ""
+    body = LOGIN_HTML.replace("{error}", error_html).encode()
+    handler.send_response(200)
+    handler.send_header("Content-Type", "text/html; charset=utf-8")
+    handler.send_header("Content-Length", str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body)
+
+
+def _redirect(handler, location="/"):
+    handler.send_response(303)
+    handler.send_header("Location", location)
+    handler.end_headers()
 
 
 def latest_schedule():
@@ -34,6 +181,16 @@ def latest_schedule():
 
 class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
+        # Serve login page (always public)
+        if self.path == "/login":
+            _serve_login(self)
+            return
+
+        # Auth gate — redirect to /login if not authenticated
+        if not _is_authenticated(self):
+            _redirect(self, "/login")
+            return
+
         if self.path == "/latest-schedule":
             filename, data = latest_schedule()
             if data is None:
@@ -102,6 +259,10 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_PUT(self):
+        if not _is_authenticated(self):
+            self.send_error(401, "Unauthorized")
+            return
+
         if self.path.startswith("/data/"):
             name = self.path[6:]
             if not name or "/" in name:
@@ -135,6 +296,33 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_error(404)
 
     def do_POST(self):
+        # Handle login before the auth gate
+        if self.path == "/login":
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length).decode()
+            # Parse application/x-www-form-urlencoded
+            params = {}
+            for part in body.split("&"):
+                k, _, v = part.partition("=")
+                params[k] = v.replace("+", " ")
+            from urllib.parse import unquote
+            password = unquote(params.get("password", ""))
+            if APP_PASSWORD and password == APP_PASSWORD:
+                token = secrets.token_hex(32)
+                VALID_SESSIONS.add(token)
+                self.send_response(303)
+                self.send_header("Set-Cookie", f"session={token}; HttpOnly; SameSite=Strict; Path=/")
+                self.send_header("Location", "/")
+                self.end_headers()
+            else:
+                _serve_login(self, error="Incorrect password. Please try again.")
+            return
+
+        # Auth gate for all other POST endpoints
+        if not _is_authenticated(self):
+            self.send_error(401, "Unauthorized")
+            return
+
         if self.path == "/save-config":
             length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(length)

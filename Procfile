@@ -1,1 +1,1 @@
-web: python3 server.py
+web: uv run python server.py

@@ -1,1 +1,1 @@
-# No third-party dependencies — stdlib only
+python-dotenv

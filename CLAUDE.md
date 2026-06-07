@@ -9,12 +9,17 @@ A browser-based school timetable auto-scheduler. ES6 modules — no framework, n
 ## Running the App
 
 ```bash
-python3 server.py          # serves on :8080, saves to saved_schedules/
-python3 server.py 3000     # custom port
+uv run python server.py          # serves on :8080, saves to saved_schedules/
+uv run python server.py 3000     # custom port
 # then open http://localhost:8080
 ```
 
-`python3 -m http.server 8080` still works but the Save button will fall back to a browser download instead of writing to `saved_schedules/`.
+`uv run` automatically uses the `.venv` and installs any missing dependencies from `pyproject.toml`.
+
+First-time setup:
+```bash
+uv sync   # creates .venv and installs dependencies
+```
 
 No build, lint, or test commands exist.
 

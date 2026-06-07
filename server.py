@@ -25,9 +25,10 @@ from urllib.parse import unquote
 from dotenv import load_dotenv
 load_dotenv()  # loads .env into os.environ (no-op if file doesn't exist)
 
-SAVE_DIR    = os.path.join(os.path.dirname(__file__), "saved_schedules")
-DATA_DIR    = os.path.join(SAVE_DIR, "data")
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "school-config.json")
+_BASE        = os.path.dirname(__file__)
+SAVE_DIR     = os.environ.get("SAVE_DIR", os.path.join(_BASE, "saved_schedules"))
+DATA_DIR     = os.path.join(SAVE_DIR, "data")
+CONFIG_PATH  = os.path.join(_BASE, "config", "school-config.json")
 BACKUP_PATH = os.path.join(SAVE_DIR, "backup.json")
 
 # ── Auth ───────────────────────────────────────────────────────────────────────

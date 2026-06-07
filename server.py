@@ -4,20 +4,23 @@ Dev server for GVP-MLBT-Scheduler.
 Serves static files and handles POST /save to write schedules to saved_schedules/.
 
 Usage:
-    python3 server.py          # serves on port 8080
-    python3 server.py 3000     # serves on a custom port
+    uv run python server.py          # serves on :8080, saves to saved_schedules/
+    uv run python server.py 3000     # custom port
 
 Auth:
     Set APP_PASSWORD env var to enable password protection.
-    Leave it unset for open access (local dev default).
+    Leave it unset (local dev default) for open access.
 """
 
+import hmac
 import json
 import os
 import secrets
 import sys
 import tempfile
+import time
 from http.server import SimpleHTTPRequestHandler, HTTPServer
+from urllib.parse import unquote
 
 from dotenv import load_dotenv
 load_dotenv()  # loads .env into os.environ (no-op if file doesn't exist)
@@ -27,9 +30,28 @@ DATA_DIR    = os.path.join(SAVE_DIR, "data")
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "school-config.json")
 BACKUP_PATH = os.path.join(SAVE_DIR, "backup.json")
 
-# Auth — only active when APP_PASSWORD is set
-APP_PASSWORD   = os.environ.get("APP_PASSWORD", "")
-VALID_SESSIONS = set()   # in-memory; cleared on server restart (fine for this use case)
+# ── Auth ───────────────────────────────────────────────────────────────────────
+APP_PASSWORD  = os.environ.get("APP_PASSWORD", "")
+# Auto-detected on Railway; set PRODUCTION=true on other hosts
+IS_PRODUCTION = bool(os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("PRODUCTION", ""))
+
+SESSION_TTL    = 8 * 3600  # sessions expire after 8 hours
+VALID_SESSIONS = {}         # {token: expiry_timestamp}
+
+# ── Brute-force protection ─────────────────────────────────────────────────────
+MAX_ATTEMPTS    = 5
+LOCKOUT_SECONDS = 15 * 60   # 15-minute lockout after MAX_ATTEMPTS failures
+FAILED_LOGINS   = {}         # {ip: {"count": n, "locked_until": float}}
+
+# ── Paths blocked from static file serving ────────────────────────────────────
+_BLOCKED_EXACT = frozenset({
+    "/pyproject.toml", "/uv.lock", "/requirements.txt",
+    "/.env", "/.env.example", "/procfile",
+    "/claude.md", "/readme.md", "/architecture.md",
+    "/scheduling_constraints.md", "/v2_plan.md",
+})
+_BLOCKED_PREFIXES = ("/saved_schedules/", "/.venv/", "/.git/")
+
 
 LOGIN_HTML = """\
 <!DOCTYPE html>
@@ -39,16 +61,16 @@ LOGIN_HTML = """\
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GVP MLBT Scheduler — Login</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{
       font-family: system-ui, -apple-system, sans-serif;
       background: #f4f6f9;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .card {
+    }}
+    .card {{
       background: #fff;
       border-radius: 16px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.10);
@@ -56,20 +78,20 @@ LOGIN_HTML = """\
       width: 100%;
       max-width: 360px;
       text-align: center;
-    }
-    .logo {
+    }}
+    .logo {{
       font-size: 28px;
       font-weight: 800;
       color: #1d4ed8;
       letter-spacing: -0.5px;
       margin-bottom: 4px;
-    }
-    .subtitle {
+    }}
+    .subtitle {{
       font-size: 13px;
       color: #6b7280;
       margin-bottom: 2rem;
-    }
-    label {
+    }}
+    label {{
       display: block;
       text-align: left;
       font-size: 12px;
@@ -78,8 +100,8 @@ LOGIN_HTML = """\
       margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-    }
-    input[type="password"] {
+    }}
+    input[type="password"] {{
       width: 100%;
       padding: 10px 14px;
       border-radius: 8px;
@@ -89,9 +111,9 @@ LOGIN_HTML = """\
       transition: border-color .15s;
       margin-bottom: 1rem;
       background: #f9fafb;
-    }
-    input[type="password"]:focus { border-color: #1d4ed8; background: #fff; }
-    button {
+    }}
+    input[type="password"]:focus {{ border-color: #1d4ed8; background: #fff; }}
+    button {{
       width: 100%;
       padding: 10px;
       border-radius: 8px;
@@ -102,9 +124,9 @@ LOGIN_HTML = """\
       font-weight: 600;
       cursor: pointer;
       transition: background .15s;
-    }
-    button:hover { background: #1e40af; }
-    .error {
+    }}
+    button:hover {{ background: #1e40af; }}
+    .error {{
       font-size: 13px;
       color: #dc2626;
       background: #fef2f2;
@@ -112,7 +134,7 @@ LOGIN_HTML = """\
       border-radius: 8px;
       padding: 8px 12px;
       margin-bottom: 1rem;
-    }
+    }}
   </style>
 </head>
 <body>
@@ -122,7 +144,8 @@ LOGIN_HTML = """\
     {error}
     <form method="POST" action="/login">
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" autofocus autocomplete="current-password" placeholder="Enter password">
+      <input type="password" id="password" name="password" autofocus
+             autocomplete="current-password" placeholder="Enter password">
       <button type="submit">Sign in</button>
     </form>
   </div>
@@ -131,11 +154,20 @@ LOGIN_HTML = """\
 """
 
 
+# ── Helpers ────────────────────────────────────────────────────────────────────
+
+def _client_ip(handler):
+    """Real client IP, accounting for Railway's reverse proxy."""
+    forwarded = handler.headers.get("X-Forwarded-For", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return handler.client_address[0]
+
+
 def _parse_cookies(handler):
-    """Return a dict of cookie name→value from the request headers."""
+    """Return a dict of cookie name → value from the request headers."""
     cookies = {}
-    header = handler.headers.get("Cookie", "")
-    for part in header.split(";"):
+    for part in handler.headers.get("Cookie", "").split(";"):
         k, _, v = part.strip().partition("=")
         if k:
             cookies[k.strip()] = v.strip()
@@ -143,17 +175,60 @@ def _parse_cookies(handler):
 
 
 def _is_authenticated(handler):
-    """Return True if auth is disabled or the request carries a valid session cookie."""
+    """True if auth is disabled or the request carries a valid, unexpired session."""
     if not APP_PASSWORD:
         return True
-    cookies = _parse_cookies(handler)
-    return cookies.get("session", "") in VALID_SESSIONS
+    token = _parse_cookies(handler).get("session", "")
+    expiry = VALID_SESSIONS.get(token, 0)
+    if expiry > time.time():
+        return True
+    VALID_SESSIONS.pop(token, None)   # clean up expired token
+    return False
+
+
+def _check_rate_limit(ip):
+    """Return (is_locked, seconds_remaining). Cleans up expired lockouts."""
+    record = FAILED_LOGINS.get(ip)
+    if not record:
+        return False, 0
+    remaining = record["locked_until"] - time.time()
+    if remaining > 0:
+        return True, int(remaining)
+    # Lockout expired — clear it
+    FAILED_LOGINS.pop(ip, None)
+    return False, 0
+
+
+def _record_failed_login(ip):
+    """Increment failure count; lock out the IP after MAX_ATTEMPTS."""
+    record = FAILED_LOGINS.get(ip, {"count": 0, "locked_until": 0})
+    record["count"] += 1
+    if record["count"] >= MAX_ATTEMPTS:
+        record["locked_until"] = time.time() + LOCKOUT_SECONDS
+        record["count"] = 0
+    FAILED_LOGINS[ip] = record
+
+
+def _is_blocked_path(path):
+    """True if the path should never be served as a static file."""
+    clean = path.split("?")[0].lower().rstrip("/") or "/"
+    if clean in _BLOCKED_EXACT:
+        return True
+    return any(clean.startswith(p) for p in _BLOCKED_PREFIXES)
+
+
+def _cookie_header(token):
+    """Build a Set-Cookie header value with the right flags for the environment."""
+    flags = "HttpOnly; SameSite=Strict; Path=/"
+    if IS_PRODUCTION:
+        flags += "; Secure"
+    return f"session={token}; {flags}"
 
 
 def _serve_login(handler, error=""):
-    """Send the login page, optionally with an error message."""
+    """Send the login page, optionally with an inline error message."""
     error_html = f'<div class="error">{error}</div>' if error else ""
-    body = LOGIN_HTML.replace("{error}", error_html).encode()
+    body = LOGIN_HTML.format(error=error_html).encode()
     handler.send_response(200)
     handler.send_header("Content-Type", "text/html; charset=utf-8")
     handler.send_header("Content-Length", str(len(body)))
@@ -179,14 +254,39 @@ def latest_schedule():
         return newest, json.load(fh)
 
 
+# ── Request handler ────────────────────────────────────────────────────────────
+
 class Handler(SimpleHTTPRequestHandler):
+
+    def end_headers(self):
+        """Inject security headers into every response."""
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; "
+            "font-src 'self'; "
+            "connect-src 'self';"
+        )
+        super().end_headers()
+
     def do_GET(self):
-        # Serve login page (always public)
+        # Always public: login page
         if self.path == "/login":
             _serve_login(self)
             return
 
-        # Auth gate — redirect to /login if not authenticated
+        # Block sensitive files before auth check (return 404, not 403,
+        # to avoid confirming the file exists)
+        if _is_blocked_path(self.path):
+            self.send_error(404, "Not Found")
+            return
+
+        # Auth gate
         if not _is_authenticated(self):
             _redirect(self, "/login")
             return
@@ -277,8 +377,6 @@ class Handler(SimpleHTTPRequestHandler):
                 return
             os.makedirs(DATA_DIR, exist_ok=True)
             dest = os.path.join(DATA_DIR, f"{name}.json")
-            # Atomic write: write to a temp file then rename so a crash mid-write
-            # never corrupts the existing file.
             fd, tmp = tempfile.mkstemp(dir=DATA_DIR, suffix=".tmp")
             try:
                 with os.fdopen(fd, "wb") as fh:
@@ -289,36 +387,51 @@ class Handler(SimpleHTTPRequestHandler):
                 raise
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps({"saved": name}).encode())
             return
         self.send_error(404)
 
     def do_POST(self):
-        # Handle login before the auth gate
+        # ── Login (always public) ──────────────────────────────────────────────
         if self.path == "/login":
+            ip = _client_ip(self)
+
+            # Check lockout before reading the body
+            locked, remaining = _check_rate_limit(ip)
+            if locked:
+                mins = remaining // 60
+                secs = remaining % 60
+                _serve_login(
+                    self,
+                    error=f"Too many failed attempts. Try again in {mins}m {secs}s."
+                )
+                return
+
             length = int(self.headers.get("Content-Length", 0))
-            body = self.rfile.read(length).decode()
-            # Parse application/x-www-form-urlencoded
+            raw = self.rfile.read(length).decode()
             params = {}
-            for part in body.split("&"):
+            for part in raw.split("&"):
                 k, _, v = part.partition("=")
-                params[k] = v.replace("+", " ")
-            from urllib.parse import unquote
-            password = unquote(params.get("password", ""))
-            if APP_PASSWORD and password == APP_PASSWORD:
+                params[k] = unquote(v.replace("+", " "))
+
+            password = params.get("password", "")
+
+            # Timing-safe comparison — prevents password-length timing attacks
+            if APP_PASSWORD and hmac.compare_digest(password, APP_PASSWORD):
+                FAILED_LOGINS.pop(ip, None)   # clear any previous failures
                 token = secrets.token_hex(32)
-                VALID_SESSIONS.add(token)
+                VALID_SESSIONS[token] = time.time() + SESSION_TTL
                 self.send_response(303)
-                self.send_header("Set-Cookie", f"session={token}; HttpOnly; SameSite=Strict; Path=/")
+                self.send_header("Set-Cookie", _cookie_header(token))
                 self.send_header("Location", "/")
                 self.end_headers()
             else:
+                _record_failed_login(ip)
                 _serve_login(self, error="Incorrect password. Please try again.")
             return
 
-        # Auth gate for all other POST endpoints
+        # ── Auth gate for all other POST endpoints ─────────────────────────────
         if not _is_authenticated(self):
             self.send_error(401, "Unauthorized")
             return
@@ -336,7 +449,6 @@ class Handler(SimpleHTTPRequestHandler):
                 f.write("\n")
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps({"saved": "school-config.json"}).encode())
             return
@@ -354,7 +466,6 @@ class Handler(SimpleHTTPRequestHandler):
                 json.dump(data, f, indent=2, ensure_ascii=False)
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps({"saved": "backup.json"}).encode())
             return
@@ -365,25 +476,19 @@ class Handler(SimpleHTTPRequestHandler):
 
         length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(length)
-
         try:
             data = json.loads(body)
         except json.JSONDecodeError:
             self.send_error(400, "Invalid JSON")
             return
 
-        filename = self.headers.get("X-Filename", "timetable.json")
-        # Sanitise: strip any path components the client might send
-        filename = os.path.basename(filename)
-
+        filename = os.path.basename(self.headers.get("X-Filename", "timetable.json"))
         os.makedirs(SAVE_DIR, exist_ok=True)
-        filepath = os.path.join(SAVE_DIR, filename)
-        with open(filepath, "w", encoding="utf-8") as f:
+        with open(os.path.join(SAVE_DIR, filename), "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(json.dumps({"saved": filename}).encode())
 
@@ -393,7 +498,6 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Filename")
         self.end_headers()
-        return
 
     def log_message(self, fmt, *args):
         if self.command == "POST":
@@ -404,5 +508,8 @@ class Handler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else int(os.environ.get("PORT", 8080))
-    print(f"Serving at http://localhost:{port}  (saves → saved_schedules/)")
+    auth_status = "password-protected" if APP_PASSWORD else "open (no APP_PASSWORD set)"
+    env_status  = "production" if IS_PRODUCTION else "development"
+    print(f"Serving at http://localhost:{port}  [{env_status}] [{auth_status}]")
+    print(f"  saves → saved_schedules/")
     HTTPServer(("", port), Handler).serve_forever()

@@ -35,21 +35,15 @@
     <div class="top-btns">
       <button class="btn btn-sm" id="theme-toggle" onclick="toggleDarkMode()" data-tooltip="Toggle dark / light mode" data-tooltip-below><i class="ti ti-moon" id="theme-icon"></i></button>
       <div class="btn-group">
-        <button class="btn" onclick="toggleDropdown('export-menu')" data-tooltip="Print or export PDFs" data-tooltip-below><i class="ti ti-download"></i> Export <i class="ti ti-chevron-down" style="font-size:11px;opacity:0.6"></i></button>
+        <button class="btn" onclick="toggleDropdown('export-menu')" data-tooltip="Print or export PDFs / JSON" data-tooltip-below><i class="ti ti-download"></i> Export <i class="ti ti-chevron-down" style="font-size:11px;opacity:0.6"></i></button>
         <div class="btn-dropdown" id="export-menu">
           <button onclick="window.print();closeDropdowns()"><i class="ti ti-printer"></i> Print</button>
           <button onclick="exportClassPDFs();closeDropdowns()"><i class="ti ti-layout-rows"></i> Class PDFs</button>
           <button onclick="exportTeacherPDFs();closeDropdowns()"><i class="ti ti-users"></i> Teacher PDFs</button>
+          <button onclick="downloadJSON();closeDropdowns()"><i class="ti ti-file-download"></i> Export JSON</button>
         </div>
       </div>
-      <button class="btn" onclick="exportJSON()" data-tooltip="Save a timestamped snapshot to saved_schedules/&#10;(falls back to browser download if server is off)" data-tooltip-below><i class="ti ti-device-floppy"></i> Save</button>
-      <div class="btn-group">
-        <button class="btn" onclick="toggleDropdown('backup-menu')" data-tooltip="Set or restore the backup schedule" data-tooltip-below><i class="ti ti-bookmark"></i> Backup <i class="ti ti-chevron-down" style="font-size:11px;opacity:0.6"></i></button>
-        <div class="btn-dropdown" id="backup-menu">
-          <button onclick="saveBackup();closeDropdowns()"><i class="ti ti-bookmark-plus"></i> Set Backup</button>
-          <button class="dd-danger" onclick="resetToBackup();closeDropdowns()"><i class="ti ti-history"></i> Load Backup</button>
-        </div>
-      </div>
+      <button class="btn" onclick="saveSchedule()" data-tooltip="Save a timestamped snapshot to saved_schedules/&#10;(falls back to browser download if server is off)" data-tooltip-below><i class="ti ti-device-floppy"></i> Save</button>
       <button class="btn" onclick="triggerImport()" data-tooltip="Load a previously saved schedule from&#10;the server or your local filesystem" data-tooltip-below><i class="ti ti-upload"></i> Import</button>
       <button class="btn" id="regen-btn" onclick="regenerate()" data-tooltip="Regenerate schedule — locked cells 🔒&#10;are preserved, everything else is reshuffled" data-tooltip-below><i class="ti ti-refresh"></i> Regenerate</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">

@@ -10,7 +10,7 @@ import { DEFAULT_TEACHERS, DEFAULT_CLASS_CONFIG, DEFAULT_SUBJECT_FREQ, DEFAULT_S
 import { allSectionIds, parseSection, getSubjects, isSatHalf, isTeacherAvailable, shuffle } from './helpers.js';
 import { showToast } from './toast.js';
 import { refreshSelects, setSelectorValue } from './selects.js';
-import { saveState, loadSavedSnap, applySnap, exportJSON, fetchLatest, fetchBackup, fetchSavedList, saveConfig, saveAsBackup, loadData } from './persistence.js';
+import { saveState, loadSavedSnap, applySnap, exportJSON, downloadJSON, fetchLatest, fetchSavedList, saveConfig, loadData } from './persistence.js';
 import { generateTimetable, checkConflicts } from './scheduler.js';
 import {
   renderClassView,
@@ -357,40 +357,29 @@ async function init() {
   if (SCHOOL_PLACE) document.getElementById('header-school-place').textContent = SCHOOL_PLACE;
   if (APP_NAME) document.getElementById('header-app-name').textContent = APP_NAME;
 
-  // Server is the source of truth — prefer the latest saved file, then backup,
+  // Server is the source of truth — prefer the latest saved file,
   // then fall back to the local browser session, then generate fresh.
   const latest = await fetchLatest();
   if (latest) {
     applySnap(latest.data);
     saveState();
     const ts = new Date(latest.data.savedAt);
-    document.getElementById('load-banner-msg').textContent = '💾 Latest schedule loaded';
+    document.getElementById('load-banner-msg').textContent = '💾 Session restored (locks preserved)';
     document.getElementById('load-banner-time').textContent =
-      `${latest.filename} — ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+      `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
     document.getElementById('load-banner').style.display = '';
   } else {
-    const backup = await fetchBackup();
-    if (backup) {
-      applySnap(backup.data);
-      saveState();
-      const ts = new Date(backup.data.savedAt);
-      document.getElementById('load-banner-msg').textContent = '📌 Default backup loaded';
+    const snap = loadSavedSnap();
+    if (snap) {
+      applySnap(snap);
+      const ts = new Date(snap.savedAt);
+      document.getElementById('load-banner-msg').textContent = '💾 Session restored (locks preserved)';
       document.getElementById('load-banner-time').textContent =
-        `Backed up ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+        `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
       document.getElementById('load-banner').style.display = '';
     } else {
-      const snap = loadSavedSnap();
-      if (snap) {
-        applySnap(snap);
-        const ts = new Date(snap.savedAt);
-        document.getElementById('load-banner-msg').textContent = '💾 Session restored (locks preserved)';
-        document.getElementById('load-banner-time').textContent =
-          `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
-        document.getElementById('load-banner').style.display = '';
-      } else {
-        state.timetable = generateTimetable(false);
-        saveState();
-      }
+      state.timetable = generateTimetable(false);
+      saveState();
     }
   }
   // Load dated calendar collections (parallel fetch; fall back to empty defaults)
@@ -408,27 +397,6 @@ async function init() {
   refreshSelects();
   checkConflicts();
   renderClassView();
-}
-
-export async function saveBackup() {
-  const serverSaved = await saveAsBackup();
-  showToast(serverSaved ? '📌 Backup saved — this is now your default schedule' : '📌 Backup downloaded as backup.json');
-}
-
-export async function resetToBackup() {
-  if (!confirm('Reset everything to backup.json? All unsaved changes will be lost.')) return;
-  const backup = await fetchBackup();
-  if (!backup) { showToast('No backup.json found on server.'); return; }
-  applySnap(backup.data);
-  saveState();
-  const ts = new Date(backup.data.savedAt);
-  document.getElementById('load-banner-msg').textContent = '📌 Restored from backup';
-  document.getElementById('load-banner-time').textContent =
-    `Backed up ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
-  document.getElementById('load-banner').style.display = '';
-  checkConflicts();
-  renderClassView();
-  showToast('📌 Restored from backup.json');
 }
 
 init();
@@ -449,9 +417,8 @@ window.runAndSwitch     = runAndSwitch;
 window.fillEmptySlots   = fillEmptySlots;
 
 // Persistence
-window.exportJSON       = () => exportJSON().then(({ saved }) => showToast(`💾 Saved: ${saved}`));
-window.saveBackup       = saveBackup;
-window.resetToBackup    = resetToBackup;
+window.saveSchedule     = () => exportJSON().then(({ saved }) => showToast(`💾 Saved: ${saved}`));
+window.downloadJSON     = downloadJSON;
 window.triggerImport    = triggerImport;
 window.closeImportModal = closeImportModal;
 window.triggerFilePicker = triggerFilePicker;

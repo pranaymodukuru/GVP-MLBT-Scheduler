@@ -154,9 +154,9 @@ function renderWeek(secId, wrap) {
       const cell    = dayData[per.id];
       if (cell?.subject) {
         filled++;
-        return `<div class="cal-cell-inner">${classCellInner(secId, weekday, per.id, cell)}</div>`;
+        return `<div class="cal-cell-inner">${classCellInner(secId, weekday, per.id, cell, iso)}</div>`;
       }
-      return `<div class="cal-cell-inner cal-cell-empty" onclick="openEdit('${secId}','${weekday}','${per.id}')"><span class="cal-empty-plus">+</span></div>`;
+      return `<div class="cal-cell-inner cal-cell-empty" onclick="openEdit('${secId}','${weekday}','${per.id}','${iso}')"><span class="cal-empty-plus">+</span></div>`;
     },
   });
 
@@ -238,22 +238,24 @@ function classCell(secId, day, pid, cell) {
 }
 
 /** Inner content only (no outer <div>) — used by week mode inside cal-cell-inner */
-function classCellInner(secId, day, pid, cell) {
-  const t          = state.TEACHERS.find(x => x.id === cell.teacherId);
-  const bg         = SUBJECT_COLORS[cell.subject] || '#f5f5f5';
-  const tc         = SUBJECT_TEXT[cell.subject]   || '#333';
-  const isConflict = state.conflictSet.has(`${secId}|${day}|${pid}`);
-  const isAbsent   = cell.teacherId && !isTeacherAvailable(cell.teacherId, day, pid);
-  const lockIcon   = cell.locked ? (pid === 'P1' ? '📌' : '🔒') : '';
-  const venue      = getGamesVenue(secId, day, pid);
+function classCellInner(secId, day, pid, cell, iso = null) {
+  const t           = state.TEACHERS.find(x => x.id === cell.teacherId);
+  const bg          = SUBJECT_COLORS[cell.subject] || '#f5f5f5';
+  const tc          = SUBJECT_TEXT[cell.subject]   || '#333';
+  const isConflict  = state.conflictSet.has(`${secId}|${day}|${pid}`);
+  const isAbsent    = cell.teacherId && !isTeacherAvailable(cell.teacherId, day, pid);
+  const lockIcon    = cell.locked ? (pid === 'P1' ? '📌' : '🔒') : '';
+  const venue       = getGamesVenue(secId, day, pid);
+  const hasOverride = iso && !!state.OVERRIDES?.[iso]?.[secId]?.[pid];
   const cls = ['cal-cell-block', cell.locked ? 'cell-locked' : '', isConflict ? 'cell-conflict' : '', isAbsent ? 'cell-absent' : ''].filter(Boolean).join(' ');
 
   return (
     `<div class="${cls}" style="background:${bg};color:${tc}"` +
-    ` onclick="openEdit('${secId}','${day}','${pid}')"` +
+    ` onclick="openEdit('${secId}','${day}','${pid}','${iso || ''}')"` +
     ` oncontextmenu="toggleCellLock('${secId}','${day}','${pid}',event)">` +
     (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
     (isAbsent ? `<span class="absent-badge">&#9888;</span>` : '') +
+    (hasOverride ? `<span class="override-badge" title="One-time change for this date">1×</span>` : '') +
     `<span class="cell-subj">${cell.subject}</span>` +
     `<span class="cell-teacher">${t ? t.name : '⚠️ Unassigned'}</span>` +
     (venue ? `<span class="venue-badge venue-${venue.toLowerCase()}">${venue}</span>` : '') +

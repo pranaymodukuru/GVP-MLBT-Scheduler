@@ -58,6 +58,7 @@ import {
   saveCell,
   clearCell,
   setModalVenue,
+  setModalScope,
 } from './modals/cell-modal.js';
 import {
   renderChips,
@@ -465,6 +466,7 @@ window.closeModal       = closeModal;
 window.saveCell         = saveCell;
 window.clearCell        = clearCell;
 window.setModalVenue    = setModalVenue;
+window.setModalScope    = setModalScope;
 
 // Teacher modal
 window.openAddTeacher   = openAddTeacher;

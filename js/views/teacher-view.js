@@ -219,12 +219,14 @@ function renderTeacherWeek(tid, wrap) {
         const lockIcon   = primary.locked ? (per.id === 'P1' ? '📌' : '🔒') : '';
         const clsLabel   = allMatches.map(f => shortSec(f.cls)).join(' + ');
         const venue      = getGamesVenue(primary.cls, weekday, per.id);
+        const hasOverride = !!(state.OVERRIDES?.[iso]?.[primary.cls]?.[per.id]);
         const cls = ['cal-cell-inner', 'cal-cell-block', primary.locked ? 'cell-locked' : '', isConflict ? 'cell-conflict' : ''].filter(Boolean).join(' ');
         return (
           `<div class="${cls}" style="background:${bg};color:${tc}"` +
-          ` onclick="openEdit('${primary.cls}','${weekday}','${per.id}')"` +
+          ` onclick="openEdit('${primary.cls}','${weekday}','${per.id}','${iso}')"` +
           ` oncontextmenu="toggleCellLock('${primary.cls}','${weekday}','${per.id}',event)">` +
           (lockIcon ? `<span class="lock-badge">${lockIcon}</span>` : '') +
+          (hasOverride ? `<span class="override-badge" title="One-time change for this date">1×</span>` : '') +
           `<span class="cell-subj">${primary.subject}</span>` +
           `<span class="cell-teacher">${clsLabel}</span>` +
           (venue ? `<span class="venue-badge venue-${venue.toLowerCase()}">${venue}</span>` : '') +

@@ -5,9 +5,10 @@
 import { state } from '../state.js';
 import { getSubjects, isTeacherAvailable, getCombinedSections, shortSec, getGamesVenue } from '../helpers.js';
 import { SUBJECTS_CONFIG } from '../../config/school-config.js';
-import { saveState } from '../persistence.js';
+import { saveState, saveData } from '../persistence.js';
 import { checkConflicts } from '../scheduler.js';
 import { showToast } from '../toast.js';
+import { effectiveDay } from '../calendar.js';
 import { renderClassView } from '../views/class-view.js';
 import { renderTeacherView } from '../views/teacher-view.js';
 import { renderDashboard } from '../views/dashboard.js';
@@ -19,11 +20,24 @@ document.getElementById('modal').addEventListener('click', e => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function openEdit(secId, day, period) {
-  state.modalState = { secId, day, period };
-  const cell = (state.timetable[secId] || {})[day]?.[period];
+/**
+ * Open the cell edit modal.
+ * @param {string} secId
+ * @param {string} day    weekday name e.g. 'Mon'
+ * @param {string} period period id e.g. 'P3'
+ * @param {string|null} isoDate  specific calendar date ('2026-06-02') or null for grid/template edit
+ */
+export function openEdit(secId, day, period, isoDate = null) {
+  // Default scope: when editing from a specific date, default to 'once'
+  const scope = isoDate ? 'once' : 'all';
+  state.modalState = { secId, day, period, isoDate, scope };
 
-  document.getElementById('modal-title').textContent = `Edit: ${secId} · ${day} · ${period}`;
+  // Resolve the cell to display: use override if one exists, else template
+  const cell = _resolveCell(secId, day, period, isoDate, scope);
+
+  document.getElementById('modal-title').textContent = isoDate
+    ? `Edit: ${secId} · ${day} · ${period} · ${_fmtDate(isoDate)}`
+    : `Edit: ${secId} · ${day} · ${period}`;
 
   const combined = getCombinedSections(secId, day, period);
   const noteEl   = document.getElementById('modal-combined-note');
@@ -34,27 +48,32 @@ export function openEdit(secId, day, period) {
     noteEl.style.display = combined.length ? '' : 'none';
   }
 
-  const subjects = getSubjects(secId);
-  const subjSel  = document.getElementById('modal-subject');
-  subjSel.innerHTML = subjects.map(s =>
-    `<option value="${s}" ${cell?.subject === s ? 'selected' : ''}>${s}</option>`
-  ).join('');
+  // Scope toggle — shown only when a specific date is provided
+  const scopeRow = document.getElementById('modal-scope-row');
+  if (scopeRow) scopeRow.style.display = isoDate ? '' : 'none';
+  _applyScopeButtons(scope);
 
-  fillTeacherDropdown(cell?.subject || subjects[0], cell?.teacherId);
-  subjSel.onchange = () => fillTeacherDropdown(subjSel.value, null);
+  // Lock row — only meaningful for template (recurring) edits
+  const lockRow = document.getElementById('modal-lock-row');
+  if (lockRow) lockRow.style.display = (isoDate && scope === 'once') ? 'none' : '';
 
-  document.getElementById('modal-lock').checked = !!cell?.locked;
-
-  const subject = cell?.subject || getSubjects(secId)[0];
-  const venueRow = document.getElementById('modal-venue-row');
-  if (SUBJECTS_CONFIG[subject]?.allowParallelGroups && getGamesVenue(secId, day, period)) {
-    venueRow.style.display = '';
-    setModalVenue(getGamesVenue(secId, day, period));
-  } else {
-    venueRow.style.display = 'none';
-  }
+  _populateFields(secId, day, period, cell);
 
   document.getElementById('modal').classList.add('open');
+}
+
+export function setModalScope(scope) {
+  state.modalState.scope = scope;
+  _applyScopeButtons(scope);
+
+  // Lock row only relevant for recurring edits
+  const lockRow = document.getElementById('modal-lock-row');
+  if (lockRow) lockRow.style.display = scope === 'once' ? 'none' : '';
+
+  // Re-populate from the appropriate source so user sees what they're editing
+  const { secId, day, period, isoDate } = state.modalState;
+  const cell = _resolveCell(secId, day, period, isoDate, scope);
+  _populateFields(secId, day, period, cell);
 }
 
 export function setModalVenue(venue) {
@@ -136,40 +155,107 @@ export function closeModal() {
 }
 
 export function saveCell() {
-  const { secId, day, period } = state.modalState;
+  const { secId, day, period, isoDate, scope } = state.modalState;
   const subj   = document.getElementById('modal-subject').value;
   const tid    = document.getElementById('modal-teacher').value;
   const locked = document.getElementById('modal-lock').checked;
 
-  if (!state.timetable[secId])       state.timetable[secId]       = {};
-  if (!state.timetable[secId][day])  state.timetable[secId][day]  = {};
-  state.timetable[secId][day][period] = { subject: subj, teacherId: tid || null, locked };
+  if (isoDate && scope === 'once') {
+    // Write a date-specific override — does NOT affect any other week
+    if (!state.OVERRIDES[isoDate])        state.OVERRIDES[isoDate]        = {};
+    if (!state.OVERRIDES[isoDate][secId]) state.OVERRIDES[isoDate][secId] = {};
+    state.OVERRIDES[isoDate][secId][period] = { subject: subj, teacherId: tid || null };
+    saveData('overrides', state.OVERRIDES);
+    showToast(`📅 Saved for ${_fmtDate(isoDate)} only`);
+  } else {
+    // Write to the weekly template — affects all weeks
+    if (!state.timetable[secId])       state.timetable[secId]       = {};
+    if (!state.timetable[secId][day])  state.timetable[secId][day]  = {};
+    state.timetable[secId][day][period] = { subject: subj, teacherId: tid || null, locked };
 
-  // Persist venue selection if the venue row was visible
-  if (document.getElementById('modal-venue-row').style.display !== 'none') {
-    const chosen   = document.getElementById('modal-venue-indoor').classList.contains('active') ? 'Indoor' : 'Outdoor';
-    const key      = `${subj}|${day}|${period}`;
-    // Determine what the un-flipped default would be for this section
-    const flipped  = !!state.venueFlips[key];
-    const defaultV = getGamesVenue(secId, day, period); // current (may already be flipped)
-    if (chosen !== defaultV) state.venueFlips[key] = !flipped;
-    else                     state.venueFlips[key] = flipped;
+    // Persist venue selection if the venue row was visible
+    if (document.getElementById('modal-venue-row').style.display !== 'none') {
+      const chosen   = document.getElementById('modal-venue-indoor').classList.contains('active') ? 'Indoor' : 'Outdoor';
+      const key      = `${subj}|${day}|${period}`;
+      const flipped  = !!state.venueFlips[key];
+      const defaultV = getGamesVenue(secId, day, period);
+      if (chosen !== defaultV) state.venueFlips[key] = !flipped;
+      else                     state.venueFlips[key] = flipped;
+    }
+
+    checkConflicts();
+    saveState();
   }
 
   closeModal();
-  checkConflicts();
   _renderCurrentView();
-  saveState();
 }
 
 export function clearCell() {
-  const { secId, day, period } = state.modalState;
-  if (state.timetable[secId]?.[day]) state.timetable[secId][day][period] = null;
+  const { secId, day, period, isoDate, scope } = state.modalState;
+
+  if (isoDate && scope === 'once') {
+    // Remove the override, restoring the template value for this date
+    if (state.OVERRIDES[isoDate]?.[secId]) {
+      delete state.OVERRIDES[isoDate][secId][period];
+      if (Object.keys(state.OVERRIDES[isoDate][secId]).length === 0) delete state.OVERRIDES[isoDate][secId];
+      if (Object.keys(state.OVERRIDES[isoDate]).length === 0)        delete state.OVERRIDES[isoDate];
+    }
+    saveData('overrides', state.OVERRIDES);
+    showToast(`🗑️ Override removed — template restored for ${_fmtDate(isoDate)}`);
+  } else {
+    if (state.timetable[secId]?.[day]) state.timetable[secId][day][period] = null;
+    checkConflicts();
+    saveState();
+  }
 
   closeModal();
-  checkConflicts();
   _renderCurrentView();
-  saveState();
+}
+
+// ── Private helpers ───────────────────────────────────────────────────────────
+
+function _resolveCell(secId, day, period, isoDate, scope) {
+  if (isoDate && scope === 'once') {
+    // Prefer existing override; fall back to effective (template) value
+    const override = state.OVERRIDES?.[isoDate]?.[secId]?.[period];
+    if (override) return override;
+    const dayData = effectiveDay(secId, isoDate) || {};
+    return dayData[period] || null;
+  }
+  return (state.timetable[secId] || {})[day]?.[period] || null;
+}
+
+function _populateFields(secId, day, period, cell) {
+  const subjects = getSubjects(secId);
+  const subjSel  = document.getElementById('modal-subject');
+  subjSel.innerHTML = subjects.map(s =>
+    `<option value="${s}" ${cell?.subject === s ? 'selected' : ''}>${s}</option>`
+  ).join('');
+
+  fillTeacherDropdown(cell?.subject || subjects[0], cell?.teacherId);
+  subjSel.onchange = () => fillTeacherDropdown(subjSel.value, null);
+
+  document.getElementById('modal-lock').checked = !!cell?.locked;
+
+  const subject  = cell?.subject || getSubjects(secId)[0];
+  const venueRow = document.getElementById('modal-venue-row');
+  if (SUBJECTS_CONFIG[subject]?.allowParallelGroups && getGamesVenue(secId, day, period)) {
+    venueRow.style.display = '';
+    setModalVenue(getGamesVenue(secId, day, period));
+  } else {
+    venueRow.style.display = 'none';
+  }
+}
+
+function _applyScopeButtons(scope) {
+  document.getElementById('modal-scope-once')?.classList.toggle('active', scope === 'once');
+  document.getElementById('modal-scope-all') ?.classList.toggle('active', scope === 'all');
+}
+
+function _fmtDate(isoDate) {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
 }
 
 function _renderCurrentView() {

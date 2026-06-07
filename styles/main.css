@@ -676,6 +676,7 @@ td:last-child,th:last-child{border-right:none}
 
 /* Filled cell block */
 .cal-cell-block {
+  position: relative;
   border-radius: 7px;
   padding: .4rem .5rem;
   cursor: pointer;
@@ -873,3 +874,12 @@ td:last-child,th:last-child{border-right:none}
   color: var(--text-muted);
   font-style: italic;
 }
+
+/* ── Scope toggle in cell modal ─────────────────────────────────────────────── */
+.scope-toggle{display:flex;gap:8px;margin-bottom:14px}
+.scope-btn{flex:1;padding:7px 0;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-subtle);color:var(--text-medium);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.scope-btn.active{border-color:#d97706;background:#fef3c7;color:#92400e;font-weight:600}
+[data-theme="dark"] .scope-btn.active{border-color:#d97706;background:#451a03;color:#fcd34d}
+
+/* ── One-time override badge on calendar cells ─────────────────────────────── */
+.override-badge{position:absolute;bottom:4px;right:5px;font-size:8px;font-weight:700;background:#f59e0b;color:#fff;border-radius:3px;padding:1px 4px;line-height:1.4;letter-spacing:0.03em;pointer-events:none}

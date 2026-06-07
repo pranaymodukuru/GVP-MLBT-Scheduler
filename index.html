@@ -268,7 +268,14 @@
         <button id="modal-venue-outdoor" class="venue-btn" onclick="setModalVenue('Outdoor')">Outdoor</button>
       </div>
     </div>
-    <div class="lock-row" onclick="document.getElementById('modal-lock').click()">
+    <div id="modal-scope-row" style="display:none">
+      <label>Apply change to</label>
+      <div class="scope-toggle">
+        <button id="modal-scope-once" class="scope-btn active" onclick="setModalScope('once')">This date only (1×)</button>
+        <button id="modal-scope-all"  class="scope-btn"        onclick="setModalScope('all')">All weeks (↻ recurring)</button>
+      </div>
+    </div>
+    <div id="modal-lock-row" class="lock-row" onclick="document.getElementById('modal-lock').click()">
       <input type="checkbox" id="modal-lock">
       <span>🔒 Lock — won't change on Regenerate</span>
     </div>

@@ -357,13 +357,16 @@ async function init() {
   if (SCHOOL_PLACE) document.getElementById('header-school-place').textContent = SCHOOL_PLACE;
   if (APP_NAME) document.getElementById('header-app-name').textContent = APP_NAME;
 
-  const snap = loadSavedSnap();
-  if (snap) {
-    applySnap(snap);
-    const ts = new Date(snap.savedAt);
-    document.getElementById('load-banner-msg').textContent = '💾 Session restored (locks preserved)';
+  // Server is the source of truth — prefer the latest saved file, then backup,
+  // then fall back to the local browser session, then generate fresh.
+  const latest = await fetchLatest();
+  if (latest) {
+    applySnap(latest.data);
+    saveState();
+    const ts = new Date(latest.data.savedAt);
+    document.getElementById('load-banner-msg').textContent = '💾 Latest schedule loaded';
     document.getElementById('load-banner-time').textContent =
-      `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+      `${latest.filename} — ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
     document.getElementById('load-banner').style.display = '';
   } else {
     const backup = await fetchBackup();
@@ -376,14 +379,13 @@ async function init() {
         `Backed up ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
       document.getElementById('load-banner').style.display = '';
     } else {
-      const latest = await fetchLatest();
-      if (latest) {
-        applySnap(latest.data);
-        saveState();
-        const ts = new Date(latest.data.savedAt);
-        document.getElementById('load-banner-msg').textContent = '💾 Saved schedule loaded (locks preserved)';
+      const snap = loadSavedSnap();
+      if (snap) {
+        applySnap(snap);
+        const ts = new Date(snap.savedAt);
+        document.getElementById('load-banner-msg').textContent = '💾 Session restored (locks preserved)';
         document.getElementById('load-banner-time').textContent =
-          `${latest.filename} — ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
+          `Saved ${ts.toLocaleDateString()} at ${ts.toLocaleTimeString()}`;
         document.getElementById('load-banner').style.display = '';
       } else {
         state.timetable = generateTimetable(false);

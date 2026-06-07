@@ -292,6 +292,26 @@ class Handler(SimpleHTTPRequestHandler):
             _redirect(self, "/login")
             return
 
+        if self.path.startswith("/schedule/"):
+            filename = unquote(self.path[len("/schedule/"):])
+            filename = os.path.basename(filename)  # strip any path traversal
+            if not filename:
+                self.send_error(400, "Missing filename")
+                return
+            filepath = os.path.join(SAVE_DIR, filename)
+            if not os.path.isfile(filepath):
+                self.send_error(404, "Not Found")
+                return
+            with open(filepath, encoding="utf-8") as fh:
+                raw = fh.read()
+            body = raw.encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         if self.path == "/latest-schedule":
             filename, data = latest_schedule()
             if data is None:

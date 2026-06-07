@@ -299,7 +299,7 @@ export function triggerFilePicker() {
 
 export async function loadSavedFile(filename) {
   try {
-    const res = await fetch(`/saved_schedules/${encodeURIComponent(filename)}`);
+    const res = await fetch(`/schedule/${encodeURIComponent(filename)}`);
     if (!res.ok) throw new Error();
     const snap = await res.json();
     applySnap(snap);
